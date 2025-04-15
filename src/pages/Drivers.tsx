@@ -142,7 +142,7 @@ const Drivers: React.FC = () => {
         driver.name.toLowerCase().includes(query) ||
         driver.email.toLowerCase().includes(query) ||
         driver.phone.includes(query) ||
-        driver.license_plate.includes(query)
+        driver.license_plate.toLowerCase().includes(query)
       );
     }
     
