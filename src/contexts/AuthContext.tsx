@@ -108,24 +108,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     } catch (error) {
       console.error('Login error:', error);
-      // let errorMessage:string;
-      // switch ((error as any).code) {
-      //   case "auth/invalid-credential":
-      //     errorMessage = "Invalid credentials. Please try again.";
-      //     break;
-      //   case "auth/user-not-found":
-      //     errorMessage = "No user found with this email.";
-      //     break;
-      //   case "auth/user-disabled":
-      //     errorMessage = "This user account has been disabled.";
-      //     break;
-      //   default:
-      //     errorMessage = "Login failed. Please try again.";
-      // }
-      // setAuthState({
-      //   user: null,
-      //   error: errorMessage
-      // });
+      let errorMessage:string;
+      switch ((error as any).code) {
+        case "auth/invalid-credential":
+          errorMessage = "Invalid credentials. Please try again.";
+          break;
+        case "auth/user-not-found":
+          errorMessage = "No user found with this email.";
+          break;
+        case "auth/user-disabled":
+          errorMessage = "This user account has been disabled.";
+          break;
+        default:
+          errorMessage = "Login failed. Please try again.";
+      }
+      setAuthState({
+        user: null,
+        error: errorMessage
+      });
     } finally {
       setLoading(false);
     }
