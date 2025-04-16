@@ -16,8 +16,6 @@ import Drivers from "./pages/Drivers";
 import RideDetails from "./pages/RideDetails";
 import TestRide from "./pages/TestRide";
 import NotFound from "./pages/NotFound";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase/firebaseConfig";
 
 // Create a theme instance
 const theme = createTheme({
@@ -63,16 +61,6 @@ const ProtectedRoute: React.FC<{ element: React.ReactElement }> = ({
 };
 
 const App: React.FC = () => {
-  const { logout } = useAuth();
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      console.log("Firebase user:", firebaseUser);
-      if (!firebaseUser) {
-        logout();
-      }
-    });
-    return () => unsubscribe(); // Cleanup subscription on unmount
-  }, []);
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

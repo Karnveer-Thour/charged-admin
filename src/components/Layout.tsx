@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import {
   AppBar,
   Box,
@@ -18,7 +18,7 @@ import {
   Menu,
   MenuItem,
   Button,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Dashboard as DashboardIcon,
   People as PeopleIcon,
@@ -29,8 +29,8 @@ import {
   AccountCircle as AccountIcon,
   DirectionsCar as CarIcon,
   Science as TestIcon,
-} from '@mui/icons-material';
-import { useAuth } from '../contexts/AuthContext';
+} from "@mui/icons-material";
+import { useAuth } from "../contexts/AuthContext";
 
 const drawerWidth = 240;
 
@@ -41,11 +41,11 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { text: 'Dashboard', path: '/', icon: <DashboardIcon /> },
-  { text: 'Pricing', path: '/pricing', icon: <MoneyIcon /> },
-  { text: 'Riders', path: '/riders', icon: <PeopleIcon /> },
-  { text: 'Drivers', path: '/drivers', icon: <CarIcon /> },
-  { text: 'Test Ride', path: '/test-ride', icon: <TestIcon /> },
+  { text: "Dashboard", path: "/", icon: <DashboardIcon /> },
+  { text: "Pricing", path: "/pricing", icon: <MoneyIcon /> },
+  { text: "Riders", path: "/riders", icon: <PeopleIcon /> },
+  { text: "Drivers", path: "/drivers", icon: <CarIcon /> },
+  { text: "Test Ride", path: "/test-ride", icon: <TestIcon /> },
 ];
 
 const Layout: React.FC = () => {
@@ -54,57 +54,64 @@ const Layout: React.FC = () => {
   const { authState, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   const userMenuOpen = Boolean(anchorEl);
-  
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  
+
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  
+
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
-  
+
   const handleLogout = () => {
     handleMenuClose();
     logout();
-    navigate('/login');
+    navigate("/login");
   };
-  
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     console.log("Logging out due to inactivity");
+  //     handleLogout();
+  //   }, 5000);
+  // },[]);
+
   const getPageTitle = () => {
     const path = location.pathname;
-    
-    if (path === '/') return 'Dashboard';
-    if (path === '/pricing') return 'Pricing Rules';
-    if (path === '/riders') return 'Rider Management';
-    if (path === '/drivers') return 'Driver Management';
-    if (path === '/test-ride') return 'Test Ride Simulation';
-    if (path.startsWith('/rides/')) return 'Ride Details';
-    
-    return 'Charged Admin';
+
+    if (path === "/") return "Dashboard";
+    if (path === "/pricing") return "Pricing Rules";
+    if (path === "/riders") return "Rider Management";
+    if (path === "/drivers") return "Driver Management";
+    if (path === "/test-ride") return "Test Ride Simulation";
+    if (path.startsWith("/rides/")) return "Ride Details";
+
+    return "Charged Admin";
   };
-  
+
   const drawer = (
     <div>
       <Toolbar
         sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
           px: [1],
         }}
       >
         <Typography
           variant="h6"
           component="div"
-          sx={{ 
-            fontWeight: 700, 
-            color: 'primary.main',
-            letterSpacing: '0.5px'
+          sx={{
+            fontWeight: 700,
+            color: "primary.main",
+            letterSpacing: "0.5px",
           }}
         >
           CHARGED ADMIN
@@ -118,7 +125,14 @@ const Layout: React.FC = () => {
               onClick={() => navigate(item.path)}
               selected={location.pathname === item.path}
             >
-              <ListItemIcon sx={{ color: location.pathname === item.path ? 'primary.main' : 'inherit' }}>
+              <ListItemIcon
+                sx={{
+                  color:
+                    location.pathname === item.path
+                      ? "primary.main"
+                      : "inherit",
+                }}
+              >
                 {item.icon}
               </ListItemIcon>
               <ListItemText primary={item.text} />
@@ -130,7 +144,7 @@ const Layout: React.FC = () => {
   );
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar
         position="fixed"
@@ -145,14 +159,14 @@ const Layout: React.FC = () => {
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
+            sx={{ mr: 2, display: { sm: "none" } }}
           >
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             {getPageTitle()}
           </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             <Button
               color="inherit"
               onClick={handleProfileMenuOpen}
@@ -168,14 +182,14 @@ const Layout: React.FC = () => {
                 )
               }
             >
-              {authState.user?.name || 'User'}
+              {authState.user?.name || "User"}
             </Button>
             <Menu
               anchorEl={anchorEl}
               open={userMenuOpen}
               onClose={handleMenuClose}
               MenuListProps={{
-                'aria-labelledby': 'profile-button',
+                "aria-labelledby": "profile-button",
               }}
             >
               <MenuItem onClick={handleLogout}>
@@ -201,8 +215,11 @@ const Layout: React.FC = () => {
             keepMounted: true, // Better open performance on mobile
           }}
           sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            display: { xs: "block", sm: "none" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+            },
           }}
         >
           {drawer}
@@ -210,8 +227,11 @@ const Layout: React.FC = () => {
         <Drawer
           variant="permanent"
           sx={{
-            display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            display: { xs: "none", sm: "block" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+            },
           }}
           open
         >
@@ -223,8 +243,8 @@ const Layout: React.FC = () => {
         sx={{
           flexGrow: 1,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
-          height: '100vh',
-          overflow: 'auto',
+          height: "100vh",
+          overflow: "auto",
           backgroundColor: (theme) => theme.palette.grey[100],
         }}
       >
@@ -235,4 +255,4 @@ const Layout: React.FC = () => {
   );
 };
 
-export default Layout; 
+export default Layout;

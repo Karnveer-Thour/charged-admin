@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { 
-  Container, 
-  Box, 
-  Typography, 
-  TextField, 
-  Button, 
-  Paper, 
-  Avatar, 
-  CssBaseline, 
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Container,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  Avatar,
+  CssBaseline,
   Alert,
-  LinearProgress
-} from '@mui/material';
-import { LockOutlined as LockOutlinedIcon } from '@mui/icons-material';
-import { useAuth } from '../contexts/AuthContext';
+  LinearProgress,
+} from "@mui/material";
+import { LockOutlined as LockOutlinedIcon } from "@mui/icons-material";
+import { useAuth } from "../contexts/AuthContext";
 
 const Login: React.FC = () => {
   const { authState, login, loading, isAuthenticated } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     // Redirect to dashboard if already authenticated
     if (isAuthenticated) {
-      navigate('/');
+      navigate("/");
     }
   }, [isAuthenticated, navigate]);
 
@@ -39,44 +39,44 @@ const Login: React.FC = () => {
       <Box
         sx={{
           marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+        <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           Charged Admin Panel
         </Typography>
-        <Paper 
-          elevation={3} 
-          sx={{ 
-            p: 4, 
-            width: '100%', 
+        <Paper
+          elevation={3}
+          sx={{
+            p: 4,
+            width: "100%",
             mt: 3,
-            position: 'relative',
-            overflow: 'hidden'
+            position: "relative",
+            overflow: "hidden",
           }}
         >
           {loading && (
-            <LinearProgress 
-              sx={{ 
-                position: 'absolute', 
-                top: 0, 
-                left: 0, 
-                width: '100%' 
-              }} 
+            <LinearProgress
+              sx={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+              }}
             />
           )}
-          
+
           {authState.error && (
             <Alert severity="error" sx={{ mb: 2 }}>
               {authState.error}
             </Alert>
           )}
-          
+
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextField
               margin="normal"
@@ -120,4 +120,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login; 
+export default Login;

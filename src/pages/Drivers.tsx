@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Container,
   Typography,
@@ -47,7 +47,7 @@ import {
   DialogContentText,
   Link,
   ButtonGroup,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Search as SearchIcon,
   Visibility as ViewIcon,
@@ -70,10 +70,17 @@ import {
   UploadFile as UploadFileIcon,
   CameraAlt as CameraIcon,
   DocumentScanner as DocumentScannerIcon,
-} from '@mui/icons-material';
-import { mockApi } from '../services/mockApi';
-import { Driver, Ride, RideType, DriverDocument, DocumentStatus, DocumentType } from '../types';
-import { useAuth } from '../contexts/AuthContext';
+} from "@mui/icons-material";
+import { mockApi } from "../services/mockApi";
+import {
+  Driver,
+  Ride,
+  RideType,
+  DriverDocument,
+  DocumentStatus,
+  DocumentType,
+} from "../types";
+import { useAuth } from "../contexts/AuthContext";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -92,11 +99,7 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`driver-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ pt: 3 }}>
-          {children}
-        </Box>
-      )}
+      {value === index && <Box sx={{ pt: 3 }}>{children}</Box>}
     </div>
   );
 }
@@ -107,11 +110,15 @@ const Drivers: React.FC = () => {
   const [filteredDrivers, setFilteredDrivers] = useState<Driver[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [selectedVehicleType, setSelectedVehicleType] = useState<RideType | 'all'>('all');
-  const [selectedStatusFilter, setSelectedStatusFilter] = useState<boolean | 'all'>('all');
+  const [selectedVehicleType, setSelectedVehicleType] = useState<
+    RideType | "all"
+  >("all");
+  const [selectedStatusFilter, setSelectedStatusFilter] = useState<
+    boolean | "all"
+  >("all");
   const [selectedDriver, setSelectedDriver] = useState<Driver | null>(null);
   const [driverRides, setDriverRides] = useState<Ride[]>([]);
   const [driverDetailsOpen, setDriverDetailsOpen] = useState(false);
@@ -119,14 +126,20 @@ const Drivers: React.FC = () => {
   const [updatingStatus, setUpdatingStatus] = useState(false);
   const [tabValue, setTabValue] = useState(0);
   const [updatingDocument, setUpdatingDocument] = useState(false);
-  const [documentUpdateSuccess, setDocumentUpdateSuccess] = useState<string | null>(null);
-  const [documentUpdateError, setDocumentUpdateError] = useState<string | null>(null);
+  const [documentUpdateSuccess, setDocumentUpdateSuccess] = useState<
+    string | null
+  >(null);
+  const [documentUpdateError, setDocumentUpdateError] = useState<string | null>(
+    null,
+  );
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
-  const [selectedDocumentType, setSelectedDocumentType] = useState<DocumentType | ''>('');
+  const [selectedDocumentType, setSelectedDocumentType] = useState<
+    DocumentType | ""
+  >("");
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [uploadDialogNotes, setUploadDialogNotes] = useState('');
+  const [uploadDialogNotes, setUploadDialogNotes] = useState("");
   const [uploadingDocument, setUploadingDocument] = useState(false);
-  const {getDrivers} = useAuth();
+  const { getDrivers } = useAuth();
 
   useEffect(() => {
     fetchDrivers();
@@ -134,35 +147,46 @@ const Drivers: React.FC = () => {
 
   const applyFilters = useCallback(() => {
     let result = [...drivers];
-    
+
     // Apply search query
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      result = result.filter(driver => 
-        driver.name.toLowerCase().includes(query) ||
-        driver.email.toLowerCase().includes(query) ||
-        driver.phone.includes(query) ||
-        driver.license_plate.toLowerCase().includes(query)
+      result = result.filter(
+        (driver) =>
+          driver.name.toLowerCase().includes(query) ||
+          driver.email.toLowerCase().includes(query) ||
+          driver.phone.includes(query) ||
+          driver.license_plate.toLowerCase().includes(query),
       );
     }
-    
+
     // Apply vehicle type filter
-    if (selectedVehicleType !== 'all') {
-      result = result.filter(driver => driver.car_type === selectedVehicleType);
+    if (selectedVehicleType !== "all") {
+      result = result.filter(
+        (driver) => driver.car_type === selectedVehicleType,
+      );
     }
-    
+
     // Apply status filter
-    if (selectedStatusFilter !== 'all') {
-      result = result.filter(driver => driver.is_active === selectedStatusFilter);
+    if (selectedStatusFilter !== "all") {
+      result = result.filter(
+        (driver) => driver.is_active === selectedStatusFilter,
+      );
     }
-    
+
     setFilteredDrivers(result);
     setPage(0); // Reset to first page when filters change
   }, [drivers, searchQuery, selectedVehicleType, selectedStatusFilter]);
 
   useEffect(() => {
     applyFilters();
-  }, [drivers, searchQuery, selectedVehicleType, selectedStatusFilter, applyFilters]);
+  }, [
+    drivers,
+    searchQuery,
+    selectedVehicleType,
+    selectedStatusFilter,
+    applyFilters,
+  ]);
 
   const fetchDrivers = async () => {
     setLoading(true);
@@ -172,8 +196,8 @@ const Drivers: React.FC = () => {
       setFilteredDrivers(data);
       setError(null);
     } catch (err) {
-      setError('Failed to load drivers. Please try again.');
-      console.error('Error fetching drivers:', err);
+      setError("Failed to load drivers. Please try again.");
+      console.error("Error fetching drivers:", err);
     } finally {
       setLoading(false);
     }
@@ -187,7 +211,9 @@ const Drivers: React.FC = () => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
@@ -197,12 +223,12 @@ const Drivers: React.FC = () => {
     setDriverDetailsOpen(true);
     setLoadingDriverDetails(true);
     setTabValue(0);
-    
+
     try {
       const rides = await mockApi.getDriverRides(driver.user_id);
       setDriverRides(rides);
     } catch (err) {
-      console.error('Error fetching driver rides:', err);
+      console.error("Error fetching driver rides:", err);
     } finally {
       setLoadingDriverDetails(false);
     }
@@ -222,56 +248,66 @@ const Drivers: React.FC = () => {
 
   const handleToggleDriverStatus = async () => {
     if (!selectedDriver) return;
-    
+
     setUpdatingStatus(true);
     try {
       const updatedDriver = await mockApi.updateDriverStatus(
-        selectedDriver.user_id, 
-        !selectedDriver.is_active
+        selectedDriver.user_id,
+        !selectedDriver.is_active,
       );
-      
+
       // Update driver in list
-      setDrivers(prev => 
-        prev.map(d => d.user_id === updatedDriver.user_id ? updatedDriver : d)
+      setDrivers((prev) =>
+        prev.map((d) =>
+          d.user_id === updatedDriver.user_id ? updatedDriver : d,
+        ),
       );
-      
+
       // Update selected driver
       setSelectedDriver(updatedDriver);
     } catch (err) {
-      console.error('Error updating driver status:', err);
+      console.error("Error updating driver status:", err);
     } finally {
       setUpdatingStatus(false);
     }
   };
 
-  const handleUpdateDocumentStatus = async (document: DriverDocument, newStatus: DocumentStatus, notes?: string) => {
+  const handleUpdateDocumentStatus = async (
+    document: DriverDocument,
+    newStatus: DocumentStatus,
+    notes?: string,
+  ) => {
     if (!selectedDriver) return;
-    
+
     setUpdatingDocument(true);
     setDocumentUpdateSuccess(null);
     setDocumentUpdateError(null);
-    
+
     try {
       const updatedDriver = await mockApi.updateDriverDocument(
         selectedDriver.user_id,
         document.id,
-        { 
+        {
           status: newStatus,
-          notes: notes || undefined
-        }
+          notes: notes || undefined,
+        },
       );
-      
+
       // Update driver in list
-      setDrivers(prev => 
-        prev.map(d => d.user_id === updatedDriver.user_id ? updatedDriver : d)
+      setDrivers((prev) =>
+        prev.map((d) =>
+          d.user_id === updatedDriver.user_id ? updatedDriver : d,
+        ),
       );
-      
+
       // Update selected driver
       setSelectedDriver(updatedDriver);
       setDocumentUpdateSuccess(`Document status updated to ${newStatus}`);
     } catch (err) {
-      console.error('Error updating document status:', err);
-      setDocumentUpdateError('Failed to update document status. Please try again.');
+      console.error("Error updating document status:", err);
+      setDocumentUpdateError(
+        "Failed to update document status. Please try again.",
+      );
     } finally {
       setUpdatingDocument(false);
     }
@@ -279,11 +315,11 @@ const Drivers: React.FC = () => {
 
   const getVehicleTypeIcon = (type: RideType) => {
     switch (type) {
-      case 'electric':
+      case "electric":
         return <ElectricIcon color="success" />;
-      case 'regular':
+      case "regular":
         return <CarIcon color="primary" />;
-      case 'suv':
+      case "suv":
         return <SuvIcon color="warning" />;
       default:
         return <CarIcon />;
@@ -292,12 +328,12 @@ const Drivers: React.FC = () => {
 
   const getVehicleTypeLabel = (type: RideType) => {
     switch (type) {
-      case 'electric':
-        return 'Electric';
-      case 'regular':
-        return 'Regular';
-      case 'suv':
-        return 'SUV';
+      case "electric":
+        return "Electric";
+      case "regular":
+        return "Regular";
+      case "suv":
+        return "SUV";
       default:
         return type;
     }
@@ -305,20 +341,20 @@ const Drivers: React.FC = () => {
 
   const getDocumentTitle = (documentType: string): string => {
     switch (documentType) {
-      case 'driverLicense':
-        return 'Driver License';
-      case 'vehicleInsurance':
-        return 'Vehicle Insurance';
-      case 'vehiclePermit':
-        return 'Vehicle Permit';
-      case 'backgroundCheck':
-        return 'Background Check';
-      case 'workEligibility':
-        return 'Work Eligibility';
-      case 'driverAbstract':
-        return 'Driver Abstract';
-      case 'vehicleDetails':
-        return 'Vehicle Details';
+      case "driverLicense":
+        return "Driver License";
+      case "vehicleInsurance":
+        return "Vehicle Insurance";
+      case "vehiclePermit":
+        return "Vehicle Permit";
+      case "backgroundCheck":
+        return "Background Check";
+      case "workEligibility":
+        return "Work Eligibility";
+      case "driverAbstract":
+        return "Driver Abstract";
+      case "vehicleDetails":
+        return "Vehicle Details";
       default:
         return documentType;
     }
@@ -326,52 +362,54 @@ const Drivers: React.FC = () => {
 
   const getDocumentStatusIcon = (status: DocumentStatus) => {
     switch (status) {
-      case 'approved':
+      case "approved":
         return <ApprovedIcon color="success" />;
-      case 'rejected':
+      case "rejected":
         return <RejectedIcon color="error" />;
-      case 'pending':
+      case "pending":
         return <PendingIcon color="warning" />;
-      case 'expired':
+      case "expired":
         return <ExpiredIcon color="error" />;
-      case 'notSubmitted':
+      case "notSubmitted":
         return <NotSubmittedIcon color="disabled" />;
       default:
         return null;
     }
   };
 
-  const getDocumentStatusColor = (status: DocumentStatus): 'success' | 'error' | 'warning' | 'default' => {
+  const getDocumentStatusColor = (
+    status: DocumentStatus,
+  ): "success" | "error" | "warning" | "default" => {
     switch (status) {
-      case 'approved':
-        return 'success';
-      case 'rejected':
-      case 'expired':
-        return 'error';
-      case 'pending':
-        return 'warning';
-      case 'notSubmitted':
+      case "approved":
+        return "success";
+      case "rejected":
+      case "expired":
+        return "error";
+      case "pending":
+        return "warning";
+      case "notSubmitted":
       default:
-        return 'default';
+        return "default";
     }
   };
 
   const getPendingDocumentsCount = (driver: Driver): number => {
-    return driver.documents.filter(doc => doc.status === 'pending').length;
+    return driver.documents.filter((doc) => doc.status === "pending").length;
   };
 
   const handleOpenUploadDialog = (docType: DocumentType) => {
     setSelectedDocumentType(docType);
     setUploadedFile(null);
-    setUploadDialogNotes('');
+    setUploadDialogNotes("");
     setUploadDialogOpen(true);
   };
 
   const handleCloseUploadDialog = () => {
     setUploadDialogOpen(false);
-    setSelectedDocumentType('');
+    setSelectedDocumentType("");
     setUploadedFile(null);
-    setUploadDialogNotes('');
+    setUploadDialogNotes("");
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -393,13 +431,13 @@ const Drivers: React.FC = () => {
         selectedDriver.user_id,
         selectedDocumentType,
         uploadedFile,
-        uploadDialogNotes
+        uploadDialogNotes,
       );
 
       // Notify the driver
       const notifyResponse = await mockApi.notifyDriverAboutDocument(
         selectedDriver.user_id,
-        selectedDocumentType
+        selectedDocumentType,
       );
 
       // Get the updated driver data (in a real app, this would come from the server)
@@ -408,11 +446,13 @@ const Drivers: React.FC = () => {
       // Update the selected driver in the UI
       setSelectedDriver(updatedDriver);
 
-      setDocumentUpdateSuccess(`Document ${getDocumentTitle(selectedDocumentType)} uploaded successfully and driver has been notified!`);
+      setDocumentUpdateSuccess(
+        `Document ${getDocumentTitle(selectedDocumentType)} uploaded successfully and driver has been notified!`,
+      );
       handleCloseUploadDialog();
     } catch (error) {
-      console.error('Error uploading document:', error);
-      setDocumentUpdateError('Failed to upload document. Please try again.');
+      console.error("Error uploading document:", error);
+      setDocumentUpdateError("Failed to upload document. Please try again.");
     } finally {
       setUploadingDocument(false);
     }
@@ -420,7 +460,7 @@ const Drivers: React.FC = () => {
 
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
         <CircularProgress />
       </Box>
     );
@@ -431,17 +471,18 @@ const Drivers: React.FC = () => {
       <Typography variant="h4" gutterBottom>
         Driver Management
       </Typography>
-      
+
       <Typography variant="body1" color="text.secondary" paragraph>
-        View and manage drivers, filter by vehicle type, and see driver statistics.
+        View and manage drivers, filter by vehicle type, and see driver
+        statistics.
       </Typography>
-      
+
       {error && (
         <Alert severity="error" sx={{ mb: 4 }}>
           {error}
         </Alert>
       )}
-      
+
       <Paper sx={{ p: 2, mb: 4 }}>
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12} md={6}>
@@ -461,77 +502,95 @@ const Drivers: React.FC = () => {
               placeholder="Search by name, email, phone, or license plate"
             />
           </Grid>
-          
+
           <Grid item xs={6} md={3}>
             <Box>
               <Typography variant="subtitle2" gutterBottom>
                 Vehicle Type
               </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                <Chip 
-                  label="All" 
-                  onClick={() => setSelectedVehicleType('all')}
-                  color={selectedVehicleType === 'all' ? 'primary' : 'default'}
-                  variant={selectedVehicleType === 'all' ? 'filled' : 'outlined'}
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                <Chip
+                  label="All"
+                  onClick={() => setSelectedVehicleType("all")}
+                  color={selectedVehicleType === "all" ? "primary" : "default"}
+                  variant={
+                    selectedVehicleType === "all" ? "filled" : "outlined"
+                  }
                 />
-                <Chip 
+                <Chip
                   icon={<ElectricIcon />}
-                  label="Electric" 
-                  onClick={() => setSelectedVehicleType('electric')}
-                  color={selectedVehicleType === 'electric' ? 'primary' : 'default'}
-                  variant={selectedVehicleType === 'electric' ? 'filled' : 'outlined'}
+                  label="Electric"
+                  onClick={() => setSelectedVehicleType("electric")}
+                  color={
+                    selectedVehicleType === "electric" ? "primary" : "default"
+                  }
+                  variant={
+                    selectedVehicleType === "electric" ? "filled" : "outlined"
+                  }
                 />
-                <Chip 
+                <Chip
                   icon={<CarIcon />}
-                  label="Regular" 
-                  onClick={() => setSelectedVehicleType('regular')}
-                  color={selectedVehicleType === 'regular' ? 'primary' : 'default'}
-                  variant={selectedVehicleType === 'regular' ? 'filled' : 'outlined'}
+                  label="Regular"
+                  onClick={() => setSelectedVehicleType("regular")}
+                  color={
+                    selectedVehicleType === "regular" ? "primary" : "default"
+                  }
+                  variant={
+                    selectedVehicleType === "regular" ? "filled" : "outlined"
+                  }
                 />
-                <Chip 
+                <Chip
                   icon={<SuvIcon />}
-                  label="SUV" 
-                  onClick={() => setSelectedVehicleType('suv')}
-                  color={selectedVehicleType === 'suv' ? 'primary' : 'default'}
-                  variant={selectedVehicleType === 'suv' ? 'filled' : 'outlined'}
+                  label="SUV"
+                  onClick={() => setSelectedVehicleType("suv")}
+                  color={selectedVehicleType === "suv" ? "primary" : "default"}
+                  variant={
+                    selectedVehicleType === "suv" ? "filled" : "outlined"
+                  }
                 />
               </Box>
             </Box>
           </Grid>
-          
+
           <Grid item xs={6} md={3}>
             <Box>
               <Typography variant="subtitle2" gutterBottom>
                 Status
               </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                <Chip 
-                  label="All" 
-                  onClick={() => setSelectedStatusFilter('all')}
-                  color={selectedStatusFilter === 'all' ? 'primary' : 'default'}
-                  variant={selectedStatusFilter === 'all' ? 'filled' : 'outlined'}
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                <Chip
+                  label="All"
+                  onClick={() => setSelectedStatusFilter("all")}
+                  color={selectedStatusFilter === "all" ? "primary" : "default"}
+                  variant={
+                    selectedStatusFilter === "all" ? "filled" : "outlined"
+                  }
                 />
-                <Chip 
+                <Chip
                   icon={<ActiveIcon />}
-                  label="Active" 
+                  label="Active"
                   onClick={() => setSelectedStatusFilter(true)}
-                  color={selectedStatusFilter === true ? 'primary' : 'default'}
-                  variant={selectedStatusFilter === true ? 'filled' : 'outlined'}
+                  color={selectedStatusFilter === true ? "primary" : "default"}
+                  variant={
+                    selectedStatusFilter === true ? "filled" : "outlined"
+                  }
                 />
-                <Chip 
+                <Chip
                   icon={<InactiveIcon />}
-                  label="Inactive" 
+                  label="Inactive"
                   onClick={() => setSelectedStatusFilter(false)}
-                  color={selectedStatusFilter === false ? 'primary' : 'default'}
-                  variant={selectedStatusFilter === false ? 'filled' : 'outlined'}
+                  color={selectedStatusFilter === false ? "primary" : "default"}
+                  variant={
+                    selectedStatusFilter === false ? "filled" : "outlined"
+                  }
                 />
               </Box>
             </Box>
           </Grid>
         </Grid>
       </Paper>
-      
-      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+
+      <Paper sx={{ width: "100%", overflow: "hidden" }}>
         <TableContainer sx={{ maxHeight: 600 }}>
           <Table stickyHeader aria-label="drivers table">
             <TableHead>
@@ -551,9 +610,9 @@ const Drivers: React.FC = () => {
                 .map((driver) => (
                   <TableRow hover key={driver.user_id}>
                     <TableCell>
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Avatar 
-                          src={driver.photo} 
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <Avatar
+                          src={driver.photo}
                           alt={driver.name}
                           sx={{ mr: 2, width: 40, height: 40 }}
                         />
@@ -566,7 +625,7 @@ const Drivers: React.FC = () => {
                       </Box>
                     </TableCell>
                     <TableCell>
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
                         {getVehicleTypeIcon(driver.car_type)}
                         <Typography variant="body2" sx={{ ml: 1 }}>
                           {getVehicleTypeLabel(driver.car_type)}
@@ -575,8 +634,8 @@ const Drivers: React.FC = () => {
                     </TableCell>
                     <TableCell>{driver.license_plate}</TableCell>
                     <TableCell>
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <StarIcon sx={{ color: 'gold', mr: 0.5 }} />
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <StarIcon sx={{ color: "gold", mr: 0.5 }} />
                         {driver.rating}
                       </Box>
                     </TableCell>
@@ -589,8 +648,8 @@ const Drivers: React.FC = () => {
                     </TableCell>
                     <TableCell align="center">{driver.total_rides}</TableCell>
                     <TableCell align="right">
-                      <IconButton 
-                        size="small" 
+                      <IconButton
+                        size="small"
                         color="primary"
                         onClick={() => handleViewDriver(driver)}
                       >
@@ -621,7 +680,7 @@ const Drivers: React.FC = () => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      
+
       {/* Driver Details Dialog */}
       <Dialog
         open={driverDetailsOpen}
@@ -632,7 +691,7 @@ const Drivers: React.FC = () => {
         {selectedDriver && (
           <>
             <DialogTitle>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Avatar
                   src={selectedDriver.photo}
                   alt={selectedDriver.name}
@@ -651,8 +710,8 @@ const Drivers: React.FC = () => {
                   sx={{ ml: 2 }}
                 />
                 {getPendingDocumentsCount(selectedDriver) > 0 && (
-                  <Badge 
-                    badgeContent={getPendingDocumentsCount(selectedDriver)} 
+                  <Badge
+                    badgeContent={getPendingDocumentsCount(selectedDriver)}
                     color="warning"
                     sx={{ ml: 2 }}
                   >
@@ -660,34 +719,36 @@ const Drivers: React.FC = () => {
                   </Badge>
                 )}
               </Box>
-              
-              <Box sx={{ borderBottom: 1, borderColor: 'divider', mt: 2 }}>
-                <Tabs 
-                  value={tabValue} 
+
+              <Box sx={{ borderBottom: 1, borderColor: "divider", mt: 2 }}>
+                <Tabs
+                  value={tabValue}
                   onChange={handleTabChange}
                   aria-label="driver details tabs"
                 >
                   <Tab label="Driver Info" id="driver-tab-0" />
-                  <Tab 
+                  <Tab
                     label={
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
                         Documents
                         {getPendingDocumentsCount(selectedDriver) > 0 && (
                           <Badge
-                            badgeContent={getPendingDocumentsCount(selectedDriver)}
+                            badgeContent={getPendingDocumentsCount(
+                              selectedDriver,
+                            )}
                             color="warning"
                             sx={{ ml: 1 }}
                           />
                         )}
                       </Box>
-                    } 
-                    id="driver-tab-1" 
+                    }
+                    id="driver-tab-1"
                   />
                   <Tab label="Rides" id="driver-tab-2" />
                 </Tabs>
               </Box>
             </DialogTitle>
-            
+
             <DialogContent dividers>
               {/* Tab 1: Driver Info */}
               <TabPanel value={tabValue} index={0}>
@@ -700,14 +761,22 @@ const Drivers: React.FC = () => {
                       <Box sx={{ mt: 2 }}>
                         <Grid container spacing={2}>
                           <Grid item xs={6}>
-                            <Typography variant="body2" color="text.secondary">Phone</Typography>
-                            <Typography variant="body1">{selectedDriver.phone}</Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              Phone
+                            </Typography>
+                            <Typography variant="body1">
+                              {selectedDriver.phone}
+                            </Typography>
                           </Grid>
                           <Grid item xs={6}>
-                            <Typography variant="body2" color="text.secondary">Rating</Typography>
-                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                              <StarIcon sx={{ color: 'gold', mr: 0.5 }} />
-                              <Typography variant="body1">{selectedDriver.rating.toFixed(1)}</Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              Rating
+                            </Typography>
+                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                              <StarIcon sx={{ color: "gold", mr: 0.5 }} />
+                              <Typography variant="body1">
+                                {selectedDriver.rating.toFixed(1)}
+                              </Typography>
                             </Box>
                           </Grid>
                           <Grid item xs={12}>
@@ -724,7 +793,7 @@ const Drivers: React.FC = () => {
                               label={
                                 updatingStatus
                                   ? "Updating status..."
-                                  : `Driver is ${selectedDriver.is_active ? 'active' : 'inactive'}`
+                                  : `Driver is ${selectedDriver.is_active ? "active" : "inactive"}`
                               }
                             />
                           </Grid>
@@ -732,7 +801,7 @@ const Drivers: React.FC = () => {
                       </Box>
                     </Paper>
                   </Grid>
-                  
+
                   <Grid item xs={12} md={6}>
                     <Paper sx={{ p: 2 }}>
                       <Typography variant="subtitle1" gutterBottom>
@@ -741,8 +810,16 @@ const Drivers: React.FC = () => {
                       <Box sx={{ mt: 2 }}>
                         <Grid container spacing={2}>
                           <Grid item xs={6}>
-                            <Typography variant="body2" color="text.secondary">Vehicle Type</Typography>
-                            <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.5 }}>
+                            <Typography variant="body2" color="text.secondary">
+                              Vehicle Type
+                            </Typography>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                mt: 0.5,
+                              }}
+                            >
                               {getVehicleTypeIcon(selectedDriver.car_type)}
                               <Typography variant="body1" sx={{ ml: 1 }}>
                                 {getVehicleTypeLabel(selectedDriver.car_type)}
@@ -750,31 +827,53 @@ const Drivers: React.FC = () => {
                             </Box>
                           </Grid>
                           <Grid item xs={6}>
-                            <Typography variant="body2" color="text.secondary">License Plate</Typography>
-                            <Typography variant="body1">{selectedDriver.license_plate}</Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              License Plate
+                            </Typography>
+                            <Typography variant="body1">
+                              {selectedDriver.license_plate}
+                            </Typography>
                           </Grid>
                           {selectedDriver.vehicleDetails && (
                             <>
                               <Grid item xs={6}>
-                                <Typography variant="body2" color="text.secondary">Make & Model</Typography>
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                >
+                                  Make & Model
+                                </Typography>
                                 <Typography variant="body1">
-                                  {selectedDriver.vehicleDetails.make} {selectedDriver.vehicleDetails.model}
+                                  {selectedDriver.vehicleDetails.make}{" "}
+                                  {selectedDriver.vehicleDetails.model}
                                 </Typography>
                               </Grid>
                               <Grid item xs={6}>
-                                <Typography variant="body2" color="text.secondary">Color & Year</Typography>
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                >
+                                  Color & Year
+                                </Typography>
                                 <Typography variant="body1">
-                                  {selectedDriver.vehicleDetails.color}, {selectedDriver.vehicleDetails.year}
+                                  {selectedDriver.vehicleDetails.color},{" "}
+                                  {selectedDriver.vehicleDetails.year}
                                 </Typography>
                               </Grid>
                             </>
                           )}
                           <Grid item xs={12}>
-                            <Typography variant="body2" color="text.secondary">Current Location</Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              Current Location
+                            </Typography>
                             {selectedDriver.address ? (
-                              <Typography variant="body1">{selectedDriver.address.address}</Typography>
+                              <Typography variant="body1">
+                                {selectedDriver.address.address}
+                              </Typography>
                             ) : (
-                              <Typography variant="body2" color="text.disabled">Location not available</Typography>
+                              <Typography variant="body2" color="text.disabled">
+                                Location not available
+                              </Typography>
                             )}
                           </Grid>
                         </Grid>
@@ -783,97 +882,139 @@ const Drivers: React.FC = () => {
                   </Grid>
                 </Grid>
               </TabPanel>
-              
+
               {/* Tab 2: Documents */}
               <TabPanel value={tabValue} index={1}>
                 {documentUpdateSuccess && (
-                  <Alert 
-                    severity="success" 
+                  <Alert
+                    severity="success"
                     sx={{ mb: 2 }}
                     onClose={() => setDocumentUpdateSuccess(null)}
                   >
                     {documentUpdateSuccess}
                   </Alert>
                 )}
-                
+
                 {documentUpdateError && (
-                  <Alert 
-                    severity="error" 
+                  <Alert
+                    severity="error"
                     sx={{ mb: 2 }}
                     onClose={() => setDocumentUpdateError(null)}
                   >
                     {documentUpdateError}
                   </Alert>
                 )}
-                
+
                 <Grid container spacing={3}>
                   {selectedDriver.documents.map((document) => (
                     <Grid item xs={12} key={document.id}>
                       <Accordion>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
-                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              width: "100%",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <Box sx={{ display: "flex", alignItems: "center" }}>
                               {getDocumentStatusIcon(document.status)}
                               <Typography variant="subtitle1" sx={{ ml: 1 }}>
                                 {getDocumentTitle(document.type)}
                               </Typography>
                             </Box>
-                            <Chip 
-                              label={document.status} 
+                            <Chip
+                              label={document.status}
                               color={getDocumentStatusColor(document.status)}
                               size="small"
-                              sx={{ textTransform: 'capitalize' }}
+                              sx={{ textTransform: "capitalize" }}
                             />
                           </Box>
                         </AccordionSummary>
                         <AccordionDetails>
                           <Grid container spacing={2}>
                             <Grid item xs={12} md={6}>
-                              <Typography variant="body2" color="text.secondary">Status</Typography>
-                              <Typography variant="body1" sx={{ textTransform: 'capitalize' }}>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
+                                Status
+                              </Typography>
+                              <Typography
+                                variant="body1"
+                                sx={{ textTransform: "capitalize" }}
+                              >
                                 {document.status}
                               </Typography>
-                              
+
                               {document.dateSubmitted && (
                                 <>
-                                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                                  <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    sx={{ mt: 1 }}
+                                  >
                                     Date Submitted
                                   </Typography>
                                   <Typography variant="body1">
-                                    {new Date(document.dateSubmitted).toLocaleDateString()}
+                                    {new Date(
+                                      document.dateSubmitted,
+                                    ).toLocaleDateString()}
                                   </Typography>
                                 </>
                               )}
-                              
+
                               {document.dateReviewed && (
                                 <>
-                                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                                  <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    sx={{ mt: 1 }}
+                                  >
                                     Date Reviewed
                                   </Typography>
                                   <Typography variant="body1">
-                                    {new Date(document.dateReviewed).toLocaleDateString()}
+                                    {new Date(
+                                      document.dateReviewed,
+                                    ).toLocaleDateString()}
                                   </Typography>
                                 </>
                               )}
-                              
+
                               {document.expiryDate && (
                                 <>
-                                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                                  <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    sx={{ mt: 1 }}
+                                  >
                                     Expiry Date
                                   </Typography>
-                                  <Typography 
+                                  <Typography
                                     variant="body1"
-                                    color={new Date(document.expiryDate) < new Date() ? 'error' : 'inherit'}
+                                    color={
+                                      new Date(document.expiryDate) < new Date()
+                                        ? "error"
+                                        : "inherit"
+                                    }
                                   >
-                                    {new Date(document.expiryDate).toLocaleDateString()}
-                                    {new Date(document.expiryDate) < new Date() && ' (Expired)'}
+                                    {new Date(
+                                      document.expiryDate,
+                                    ).toLocaleDateString()}
+                                    {new Date(document.expiryDate) <
+                                      new Date() && " (Expired)"}
                                   </Typography>
                                 </>
                               )}
-                              
+
                               {document.reviewedBy && (
                                 <>
-                                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                                  <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    sx={{ mt: 1 }}
+                                  >
                                     Reviewed By
                                   </Typography>
                                   <Typography variant="body1">
@@ -881,10 +1022,14 @@ const Drivers: React.FC = () => {
                                   </Typography>
                                 </>
                               )}
-                              
+
                               {document.notes && (
                                 <>
-                                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                                  <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    sx={{ mt: 1 }}
+                                  >
                                     Notes
                                   </Typography>
                                   <Typography variant="body1">
@@ -893,17 +1038,19 @@ const Drivers: React.FC = () => {
                                 </>
                               )}
 
-                              <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
+                              <Box sx={{ mt: 2, display: "flex", gap: 1 }}>
                                 <Button
                                   variant="outlined"
                                   startIcon={<UploadFileIcon />}
-                                  onClick={() => handleOpenUploadDialog(document.type)}
+                                  onClick={() =>
+                                    handleOpenUploadDialog(document.type)
+                                  }
                                   disabled={uploadingDocument}
                                   sx={{ mr: 1 }}
                                 >
                                   Upload Document
                                 </Button>
-                                
+
                                 {document.fileUrl && (
                                   <Button
                                     variant="outlined"
@@ -918,31 +1065,57 @@ const Drivers: React.FC = () => {
                               </Box>
                             </Grid>
                             <Grid item xs={12} md={6}>
-                              <Typography variant="body2" sx={{ mb: 2 }}>Update Document Status</Typography>
+                              <Typography variant="body2" sx={{ mb: 2 }}>
+                                Update Document Status
+                              </Typography>
                               <ButtonGroup variant="outlined" sx={{ mb: 2 }}>
                                 <Button
                                   color="success"
-                                  onClick={() => handleUpdateDocumentStatus(document, 'approved')}
-                                  disabled={document.status === 'approved' || updatingDocument}
+                                  onClick={() =>
+                                    handleUpdateDocumentStatus(
+                                      document,
+                                      "approved",
+                                    )
+                                  }
+                                  disabled={
+                                    document.status === "approved" ||
+                                    updatingDocument
+                                  }
                                 >
                                   Approve
                                 </Button>
                                 <Button
                                   color="error"
-                                  onClick={() => handleUpdateDocumentStatus(document, 'rejected')}
-                                  disabled={document.status === 'rejected' || updatingDocument}
+                                  onClick={() =>
+                                    handleUpdateDocumentStatus(
+                                      document,
+                                      "rejected",
+                                    )
+                                  }
+                                  disabled={
+                                    document.status === "rejected" ||
+                                    updatingDocument
+                                  }
                                 >
                                   Reject
                                 </Button>
                                 <Button
                                   color="warning"
-                                  onClick={() => handleUpdateDocumentStatus(document, 'pending')}
-                                  disabled={document.status === 'pending' || updatingDocument}
+                                  onClick={() =>
+                                    handleUpdateDocumentStatus(
+                                      document,
+                                      "pending",
+                                    )
+                                  }
+                                  disabled={
+                                    document.status === "pending" ||
+                                    updatingDocument
+                                  }
                                 >
                                   Mark Pending
                                 </Button>
                               </ButtonGroup>
-                              
+
                               <Box>
                                 <TextField
                                   fullWidth
@@ -954,10 +1127,14 @@ const Drivers: React.FC = () => {
                                   disabled={updatingDocument}
                                   onBlur={(e) => {
                                     if (e.target.value.trim()) {
-                                      handleUpdateDocumentStatus(document, document.status, e.target.value);
+                                      handleUpdateDocumentStatus(
+                                        document,
+                                        document.status,
+                                        e.target.value,
+                                      );
                                     }
                                   }}
-                                  defaultValue={document.notes || ''}
+                                  defaultValue={document.notes || ""}
                                 />
                               </Box>
                             </Grid>
@@ -967,32 +1144,52 @@ const Drivers: React.FC = () => {
                     </Grid>
                   ))}
                 </Grid>
-                
-                <Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+
+                <Box
+                  sx={{
+                    mt: 3,
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
                   <Typography variant="body2" color="text.secondary">
-                    Last document update: {selectedDriver.documents.filter(d => d.dateReviewed).length > 0 
-                      ? new Date(Math.max(...selectedDriver.documents
-                          .filter(d => d.dateReviewed)
-                          .map(d => new Date(d.dateReviewed!).getTime())))
-                          .toLocaleDateString() 
-                      : 'Never'}
+                    Last document update:{" "}
+                    {selectedDriver.documents.filter((d) => d.dateReviewed)
+                      .length > 0
+                      ? new Date(
+                          Math.max(
+                            ...selectedDriver.documents
+                              .filter((d) => d.dateReviewed)
+                              .map((d) => new Date(d.dateReviewed!).getTime()),
+                          ),
+                        ).toLocaleDateString()
+                      : "Never"}
                   </Typography>
-                  
+
                   <Box>
                     <Button
                       variant="contained"
                       color="success"
                       startIcon={<VerifiedIcon />}
                       disabled={
-                        updatingDocument || 
-                        selectedDriver.documents.some(d => d.status !== 'approved' && d.status !== 'notSubmitted')
+                        updatingDocument ||
+                        selectedDriver.documents.some(
+                          (d) =>
+                            d.status !== "approved" &&
+                            d.status !== "notSubmitted",
+                        )
                       }
                       onClick={() => {
-                        const pendingDocs = selectedDriver.documents.filter(d => 
-                          d.status !== 'approved' && d.status !== 'notSubmitted'
+                        const pendingDocs = selectedDriver.documents.filter(
+                          (d) =>
+                            d.status !== "approved" &&
+                            d.status !== "notSubmitted",
                         );
                         if (pendingDocs.length === 0) {
-                          setDocumentUpdateSuccess('All required documents are verified');
+                          setDocumentUpdateSuccess(
+                            "All required documents are verified",
+                          );
                         }
                       }}
                     >
@@ -1001,7 +1198,7 @@ const Drivers: React.FC = () => {
                   </Box>
                 </Box>
               </TabPanel>
-              
+
               {/* Tab 3: Rides */}
               <TabPanel value={tabValue} index={2}>
                 <Grid container spacing={3}>
@@ -1011,7 +1208,14 @@ const Drivers: React.FC = () => {
                         Recent Rides
                       </Typography>
                       {loadingDriverDetails ? (
-                        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3, mb: 2 }}>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            mt: 3,
+                            mb: 2,
+                          }}
+                        >
                           <CircularProgress size={24} />
                         </Box>
                       ) : driverRides.length > 0 ? (
@@ -1029,22 +1233,24 @@ const Drivers: React.FC = () => {
                               {driverRides.map((ride) => (
                                 <TableRow key={ride.id} hover>
                                   <TableCell>
-                                    {new Date(ride.createdAt).toLocaleDateString()}
+                                    {new Date(
+                                      ride.createdAt,
+                                    ).toLocaleDateString()}
                                   </TableCell>
                                   <TableCell>
                                     <Chip
                                       label={ride.status}
                                       size="small"
                                       color={
-                                        ride.status === 'completed'
-                                          ? 'success'
-                                          : ride.status === 'cancelled'
-                                          ? 'error'
-                                          : ride.status === 'in-progress'
-                                          ? 'primary'
-                                          : 'default'
+                                        ride.status === "completed"
+                                          ? "success"
+                                          : ride.status === "cancelled"
+                                            ? "error"
+                                            : ride.status === "in-progress"
+                                              ? "primary"
+                                              : "default"
                                       }
-                                      sx={{ textTransform: 'capitalize' }}
+                                      sx={{ textTransform: "capitalize" }}
                                     />
                                   </TableCell>
                                   <TableCell>{ride.riderId}</TableCell>
@@ -1057,7 +1263,7 @@ const Drivers: React.FC = () => {
                           </Table>
                         </TableContainer>
                       ) : (
-                        <Box sx={{ py: 2, textAlign: 'center' }}>
+                        <Box sx={{ py: 2, textAlign: "center" }}>
                           <Typography variant="body2" color="text.secondary">
                             No rides found for this driver
                           </Typography>
@@ -1065,7 +1271,7 @@ const Drivers: React.FC = () => {
                       )}
                     </Paper>
                   </Grid>
-                  
+
                   <Grid item xs={12}>
                     <Paper sx={{ p: 2 }}>
                       <Typography variant="subtitle1" gutterBottom>
@@ -1073,25 +1279,53 @@ const Drivers: React.FC = () => {
                       </Typography>
                       <Grid container spacing={2}>
                         <Grid item xs={4}>
-                          <Paper elevation={0} variant="outlined" sx={{ p: 1, textAlign: 'center' }}>
-                            <Typography variant="h6">{selectedDriver.total_rides}</Typography>
-                            <Typography variant="body2" color="text.secondary">Total Rides</Typography>
+                          <Paper
+                            elevation={0}
+                            variant="outlined"
+                            sx={{ p: 1, textAlign: "center" }}
+                          >
+                            <Typography variant="h6">
+                              {selectedDriver.total_rides}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              Total Rides
+                            </Typography>
                           </Paper>
                         </Grid>
                         <Grid item xs={4}>
-                          <Paper elevation={0} variant="outlined" sx={{ p: 1, textAlign: 'center' }}>
+                          <Paper
+                            elevation={0}
+                            variant="outlined"
+                            sx={{ p: 1, textAlign: "center" }}
+                          >
                             <Typography variant="h6">
-                              {driverRides.filter(r => r.status === 'completed').length}
+                              {
+                                driverRides.filter(
+                                  (r) => r.status === "completed",
+                                ).length
+                              }
                             </Typography>
-                            <Typography variant="body2" color="text.secondary">Completed</Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              Completed
+                            </Typography>
                           </Paper>
                         </Grid>
                         <Grid item xs={4}>
-                          <Paper elevation={0} variant="outlined" sx={{ p: 1, textAlign: 'center' }}>
+                          <Paper
+                            elevation={0}
+                            variant="outlined"
+                            sx={{ p: 1, textAlign: "center" }}
+                          >
                             <Typography variant="h6">
-                              {driverRides.filter(r => r.status === 'cancelled').length}
+                              {
+                                driverRides.filter(
+                                  (r) => r.status === "cancelled",
+                                ).length
+                              }
                             </Typography>
-                            <Typography variant="body2" color="text.secondary">Cancelled</Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              Cancelled
+                            </Typography>
                           </Paper>
                         </Grid>
                       </Grid>
@@ -1100,7 +1334,7 @@ const Drivers: React.FC = () => {
                 </Grid>
               </TabPanel>
             </DialogContent>
-            
+
             <DialogActions>
               <Button onClick={handleCloseDriverDetails}>Close</Button>
             </DialogActions>
@@ -1111,23 +1345,29 @@ const Drivers: React.FC = () => {
       {/* Document Upload Dialog */}
       <Dialog open={uploadDialogOpen} onClose={handleCloseUploadDialog}>
         <DialogTitle>
-          Upload {selectedDocumentType ? getDocumentTitle(selectedDocumentType) : 'Document'}
+          Upload{" "}
+          {selectedDocumentType
+            ? getDocumentTitle(selectedDocumentType)
+            : "Document"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Upload a document on behalf of the driver. This document will be marked as pending and will need to be verified.
+            Upload a document on behalf of the driver. This document will be
+            marked as pending and will need to be verified.
           </DialogContentText>
-          
+
           <Box sx={{ mt: 2, mb: 2 }}>
             <Input
               type="file"
               id="document-upload"
-              inputProps={{ accept: 'image/*,.pdf' }}
+              inputProps={{ accept: "image/*,.pdf" }}
               onChange={handleFileChange}
-              sx={{ display: 'none' }}
+              sx={{ display: "none" }}
             />
-            
-            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 2 }}>
+
+            <Box
+              sx={{ display: "flex", justifyContent: "center", gap: 2, mb: 2 }}
+            >
               <Button
                 variant="outlined"
                 component="label"
@@ -1137,30 +1377,32 @@ const Drivers: React.FC = () => {
                 Select File
               </Button>
             </Box>
-            
+
             {uploadedFile && (
-              <Box sx={{ 
-                mt: 2, 
-                p: 2, 
-                border: '1px dashed #ccc', 
-                borderRadius: 1,
-                textAlign: 'center' 
-              }}>
+              <Box
+                sx={{
+                  mt: 2,
+                  p: 2,
+                  border: "1px dashed #ccc",
+                  borderRadius: 1,
+                  textAlign: "center",
+                }}
+              >
                 <Typography variant="body2">
                   Selected: {uploadedFile.name}
                 </Typography>
-                {uploadedFile.type.startsWith('image/') && (
+                {uploadedFile.type.startsWith("image/") && (
                   <Box sx={{ mt: 1 }}>
-                    <img 
-                      src={URL.createObjectURL(uploadedFile)} 
-                      alt="Preview" 
-                      style={{ maxWidth: '100%', maxHeight: '200px' }} 
+                    <img
+                      src={URL.createObjectURL(uploadedFile)}
+                      alt="Preview"
+                      style={{ maxWidth: "100%", maxHeight: "200px" }}
                     />
                   </Box>
                 )}
               </Box>
             )}
-            
+
             <TextField
               margin="dense"
               label="Notes"
@@ -1176,13 +1418,13 @@ const Drivers: React.FC = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseUploadDialog}>Cancel</Button>
-          <Button 
-            onClick={handleUploadDocument} 
+          <Button
+            onClick={handleUploadDocument}
             disabled={!uploadedFile || uploadingDocument}
             variant="contained"
             color="primary"
           >
-            {uploadingDocument ? 'Uploading...' : 'Upload'}
+            {uploadingDocument ? "Uploading..." : "Upload"}
           </Button>
         </DialogActions>
       </Dialog>
@@ -1190,4 +1432,4 @@ const Drivers: React.FC = () => {
   );
 };
 
-export default Drivers; 
+export default Drivers;

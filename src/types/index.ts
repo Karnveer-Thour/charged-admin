@@ -4,7 +4,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  role: 'admin' | 'support';
+  role: "admin" | "support";
   createdAt: any;
   photo?: string;
 }
@@ -16,8 +16,8 @@ export interface AuthState {
 }
 
 // Ride types
-export type RideStatus = 'pending' | 'in-progress' | 'completed' | 'cancelled';
-export type RideType = 'electric' | 'regular' | 'suv';
+export type RideStatus = "pending" | "in-progress" | "completed" | "cancelled";
+export type RideType = "electric" | "regular" | "suv";
 
 export interface Location {
   latitude: number;
@@ -81,16 +81,21 @@ export interface Driver {
   };
 }
 
-export type DocumentType = 
-  | 'driverLicense'
-  | 'vehicleInsurance'
-  | 'vehiclePermit'
-  | 'backgroundCheck'
-  | 'workEligibility'
-  | 'driverAbstract'
-  | 'vehicleDetails';
+export type DocumentType =
+  | "driverLicense"
+  | "vehicleInsurance"
+  | "vehiclePermit"
+  | "backgroundCheck"
+  | "workEligibility"
+  | "driverAbstract"
+  | "vehicleDetails";
 
-export type DocumentStatus = 'pending' | 'approved' | 'rejected' | 'expired' | 'notSubmitted';
+export type DocumentStatus =
+  | "pending"
+  | "approved"
+  | "rejected"
+  | "expired"
+  | "notSubmitted";
 
 export interface DriverDocument {
   id: string;
@@ -135,4 +140,4 @@ export interface DashboardStats {
     type: string;
     count: number;
   }[];
-} 
+}

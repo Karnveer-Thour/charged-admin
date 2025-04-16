@@ -27,21 +27,25 @@ This is the administration panel for the Charged ride-sharing application. The a
 ### Installation
 
 1. Clone the repository
+
 ```
 git clone <repository-url>
 ```
 
 2. Navigate to the project directory
+
 ```
 cd charged-admin
 ```
 
 3. Install dependencies
+
 ```
 npm install
 ```
 
 4. Start the development server
+
 ```
 npm start
 ```
@@ -79,6 +83,7 @@ The system automatically determines refund eligibility for cancelled rides based
 ### Pricing Rules
 
 The admin panel allows setting different pricing parameters for each vehicle type:
+
 - Base price
 - Price per kilometer
 - Price per minute
@@ -106,4 +111,5 @@ The build files will be generated in the `build` directory.
 - Real-time ride tracking
 - Analytics and reporting
 - Payment processing management
+
 # charged-admin

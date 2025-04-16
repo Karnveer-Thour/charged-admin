@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Container,
   Typography,
@@ -25,34 +25,34 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions
-} from '@mui/material';
+  DialogActions,
+} from "@mui/material";
 import {
   Search as SearchIcon,
   Visibility as ViewIcon,
   Star as StarIcon,
   DirectionsCar as RideIcon,
   Edit as EditIcon,
-  Close as CloseIcon
-} from '@mui/icons-material';
-import { mockApi } from '../services/mockApi';
-import { Rider, Ride } from '../types';
-import { formatDate, formatRelativeTime } from '../utils/formatters';
-import { useAuth } from '../contexts/AuthContext';
+  Close as CloseIcon,
+} from "@mui/icons-material";
+import { mockApi } from "../services/mockApi";
+import { Rider, Ride } from "../types";
+import { formatDate, formatRelativeTime } from "../utils/formatters";
+import { useAuth } from "../contexts/AuthContext";
 
 const Riders: React.FC = () => {
   const [riders, setRiders] = useState<Rider[]>([]);
   const [filteredRiders, setFilteredRiders] = useState<Rider[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedRider, setSelectedRider] = useState<Rider | null>(null);
   const [riderRides, setRiderRides] = useState<Ride[]>([]);
   const [rideDialogOpen, setRideDialogOpen] = useState(false);
   const [rideDialogLoading, setRideDialogLoading] = useState(false);
-  const {getRiders} = useAuth();
+  const { getRiders } = useAuth();
 
   // Load riders on component mount
   useEffect(() => {
@@ -62,10 +62,11 @@ const Riders: React.FC = () => {
   // Filter riders when search query changes
   useEffect(() => {
     if (riders.length) {
-      const filtered = riders.filter(rider => 
-        rider.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        rider.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        rider.phone.includes(searchQuery)
+      const filtered = riders.filter(
+        (rider) =>
+          rider.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          rider.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          rider.phone.includes(searchQuery),
       );
       setFilteredRiders(filtered);
       setPage(0); // Reset to first page when filtering
@@ -80,8 +81,8 @@ const Riders: React.FC = () => {
       setFilteredRiders(data);
       setError(null);
     } catch (err) {
-      setError('Failed to load riders. Please try again.');
-      console.error('Error fetching riders:', err);
+      setError("Failed to load riders. Please try again.");
+      console.error("Error fetching riders:", err);
     } finally {
       setLoading(false);
     }
@@ -91,7 +92,9 @@ const Riders: React.FC = () => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
@@ -100,12 +103,12 @@ const Riders: React.FC = () => {
     setSelectedRider(rider);
     setRideDialogOpen(true);
     setRideDialogLoading(true);
-    
+
     try {
       const rides = await mockApi.getRiderRides(rider.id);
       setRiderRides(rides);
     } catch (err) {
-      console.error('Error fetching rider rides:', err);
+      console.error("Error fetching rider rides:", err);
     } finally {
       setRideDialogLoading(false);
     }
@@ -119,22 +122,22 @@ const Riders: React.FC = () => {
 
   const getRideStatusColor = (status: string) => {
     switch (status) {
-      case 'completed':
-        return 'success';
-      case 'in-progress':
-        return 'info';
-      case 'pending':
-        return 'warning';
-      case 'cancelled':
-        return 'error';
+      case "completed":
+        return "success";
+      case "in-progress":
+        return "info";
+      case "pending":
+        return "warning";
+      case "cancelled":
+        return "error";
       default:
-        return 'default';
+        return "default";
     }
   };
 
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
         <CircularProgress />
       </Box>
     );
@@ -146,18 +149,25 @@ const Riders: React.FC = () => {
         <Alert severity="error" sx={{ mb: 4 }}>
           {error}
         </Alert>
-        <Button variant="contained" onClick={fetchRiders}>Retry</Button>
+        <Button variant="contained" onClick={fetchRiders}>
+          Retry
+        </Button>
       </Container>
     );
   }
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-        <Typography variant="h4">
-          Riders
-        </Typography>
-        
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 4,
+        }}
+      >
+        <Typography variant="h4">Riders</Typography>
+
         <TextField
           placeholder="Search riders..."
           variant="outlined"
@@ -174,7 +184,7 @@ const Riders: React.FC = () => {
           sx={{ width: 300 }}
         />
       </Box>
-      
+
       <Paper elevation={3}>
         <TableContainer>
           <Table>
@@ -195,9 +205,9 @@ const Riders: React.FC = () => {
                 .map((rider) => (
                   <TableRow key={rider.id} hover>
                     <TableCell>
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Avatar 
-                          src={rider.photo} 
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <Avatar
+                          src={rider.photo}
                           alt={rider.name}
                           sx={{ mr: 2, width: 40, height: 40 }}
                         />
@@ -213,36 +223,39 @@ const Riders: React.FC = () => {
                     </TableCell>
                     <TableCell>
                       <Typography variant="body2">{rider.email}</Typography>
-                      <Typography variant="body2" color="text.secondary">{rider.phone}</Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {rider.phone}
+                      </Typography>
                     </TableCell>
                     <TableCell align="center">
-                      <Chip 
-                        icon={<StarIcon fontSize="small" />} 
-                        label={rider.rewardPoints} 
-                        color="primary" 
+                      <Chip
+                        icon={<StarIcon fontSize="small" />}
+                        label={rider.rewardPoints}
+                        color="primary"
                         variant="outlined"
                       />
                     </TableCell>
                     <TableCell align="center">{rider.totalRides}</TableCell>
-                    <TableCell align="center">{formatDate(rider.created_at)}</TableCell>
                     <TableCell align="center">
-                      {rider.lastRideDate 
+                      {formatDate(rider.created_at)}
+                    </TableCell>
+                    <TableCell align="center">
+                      {rider.lastRideDate
                         ? formatRelativeTime(rider.lastRideDate)
-                        : 'Never'
-                      }
+                        : "Never"}
                     </TableCell>
                     <TableCell align="center">
                       <Box>
-                        <IconButton 
-                          color="primary" 
+                        <IconButton
+                          color="primary"
                           size="small"
                           onClick={() => handleViewRiderRides(rider)}
                           title="View rides"
                         >
                           <ViewIcon />
                         </IconButton>
-                        <IconButton 
-                          color="secondary" 
+                        <IconButton
+                          color="secondary"
                           size="small"
                           title="Edit rider"
                         >
@@ -252,7 +265,7 @@ const Riders: React.FC = () => {
                     </TableCell>
                   </TableRow>
                 ))}
-              
+
               {filteredRiders.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={7} align="center" sx={{ py: 3 }}>
@@ -265,7 +278,7 @@ const Riders: React.FC = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        
+
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
@@ -276,17 +289,23 @@ const Riders: React.FC = () => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      
+
       {/* Rider Rides Dialog */}
-      <Dialog 
-        open={rideDialogOpen} 
+      <Dialog
+        open={rideDialogOpen}
         onClose={handleCloseRideDialog}
         maxWidth="md"
         fullWidth
       >
         <DialogTitle>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center" }}>
               <RideIcon sx={{ mr: 1 }} />
               <Typography variant="h6">
                 {selectedRider?.name}'s Rides
@@ -299,14 +318,14 @@ const Riders: React.FC = () => {
         </DialogTitle>
         <DialogContent dividers>
           {rideDialogLoading ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+            <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
               <CircularProgress />
             </Box>
           ) : (
             <>
               <Grid container spacing={2} sx={{ mb: 3 }}>
                 <Grid item xs={6} md={3}>
-                  <Paper sx={{ p: 2, textAlign: 'center' }} elevation={2}>
+                  <Paper sx={{ p: 2, textAlign: "center" }} elevation={2}>
                     <Typography variant="h4" color="primary">
                       {selectedRider?.totalRides || 0}
                     </Typography>
@@ -316,7 +335,7 @@ const Riders: React.FC = () => {
                   </Paper>
                 </Grid>
                 <Grid item xs={6} md={3}>
-                  <Paper sx={{ p: 2, textAlign: 'center' }} elevation={2}>
+                  <Paper sx={{ p: 2, textAlign: "center" }} elevation={2}>
                     <Typography variant="h4" color="primary">
                       {selectedRider?.rewardPoints || 0}
                     </Typography>
@@ -326,9 +345,12 @@ const Riders: React.FC = () => {
                   </Paper>
                 </Grid>
                 <Grid item xs={6} md={3}>
-                  <Paper sx={{ p: 2, textAlign: 'center' }} elevation={2}>
+                  <Paper sx={{ p: 2, textAlign: "center" }} elevation={2}>
                     <Typography variant="h4" color="primary">
-                      {riderRides.filter(r => r.status === 'completed').length}
+                      {
+                        riderRides.filter((r) => r.status === "completed")
+                          .length
+                      }
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       Completed Rides
@@ -336,9 +358,12 @@ const Riders: React.FC = () => {
                   </Paper>
                 </Grid>
                 <Grid item xs={6} md={3}>
-                  <Paper sx={{ p: 2, textAlign: 'center' }} elevation={2}>
+                  <Paper sx={{ p: 2, textAlign: "center" }} elevation={2}>
                     <Typography variant="h4" color="primary">
-                      {riderRides.filter(r => r.status === 'cancelled').length}
+                      {
+                        riderRides.filter((r) => r.status === "cancelled")
+                          .length
+                      }
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       Cancelled Rides
@@ -346,17 +371,25 @@ const Riders: React.FC = () => {
                   </Paper>
                 </Grid>
               </Grid>
-              
+
               <Typography variant="subtitle1" sx={{ mb: 2 }}>
                 Recent Rides
               </Typography>
-              
+
               {riderRides.length === 0 ? (
-                <Typography align="center" color="text.secondary" sx={{ py: 4 }}>
+                <Typography
+                  align="center"
+                  color="text.secondary"
+                  sx={{ py: 4 }}
+                >
                   No rides found for this rider.
                 </Typography>
               ) : (
-                <TableContainer component={Paper} elevation={0} variant="outlined">
+                <TableContainer
+                  component={Paper}
+                  elevation={0}
+                  variant="outlined"
+                >
                   <Table size="small">
                     <TableHead>
                       <TableRow>
@@ -373,28 +406,41 @@ const Riders: React.FC = () => {
                       {riderRides.map((ride) => (
                         <TableRow key={ride.id} hover>
                           <TableCell>{formatDate(ride.createdAt)}</TableCell>
-                          <TableCell sx={{ textTransform: 'capitalize' }}>{ride.rideType}</TableCell>
-                          <TableCell>{ride.pickupLocation.address.split(',')[0]}</TableCell>
-                          <TableCell>{ride.dropoffLocation.address.split(',')[0]}</TableCell>
-                          <TableCell align="right">${ride.fare.toFixed(2)}</TableCell>
+                          <TableCell sx={{ textTransform: "capitalize" }}>
+                            {ride.rideType}
+                          </TableCell>
+                          <TableCell>
+                            {ride.pickupLocation.address.split(",")[0]}
+                          </TableCell>
+                          <TableCell>
+                            {ride.dropoffLocation.address.split(",")[0]}
+                          </TableCell>
+                          <TableCell align="right">
+                            ${ride.fare.toFixed(2)}
+                          </TableCell>
                           <TableCell align="center">
-                            <Chip 
-                              label={ride.status} 
-                              size="small" 
+                            <Chip
+                              label={ride.status}
+                              size="small"
                               color={getRideStatusColor(ride.status)}
-                              sx={{ textTransform: 'capitalize' }}
+                              sx={{ textTransform: "capitalize" }}
                             />
                           </TableCell>
                           <TableCell align="center">
                             {ride.pointsAwarded > 0 ? (
-                              <Chip 
-                                icon={<StarIcon fontSize="small" />} 
-                                label={ride.pointsAwarded} 
+                              <Chip
+                                icon={<StarIcon fontSize="small" />}
+                                label={ride.pointsAwarded}
                                 size="small"
                                 variant="outlined"
                               />
                             ) : (
-                              <Typography variant="body2" color="text.secondary">-</Typography>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
+                                -
+                              </Typography>
                             )}
                           </TableCell>
                         </TableRow>
@@ -414,4 +460,4 @@ const Riders: React.FC = () => {
   );
 };
 
-export default Riders; 
+export default Riders;
