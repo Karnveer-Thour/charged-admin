@@ -107,7 +107,7 @@ const Layout: React.FC = () => {
             logoutIfTokenExpired(currentTime, expiry);
           },
 
-          1000*60*15,
+          1000 * 60 * 15,
         ); // Check after every 15 minutes token expired or not
       }
     } catch (error) {

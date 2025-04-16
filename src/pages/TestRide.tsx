@@ -261,10 +261,7 @@ const TestRide: React.FC = () => {
                             }}
                           >
                             {drivers.map((driver) => (
-                              <option
-                                key={driver.uuid}
-                                value={driver.uuid}
-                              >
+                              <option key={driver.uuid} value={driver.uuid}>
                                 {driver.name} ({driver.car_type})
                               </option>
                             ))}

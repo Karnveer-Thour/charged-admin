@@ -258,9 +258,7 @@ const Drivers: React.FC = () => {
 
       // Update driver in list
       setDrivers((prev) =>
-        prev.map((d) =>
-          d.uuid === updatedDriver.uuid ? updatedDriver : d,
-        ),
+        prev.map((d) => (d.uuid === updatedDriver.uuid ? updatedDriver : d)),
       );
 
       // Update selected driver
@@ -295,9 +293,7 @@ const Drivers: React.FC = () => {
 
       // Update driver in list
       setDrivers((prev) =>
-        prev.map((d) =>
-          d.uuid === updatedDriver.uuid ? updatedDriver : d,
-        ),
+        prev.map((d) => (d.uuid === updatedDriver.uuid ? updatedDriver : d)),
       );
 
       // Update selected driver

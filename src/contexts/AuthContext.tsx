@@ -82,8 +82,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         email,
         password,
       );
-      // const user=await axios.get(`http://3.20.152.91:3000/api-docs/#/Admin/adminLogin`);
-      // console.log(user);
+
       const User: User = {
         token: userCredential.user?.accessToken,
         id: userCredential.user?.uid,
@@ -139,14 +138,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   // Function to get drivers
 
   const getDrivers = async (): Promise<Driver[]> => {
-    const drivers: any = await getDriversdata();
-    return drivers.data.data;
+    try {
+      const drivers: any = await getDriversdata();
+      return drivers.data.data;
+    } catch (error: any) {
+      let message = "Something went wrong, login again";
+      if (
+        "auth/id-token-expired" === error.response.data.error.code ||
+        "auth/argument-error" === error.response.data.error.code
+      ) {
+        message = "Token expired. Please login again.";
+        setAuthState({
+          user: null,
+          error: message,
+        });
+        logout();
+      }
+      throw new Error(message);
+    }
   };
 
   // Function to get Riders
   const getRiders = async (): Promise<Rider[]> => {
-    const riders: any = await getridersdata();
-    return riders.data.data;
+    try {
+      const riders: any = await getridersdata();
+      return riders.data.data;
+    } catch (error: any) {
+      let message = "Something went wrong, login again";
+      if (
+        "auth/id-token-expired" === error.response.data.error.code ||
+        "auth/argument-error" === error.response.data.error.code
+      ) {
+        message = "Token expired. Please login again.";
+        setAuthState({
+          user: null,
+          error: message,
+        });
+        logout();
+      }
+      throw new Error(message);
+    }
   };
 
   const logout = () => {
