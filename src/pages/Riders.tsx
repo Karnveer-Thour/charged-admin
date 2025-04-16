@@ -105,7 +105,7 @@ const Riders: React.FC = () => {
     setRideDialogLoading(true);
 
     try {
-      const rides = await mockApi.getRiderRides(rider.id);
+      const rides = await mockApi.getRiderRides(rider.uuid);
       setRiderRides(rides);
     } catch (err) {
       console.error("Error fetching rider rides:", err);
@@ -203,7 +203,7 @@ const Riders: React.FC = () => {
               {filteredRiders
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((rider) => (
-                  <TableRow key={rider.id} hover>
+                  <TableRow key={rider.uuid} hover>
                     <TableCell>
                       <Box sx={{ display: "flex", alignItems: "center" }}>
                         <Avatar
@@ -216,7 +216,7 @@ const Riders: React.FC = () => {
                             {rider.name}
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
-                            ID: {rider.id}
+                            ID: {rider.uuid}
                           </Typography>
                         </Box>
                       </Box>

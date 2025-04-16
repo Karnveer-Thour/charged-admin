@@ -160,7 +160,7 @@ const TestRide: React.FC = () => {
     // Create a completed ride
     const createdRide: Ride = {
       id: `test-ride-${Date.now()}`,
-      riderId: selectedRider.id,
+      riderId: selectedRider.uuid,
       driverId: selectedDriver.uuid,
       rideType: selectedRideType as any,
       status: "completed",
@@ -205,10 +205,10 @@ const TestRide: React.FC = () => {
                             select
                             fullWidth
                             label="Rider"
-                            value={selectedRider?.id || ""}
+                            value={selectedRider?.uuid || ""}
                             onChange={(e) => {
                               const rider = riders.find(
-                                (r) => r.id === e.target.value,
+                                (r) => r.uuid === e.target.value,
                               );
                               setSelectedRider(rider || null);
                             }}
@@ -217,7 +217,7 @@ const TestRide: React.FC = () => {
                             }}
                           >
                             {riders.map((rider) => (
-                              <option key={rider.id} value={rider.id}>
+                              <option key={rider.uuid} value={rider.uuid}>
                                 {rider.name} ({rider.email})
                               </option>
                             ))}
