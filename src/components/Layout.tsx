@@ -51,7 +51,7 @@ const navItems: NavItem[] = [
 const Layout: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const { authState, logout } = useAuth();
+  const { authState, logout, setAuthState } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -75,12 +75,54 @@ const Layout: React.FC = () => {
     navigate("/login");
   };
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     console.log("Logging out due to inactivity");
-  //     handleLogout();
-  //   }, 5000);
-  // },[]);
+  // Function to check if the token is expired and logout if it is
+  const logoutIfTokenExpired = (currentTime: number, expiry: number): void => {
+    if (expiry && currentTime > expiry) {
+      handleLogout();
+    }
+  };
+
+  // Check if the token is expired when the component mounts
+  // and set an interval to check every 15 minutes
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    try {
+      const token = JSON.parse(
+        localStorage.getItem("charged_admin_user") as string,
+      )?.token;
+      if (token) {
+        const decodedToken = token
+          ? JSON.parse(atob(token.split(".")[1]))
+          : null;
+        const expiry = decodedToken?.exp;
+
+        const currentTime = Math.floor(Date.now() / 1000);
+
+        logoutIfTokenExpired(currentTime, expiry);
+
+        interval = setInterval(
+          () => {
+            console.log("Checking token expiry...");
+            const currentTime = Math.floor(Date.now() / 1000);
+            logoutIfTokenExpired(currentTime, expiry);
+          },
+
+          1000*60*15,
+        ); // Check after every 15 minutes token expired or not
+      }
+    } catch (error) {
+      setAuthState({
+        user: null,
+        error: "Invalid token ",
+      });
+      handleLogout();
+    }
+
+    // Cleanup function to clear the interval when the component unmounts
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   const getPageTitle = () => {
     const path = location.pathname;

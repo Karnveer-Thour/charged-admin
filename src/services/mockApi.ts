@@ -223,7 +223,7 @@ const generateDrivers = (count: number): Driver[] => {
     ];
 
     drivers.push({
-      user_id: `driver-${i}`,
+      uuid: `driver-${i}`,
       name: `Driver ${i}`,
       email: `driver${i}@example.com`,
       phone: `+1${Math.floor(Math.random() * 900) + 100}${Math.floor(Math.random() * 900) + 100}${Math.floor(Math.random() * 9000) + 1000}`,
@@ -285,7 +285,7 @@ const generateRides = (count: number): Ride[] => {
     const riderId =
       mockRiders[Math.floor(Math.random() * mockRiders.length)].id;
     const driverId =
-      mockDrivers[Math.floor(Math.random() * mockDrivers.length)].user_id;
+      mockDrivers[Math.floor(Math.random() * mockDrivers.length)].uuid;
     const status = statuses[Math.floor(Math.random() * statuses.length)];
 
     const distance = Math.random() * 10 + 1; // 1-11 km
@@ -500,14 +500,14 @@ export const mockApi = {
 
   getDriver: async (id: string): Promise<Driver> => {
     await new Promise((resolve) => setTimeout(resolve, 300));
-    const driver = mockDrivers.find((d) => d.user_id === id);
+    const driver = mockDrivers.find((d) => d.uuid === id);
     if (!driver) throw new Error("Driver not found");
     return driver;
   },
 
   updateDriverStatus: async (id: string, active: boolean): Promise<Driver> => {
     await new Promise((resolve) => setTimeout(resolve, 500));
-    const index = mockDrivers.findIndex((d) => d.user_id === id);
+    const index = mockDrivers.findIndex((d) => d.uuid === id);
     if (index === -1) throw new Error("Driver not found");
 
     mockDrivers[index] = {
@@ -524,7 +524,7 @@ export const mockApi = {
     updates: Partial<DriverDocument>,
   ): Promise<Driver> => {
     await new Promise((resolve) => setTimeout(resolve, 600));
-    const driverIndex = mockDrivers.findIndex((d) => d.user_id === driverId);
+    const driverIndex = mockDrivers.findIndex((d) => d.uuid === driverId);
     if (driverIndex === -1) throw new Error("Driver not found");
 
     const documentIndex = mockDrivers[driverIndex].documents.findIndex(
@@ -613,7 +613,7 @@ export const mockApi = {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Find the driver
-      const driver = mockDrivers.find((d) => d.user_id === driverId);
+      const driver = mockDrivers.find((d) => d.uuid === driverId);
       if (!driver) {
         throw new Error("Driver not found");
       }

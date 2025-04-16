@@ -7,6 +7,7 @@ import { getAdmin, getridersdata, getDriversdata } from "../API/axios";
 interface AuthContextType {
   authState: AuthState;
   isAuthenticated: boolean;
+  setAuthState: React.Dispatch<React.SetStateAction<AuthState>>;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   getDrivers: () => Promise<Driver[]>;
@@ -21,6 +22,7 @@ const initialAuthState: AuthState = {
 
 const AuthContext = createContext<AuthContextType>({
   authState: initialAuthState,
+  setAuthState: () => {},
   isAuthenticated: false,
   loading: false,
   login: async () => {},
@@ -163,6 +165,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     <AuthContext.Provider
       value={{
         authState,
+        setAuthState,
         isAuthenticated,
         loading,
         login,

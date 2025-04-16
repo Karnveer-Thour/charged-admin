@@ -225,7 +225,7 @@ const Drivers: React.FC = () => {
     setTabValue(0);
 
     try {
-      const rides = await mockApi.getDriverRides(driver.user_id);
+      const rides = await mockApi.getDriverRides(driver.uuid);
       setDriverRides(rides);
     } catch (err) {
       console.error("Error fetching driver rides:", err);
@@ -252,14 +252,14 @@ const Drivers: React.FC = () => {
     setUpdatingStatus(true);
     try {
       const updatedDriver = await mockApi.updateDriverStatus(
-        selectedDriver.user_id,
+        selectedDriver.uuid,
         !selectedDriver.is_active,
       );
 
       // Update driver in list
       setDrivers((prev) =>
         prev.map((d) =>
-          d.user_id === updatedDriver.user_id ? updatedDriver : d,
+          d.uuid === updatedDriver.uuid ? updatedDriver : d,
         ),
       );
 
@@ -285,7 +285,7 @@ const Drivers: React.FC = () => {
 
     try {
       const updatedDriver = await mockApi.updateDriverDocument(
-        selectedDriver.user_id,
+        selectedDriver.uuid,
         document.id,
         {
           status: newStatus,
@@ -296,7 +296,7 @@ const Drivers: React.FC = () => {
       // Update driver in list
       setDrivers((prev) =>
         prev.map((d) =>
-          d.user_id === updatedDriver.user_id ? updatedDriver : d,
+          d.uuid === updatedDriver.uuid ? updatedDriver : d,
         ),
       );
 
@@ -428,7 +428,7 @@ const Drivers: React.FC = () => {
     try {
       // Upload document using the mockApi
       const uploadResponse = await mockApi.uploadDocumentForDriver(
-        selectedDriver.user_id,
+        selectedDriver.uuid,
         selectedDocumentType,
         uploadedFile,
         uploadDialogNotes,
@@ -436,12 +436,12 @@ const Drivers: React.FC = () => {
 
       // Notify the driver
       const notifyResponse = await mockApi.notifyDriverAboutDocument(
-        selectedDriver.user_id,
+        selectedDriver.uuid,
         selectedDocumentType,
       );
 
       // Get the updated driver data (in a real app, this would come from the server)
-      const updatedDriver = await mockApi.getDriver(selectedDriver.user_id);
+      const updatedDriver = await mockApi.getDriver(selectedDriver.uuid);
 
       // Update the selected driver in the UI
       setSelectedDriver(updatedDriver);
@@ -608,7 +608,7 @@ const Drivers: React.FC = () => {
               {filteredDrivers
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((driver) => (
-                  <TableRow hover key={driver.user_id}>
+                  <TableRow hover key={driver.uuid}>
                     <TableCell>
                       <Box sx={{ display: "flex", alignItems: "center" }}>
                         <Avatar

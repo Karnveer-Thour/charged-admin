@@ -161,7 +161,7 @@ const TestRide: React.FC = () => {
     const createdRide: Ride = {
       id: `test-ride-${Date.now()}`,
       riderId: selectedRider.id,
-      driverId: selectedDriver.user_id,
+      driverId: selectedDriver.uuid,
       rideType: selectedRideType as any,
       status: "completed",
       pickupLocation,
@@ -249,10 +249,10 @@ const TestRide: React.FC = () => {
                             select
                             fullWidth
                             label="Driver"
-                            value={selectedDriver?.user_id || ""}
+                            value={selectedDriver?.uuid || ""}
                             onChange={(e) => {
                               const driver = drivers.find(
-                                (d) => d.user_id === e.target.value,
+                                (d) => d.uuid === e.target.value,
                               );
                               setSelectedDriver(driver || null);
                             }}
@@ -262,8 +262,8 @@ const TestRide: React.FC = () => {
                           >
                             {drivers.map((driver) => (
                               <option
-                                key={driver.user_id}
-                                value={driver.user_id}
+                                key={driver.uuid}
+                                value={driver.uuid}
                               >
                                 {driver.name} ({driver.car_type})
                               </option>
