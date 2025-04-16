@@ -84,8 +84,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       );
       // const user=await axios.get(`http://3.20.152.91:3000/api-docs/#/Admin/adminLogin`);
       // console.log(user);
-
-      const AdminUser: User = {
+      const User: User = {
         token: userCredential.user?.accessToken,
         id: userCredential.user?.uid,
         name: userCredential.user?.displayName || "Admin",
@@ -96,7 +95,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       };
       // Check if the user exists or not
       if (userCredential.user) {
-        const userData = await getAdmin(AdminUser.token || "");
+        const userData = await getAdmin(User.token || "");
         //Check if the user is an admin
         if (userData.data.data.user_type !== "admin") {
           setAuthState({
@@ -106,11 +105,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           return;
         }
         setAuthState({
-          user: AdminUser,
+          user: User,
           error: null,
         });
         // Store user data in localStorage
-        localStorage.setItem("charged_admin_user", JSON.stringify(AdminUser));
+        localStorage.setItem("charged_admin_user", JSON.stringify(User));
       }
     } catch (error) {
       console.error("Login error:", error);
