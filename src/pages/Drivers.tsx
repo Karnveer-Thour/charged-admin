@@ -21,7 +21,6 @@ import {
   CircularProgress,
   Alert,
   IconButton,
-  Tooltip,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -32,20 +31,12 @@ import {
   Tabs,
   Tab,
   Badge,
-  Card,
-  CardContent,
-  CardActions,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
   TextField as MuiTextField,
   Accordion,
   AccordionSummary,
   AccordionDetails,
   Input,
   DialogContentText,
-  Link,
   ButtonGroup,
 } from "@mui/material";
 import {
@@ -139,7 +130,7 @@ const Drivers: React.FC = () => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [uploadDialogNotes, setUploadDialogNotes] = useState("");
   const [uploadingDocument, setUploadingDocument] = useState(false);
-  const { getDrivers,getDriverDocs } = useAuth();
+  const { getDrivers, getDriverDocs, updateDriverdocsStatus } = useAuth();
 
   useEffect(() => {
     fetchDrivers();
@@ -224,8 +215,8 @@ const Drivers: React.FC = () => {
       setDriverDetailsOpen(true);
       const documents = await getDriverDocs(driver.id as any);
       setLoadingDriverDetails(false);
-    setSelectedDriver({...driver,documents});
-    setTabValue(0);
+      setSelectedDriver({ ...driver, documents });
+      setTabValue(0);
       // setDriverRides(rides);
     } catch (err) {
       console.error("Error fetching driver rides:", err);
@@ -282,7 +273,7 @@ const Drivers: React.FC = () => {
     setDocumentUpdateError(null);
 
     try {
-      const updatedDriver = await mockApi.updateDriverDocument(
+      const updatedDriver = await updateDriverdocsStatus(
         selectedDriver.uuid,
         document.id,
         {
@@ -677,7 +668,6 @@ const Drivers: React.FC = () => {
         />
       </Paper>
 
-      
       {/* Driver Details Dialog */}
       <Dialog
         open={driverDetailsOpen}
@@ -685,9 +675,8 @@ const Drivers: React.FC = () => {
         maxWidth="md"
         fullWidth
       >
-
         {/* Loading driver details... model until api fetching data */}
-       { loadingDriverDetails &&  (
+        {loadingDriverDetails && (
           <Box
             sx={{
               display: "flex",
@@ -788,7 +777,9 @@ const Drivers: React.FC = () => {
                             <Box sx={{ display: "flex", alignItems: "center" }}>
                               <StarIcon sx={{ color: "gold", mr: 0.5 }} />
                               <Typography variant="body1">
-                                {selectedDriver.rating?selectedDriver.rating:0} 
+                                {selectedDriver.rating
+                                  ? selectedDriver.rating
+                                  : 0}
                               </Typography>
                             </Box>
                           </Grid>
@@ -1168,7 +1159,8 @@ const Drivers: React.FC = () => {
                 >
                   <Typography variant="body2" color="text.secondary">
                     Last document update:{" "}
-                    {selectedDriver.documents && selectedDriver.documents.filter((d) => d.dateReviewed)
+                    {selectedDriver.documents &&
+                    selectedDriver.documents.filter((d) => d.dateReviewed)
                       .length > 0
                       ? new Date(
                           Math.max(
@@ -1187,11 +1179,12 @@ const Drivers: React.FC = () => {
                       startIcon={<VerifiedIcon />}
                       disabled={
                         updatingDocument ||
-                        (selectedDriver.documents && selectedDriver.documents.some(
-                          (d) =>
-                            d?.status !== "approved" &&
-                            d?.status !== "notSubmitted",
-                        ))
+                        (selectedDriver.documents &&
+                          selectedDriver.documents.some(
+                            (d) =>
+                              d?.status !== "approved" &&
+                              d?.status !== "notSubmitted",
+                          ))
                       }
                       onClick={() => {
                         const pendingDocs = selectedDriver.documents.filter(

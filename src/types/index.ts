@@ -61,7 +61,7 @@ export interface Rider {
 
 // Driver types
 export interface Driver {
-  id?:number;
+  id?: number;
   uuid: string;
   name: string;
   email: string;

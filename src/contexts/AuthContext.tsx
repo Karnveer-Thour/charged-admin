@@ -2,7 +2,13 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { User, AuthState, Driver, Rider } from "../types";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
-import { getAdmin, getridersdata, getDriversdata, getDriverdocsdata } from "../API/axios";
+import {
+  getAdmin,
+  getridersdata,
+  getDriversdata,
+  getDriverdocsdata,
+  updateDriverDocs,
+} from "../API/axios";
 
 interface AuthContextType {
   authState: AuthState;
@@ -12,6 +18,11 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   getDrivers: () => Promise<Driver[]>;
   getDriverDocs: (id: string) => Promise<any>;
+  updateDriverdocsStatus: (
+    driverId: string,
+    documentId: string,
+    data: any,
+  ) => Promise<any>;
   getRiders: () => Promise<Rider[]>;
   logout: () => void;
 }
@@ -31,6 +42,9 @@ const AuthContext = createContext<AuthContextType>({
     return [];
   },
   getDriverDocs: async () => {
+    return [];
+  },
+  updateDriverdocsStatus: async () => {
     return [];
   },
   getRiders: async () => {
@@ -172,7 +186,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       if (
         "auth/id-token-expired" === error.response.data.error.code ||
         "auth/argument-error" === error.response.data.error.code
-      ) { 
+      ) {
+        message = "Token expired. Please login again.";
+        setAuthState({
+          user: null,
+          error: message,
+        });
+        logout();
+      }
+      throw new Error(message);
+    }
+  };
+
+  // Function to update driver documents
+
+  const updateDriverdocsStatus = async (
+    driverId: string,
+    documentId: string,
+    data: any,
+  ): Promise<any> => {
+    try {
+      const driverDocs: any = await updateDriverDocs(
+        driverId,
+        documentId,
+        data,
+      );
+      return driverDocs.data.data;
+    } catch (error: any) {
+      let message = "Something went wrong, login again";
+      if (
+        "auth/id-token-expired" === error.response.data.error.code ||
+        "auth/argument-error" === error.response.data.error.code
+      ) {
         message = "Token expired. Please login again.";
         setAuthState({
           user: null,
@@ -227,6 +272,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         login,
         getDrivers,
         getDriverDocs,
+        updateDriverdocsStatus,
         getRiders,
         logout,
       }}
