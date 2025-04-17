@@ -124,6 +124,9 @@ const Drivers: React.FC = () => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [uploadDialogNotes, setUploadDialogNotes] = useState("");
   const [uploadingDocument, setUploadingDocument] = useState(false);
+  const [showRejectionReason, setShowRejectionReason] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState("");
+  const [verifyNotes, setVerifyNotes] = useState("");
   const { getDrivers, getDriverDocs, updateDriverdocsStatus } = useAuth();
 
   useEffect(() => {
@@ -222,6 +225,7 @@ const Drivers: React.FC = () => {
 
   const handleCloseDriverDetails = () => {
     setDriverDetailsOpen(false);
+    setShowRejectionReason(false);
     setSelectedDriver(null);
     setDriverRides([]);
     setDocumentUpdateSuccess(null);
@@ -259,21 +263,17 @@ const Drivers: React.FC = () => {
   const handleUpdateDocumentStatus = async (
     document: DriverDocument,
     newStatus: DocumentStatus,
-    notes?: string,
   ) => {
     if (!selectedDriver) return;
-
-    setUpdatingDocument(true);
-    setDocumentUpdateSuccess(null);
-    setDocumentUpdateError(null);
-
     try {
+      console.log("document", document);
       const updatedDriver = await updateDriverdocsStatus(
-        selectedDriver.uuid,
+        document.user_id,
         document.id,
         {
           status: newStatus,
-          notes: notes || undefined,
+          rejection_reason: rejectionReason || "",
+          notes: verifyNotes || "",
         },
       );
 
@@ -344,7 +344,7 @@ const Drivers: React.FC = () => {
 
   const getDocumentStatusIcon = (status: DocumentStatus) => {
     switch (status) {
-      case "approved":
+      case "verified":
         return <ApprovedIcon color="success" />;
       case "rejected":
         return <RejectedIcon color="error" />;
@@ -363,7 +363,7 @@ const Drivers: React.FC = () => {
     status: DocumentStatus,
   ): "success" | "error" | "warning" | "default" => {
     switch (status) {
-      case "approved":
+      case "verified":
         return "success";
       case "rejected":
       case "expired":
@@ -920,7 +920,7 @@ const Drivers: React.FC = () => {
                             <Box sx={{ display: "flex", alignItems: "center" }}>
                               {getDocumentStatusIcon(document.status)}
                               <Typography variant="subtitle1" sx={{ ml: 1 }}>
-                                {getDocumentTitle(document.type)}
+                                {getDocumentTitle(document.document_type)}
                               </Typography>
                             </Box>
                             <Chip
@@ -947,7 +947,7 @@ const Drivers: React.FC = () => {
                                 {document.status}
                               </Typography>
 
-                              {document.dateSubmitted && (
+                              {document.uploaded_at && (
                                 <>
                                   <Typography
                                     variant="body2"
@@ -958,13 +958,13 @@ const Drivers: React.FC = () => {
                                   </Typography>
                                   <Typography variant="body1">
                                     {new Date(
-                                      document.dateSubmitted,
+                                      document.uploaded_at,
                                     ).toLocaleDateString()}
                                   </Typography>
                                 </>
                               )}
 
-                              {document.dateReviewed && (
+                              {document.updated_at && (
                                 <>
                                   <Typography
                                     variant="body2"
@@ -975,13 +975,13 @@ const Drivers: React.FC = () => {
                                   </Typography>
                                   <Typography variant="body1">
                                     {new Date(
-                                      document.dateReviewed,
+                                      document.updated_at,
                                     ).toLocaleDateString()}
                                   </Typography>
                                 </>
                               )}
 
-                              {document.expiryDate && (
+                              {document.expiry_date && (
                                 <>
                                   <Typography
                                     variant="body2"
@@ -993,21 +993,21 @@ const Drivers: React.FC = () => {
                                   <Typography
                                     variant="body1"
                                     color={
-                                      new Date(document.expiryDate) < new Date()
+                                      new Date(document.expiry_date) < new Date()
                                         ? "error"
                                         : "inherit"
                                     }
                                   >
                                     {new Date(
-                                      document.expiryDate,
+                                      document.expiry_date,
                                     ).toLocaleDateString()}
-                                    {new Date(document.expiryDate) <
+                                    {new Date(document.expiry_date) <
                                       new Date() && " (Expired)"}
                                   </Typography>
                                 </>
                               )}
 
-                              {document.reviewedBy && (
+                              {document.reviewed_by && (
                                 <>
                                   <Typography
                                     variant="body2"
@@ -1017,7 +1017,7 @@ const Drivers: React.FC = () => {
                                     Reviewed By
                                   </Typography>
                                   <Typography variant="body1">
-                                    {document.reviewedBy}
+                                    {document.reviewed_by}
                                   </Typography>
                                 </>
                               )}
@@ -1042,7 +1042,7 @@ const Drivers: React.FC = () => {
                                   variant="outlined"
                                   startIcon={<UploadFileIcon />}
                                   onClick={() =>
-                                    handleOpenUploadDialog(document.type)
+                                    handleOpenUploadDialog(document.document_type)
                                   }
                                   disabled={uploadingDocument}
                                   sx={{ mr: 1 }}
@@ -1050,11 +1050,11 @@ const Drivers: React.FC = () => {
                                   Upload Document
                                 </Button>
 
-                                {document.fileUrl && (
+                                {document.file_url && (
                                   <Button
                                     variant="outlined"
                                     startIcon={<OpenIcon />}
-                                    href={document.fileUrl}
+                                    href={document.file_url}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                   >
@@ -1073,11 +1073,11 @@ const Drivers: React.FC = () => {
                                   onClick={() =>
                                     handleUpdateDocumentStatus(
                                       document,
-                                      "approved",
+                                      "verified",
                                     )
                                   }
                                   disabled={
-                                    document.status === "approved" ||
+                                    document.status === "verified" ||
                                     updatingDocument
                                   }
                                 >
@@ -1085,11 +1085,16 @@ const Drivers: React.FC = () => {
                                 </Button>
                                 <Button
                                   color="error"
-                                  onClick={() =>
+                                  onClick={() =>{
+                                    if(!showRejectionReason){
+                                    setShowRejectionReason(true);
+                                    return;
+                                    }
                                     handleUpdateDocumentStatus(
                                       document,
                                       "rejected",
                                     )
+                                  }
                                   }
                                   disabled={
                                     document.status === "rejected" ||
@@ -1114,7 +1119,27 @@ const Drivers: React.FC = () => {
                                   Mark Pending
                                 </Button>
                               </ButtonGroup>
-
+                                  {
+                                    (showRejectionReason || document.status==="rejected") &&(
+                                      <>
+                                    <Box>
+                                    <TextField
+                                      fullWidth
+                                      label="Rejection Reason"
+                                      multiline
+                                      rows={3}
+                                      size="small"
+                                      placeholder="Rejection reason required..."
+                                      disabled={updatingDocument || document.status==="rejected"}
+                                      required
+                                      onChange={(e => setRejectionReason(e.target.value))}
+                                      defaultValue={document.rejection_reason}
+                                    />
+                                  </Box>
+                                  <br/>
+                                  </>
+                                  )
+                                  }
                               <Box>
                                 <TextField
                                   fullWidth
@@ -1124,16 +1149,8 @@ const Drivers: React.FC = () => {
                                   size="small"
                                   placeholder="Add notes about this document..."
                                   disabled={updatingDocument}
-                                  onBlur={(e) => {
-                                    if (e.target.value.trim()) {
-                                      handleUpdateDocumentStatus(
-                                        document,
-                                        document.status,
-                                        e.target.value,
-                                      );
-                                    }
-                                  }}
-                                  defaultValue={document.notes || ""}
+                                  onChange={(e) =>{setVerifyNotes(e.target.value)}}
+                                  defaultValue={document.notes}
                                 />
                               </Box>
                             </Grid>
@@ -1155,13 +1172,13 @@ const Drivers: React.FC = () => {
                   <Typography variant="body2" color="text.secondary">
                     Last document update:{" "}
                     {selectedDriver.documents &&
-                    selectedDriver.documents.filter((d) => d.dateReviewed)
+                    selectedDriver.documents.filter((d) => d.updated_at)
                       .length > 0
                       ? new Date(
                           Math.max(
                             ...selectedDriver.documents
-                              .filter((d) => d.dateReviewed)
-                              .map((d) => new Date(d.dateReviewed!).getTime()),
+                              .filter((d) => d.updated_at)
+                              .map((d) => new Date(d.updated_at!).getTime()),
                           ),
                         ).toLocaleDateString()
                       : "Never"}
@@ -1177,20 +1194,20 @@ const Drivers: React.FC = () => {
                         (selectedDriver.documents &&
                           selectedDriver.documents.some(
                             (d) =>
-                              d?.status !== "approved" &&
+                              d?.status !== "verified" &&
                               d?.status !== "notSubmitted",
                           ))
                       }
                       onClick={() => {
-                        const pendingDocs = selectedDriver.documents.filter(
+                        const pendingDocs = selectedDriver.documents?selectedDriver.documents.filter(
                           (d) =>
-                            d.status !== "approved" &&
+                            d.status !== "verified" &&
                             d.status !== "notSubmitted",
-                        );
+                        ):[];
                         if (pendingDocs.length === 0) {
                           setDocumentUpdateSuccess(
                             "All required documents are verified",
-                          );
+                          )
                         }
                       }}
                     >

@@ -147,7 +147,7 @@ const generateDrivers = (count: number): Driver[] => {
   const vehicleColors = ["Black", "White", "Silver", "Red", "Blue", "Grey"];
   const documentStatuses: DocumentStatus[] = [
     "pending",
-    "approved",
+    "verified",
     "rejected",
     "expired",
     "notSubmitted",
@@ -176,13 +176,13 @@ const generateDrivers = (count: number): Driver[] => {
             ).toISOString()
           : undefined;
       const dateReviewed =
-        status === "approved" || status === "rejected"
+        status === "verified" || status === "rejected"
           ? new Date(
               Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000,
             ).toISOString()
           : undefined;
       const expiryDate =
-        status === "approved" || status === "expired"
+        status === "verified" || status === "expired"
           ? new Date(
               Date.now() +
                 (status === "expired" ? -1 : 1) *
@@ -197,15 +197,16 @@ const generateDrivers = (count: number): Driver[] => {
 
       return {
         id: `${type}-${i}`,
-        type,
+        document_type: type,
         status,
-        dateSubmitted,
-        dateReviewed,
-        expiryDate,
-        reviewedBy: dateReviewed ? "Admin User" : undefined,
+        uploaded_at: dateSubmitted,
+        user_id: `driver-${i}`,
+        updated_at: dateReviewed,
+        expiry_date: expiryDate,
+        reviewed_by: dateReviewed ? "Admin User" : undefined,
         notes:
           status === "rejected" ? "Document unclear or incomplete" : undefined,
-        fileUrl:
+          file_url:
           status !== "notSubmitted"
             ? `https://example.com/documents/${type}-${i}.pdf`
             : undefined,
@@ -536,12 +537,12 @@ export const mockApi = {
     updatedDocuments[documentIndex] = {
       ...updatedDocuments[documentIndex],
       ...updates,
-      dateReviewed: updates.status
+      updated_at: updates.status
         ? new Date().toISOString()
-        : updatedDocuments[documentIndex].dateReviewed,
-      reviewedBy: updates.status
+        : updatedDocuments[documentIndex].updated_at,
+        reviewed_by: updates.status
         ? "Admin User"
-        : updatedDocuments[documentIndex].reviewedBy,
+        : updatedDocuments[documentIndex].reviewed_by,
     };
 
     mockDrivers[driverIndex] = {
@@ -620,7 +621,7 @@ export const mockApi = {
 
       // Update the document
       const updatedDocuments = driver.documents.map((doc) => {
-        if (doc.type === documentType) {
+        if (doc.document_type === documentType) {
           return {
             ...doc,
             status: "pending" as DocumentStatus,
@@ -642,7 +643,7 @@ export const mockApi = {
       return {
         success: true,
         message: "Document uploaded successfully",
-        document: updatedDocuments.find((doc) => doc.type === documentType),
+        document: updatedDocuments.find((doc) => doc.document_type === documentType),
       };
     } catch (error) {
       console.error("Error uploading document:", error);

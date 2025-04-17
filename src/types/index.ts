@@ -93,21 +93,29 @@ export type DocumentType =
 
 export type DocumentStatus =
   | "pending"
-  | "approved"
+  | "verified"
   | "rejected"
   | "expired"
   | "notSubmitted";
 
+export interface DriverDocumentpayload {
+  status:string;
+  rejection_reason?: string,
+  notes?: string,
+}
+
 export interface DriverDocument {
   id: string;
-  type: DocumentType;
+  document_type: DocumentType;
   status: DocumentStatus;
-  dateSubmitted?: string;
-  dateReviewed?: string;
-  expiryDate?: string;
-  reviewedBy?: string;
+  uploaded_at?: string;
+  updated_at?: string;
+  expiry_date?: string;
+  reviewed_by?: string;
   notes?: string;
-  fileUrl?: string;
+  rejection_reason?: string;
+  file_url?: string;
+  user_id: string;
 }
 
 // Pricing types

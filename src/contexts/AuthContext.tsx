@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { User, AuthState, Driver, Rider } from "../types";
+import { User, AuthState, Driver, Rider, DriverDocumentpayload } from "../types";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
 import {
@@ -203,7 +203,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const updateDriverdocsStatus = async (
     driverId: string,
     documentId: string,
-    data: any,
+    data: DriverDocumentpayload,
   ): Promise<any> => {
     try {
       const driverDocs: any = await updateDriverDocs(
