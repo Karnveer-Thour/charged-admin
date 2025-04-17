@@ -34,4 +34,7 @@ export const getAdmin = (token: string) =>
 
 export const getDriversdata = () => instance.get("/admin/getdrivers");
 
+export const getDriverdocsdata=(id:string)=>instance.get(`/admin/getdriverdocs/${id}`);
+
 export const getridersdata = () => instance.get("/admin/getriders");
+

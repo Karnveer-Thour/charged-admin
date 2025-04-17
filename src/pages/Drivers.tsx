@@ -139,7 +139,7 @@ const Drivers: React.FC = () => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [uploadDialogNotes, setUploadDialogNotes] = useState("");
   const [uploadingDocument, setUploadingDocument] = useState(false);
-  const { getDrivers } = useAuth();
+  const { getDrivers,getDriverDocs } = useAuth();
 
   useEffect(() => {
     fetchDrivers();
@@ -219,14 +219,14 @@ const Drivers: React.FC = () => {
   };
 
   const handleViewDriver = async (driver: Driver) => {
-    setSelectedDriver(driver);
-    setDriverDetailsOpen(true);
-    setLoadingDriverDetails(true);
-    setTabValue(0);
-
     try {
-      const rides = await mockApi.getDriverRides(driver.uuid);
-      setDriverRides(rides);
+      setLoadingDriverDetails(true);
+      setDriverDetailsOpen(true);
+      const documents = await getDriverDocs(driver.id as any);
+      setLoadingDriverDetails(false);
+    setSelectedDriver({...driver,documents});
+    setTabValue(0);
+      // setDriverRides(rides);
     } catch (err) {
       console.error("Error fetching driver rides:", err);
     } finally {
@@ -391,7 +391,7 @@ const Drivers: React.FC = () => {
   };
 
   const getPendingDocumentsCount = (driver: Driver): number => {
-    return driver.documents.filter((doc) => doc.status === "pending").length;
+    return driver?.documents?.filter((doc) => doc.status === "pending").length;
   };
 
   const handleOpenUploadDialog = (docType: DocumentType) => {
@@ -677,6 +677,7 @@ const Drivers: React.FC = () => {
         />
       </Paper>
 
+      
       {/* Driver Details Dialog */}
       <Dialog
         open={driverDetailsOpen}
@@ -684,6 +685,22 @@ const Drivers: React.FC = () => {
         maxWidth="md"
         fullWidth
       >
+
+        {/* Loading driver details... model until api fetching data */}
+       { loadingDriverDetails &&  (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+              padding: 2,
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        )}
+
         {selectedDriver && (
           <>
             <DialogTitle>
@@ -761,7 +778,7 @@ const Drivers: React.FC = () => {
                               Phone
                             </Typography>
                             <Typography variant="body1">
-                              {selectedDriver.phone}
+                              {selectedDriver?.phone}
                             </Typography>
                           </Grid>
                           <Grid item xs={6}>
@@ -771,7 +788,7 @@ const Drivers: React.FC = () => {
                             <Box sx={{ display: "flex", alignItems: "center" }}>
                               <StarIcon sx={{ color: "gold", mr: 0.5 }} />
                               <Typography variant="body1">
-                                {selectedDriver.rating.toFixed(1)}
+                                {selectedDriver.rating?selectedDriver.rating:0} 
                               </Typography>
                             </Box>
                           </Grid>
@@ -789,7 +806,7 @@ const Drivers: React.FC = () => {
                               label={
                                 updatingStatus
                                   ? "Updating status..."
-                                  : `Driver is ${selectedDriver.is_active ? "active" : "inactive"}`
+                                  : `Driver is ${selectedDriver?.is_active ? "active" : "inactive"}`
                               }
                             />
                           </Grid>
@@ -827,10 +844,10 @@ const Drivers: React.FC = () => {
                               License Plate
                             </Typography>
                             <Typography variant="body1">
-                              {selectedDriver.license_plate}
+                              {selectedDriver?.license_plate}
                             </Typography>
                           </Grid>
-                          {selectedDriver.vehicleDetails && (
+                          {selectedDriver?.vehicleDetails && (
                             <>
                               <Grid item xs={6}>
                                 <Typography
@@ -864,7 +881,7 @@ const Drivers: React.FC = () => {
                             </Typography>
                             {selectedDriver.address ? (
                               <Typography variant="body1">
-                                {selectedDriver.address.address}
+                                {selectedDriver?.address.address}
                               </Typography>
                             ) : (
                               <Typography variant="body2" color="text.disabled">
@@ -902,7 +919,7 @@ const Drivers: React.FC = () => {
                 )}
 
                 <Grid container spacing={3}>
-                  {selectedDriver.documents.map((document) => (
+                  {selectedDriver?.documents?.map((document) => (
                     <Grid item xs={12} key={document.id}>
                       <Accordion>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -1151,7 +1168,7 @@ const Drivers: React.FC = () => {
                 >
                   <Typography variant="body2" color="text.secondary">
                     Last document update:{" "}
-                    {selectedDriver.documents.filter((d) => d.dateReviewed)
+                    {selectedDriver.documents && selectedDriver.documents.filter((d) => d.dateReviewed)
                       .length > 0
                       ? new Date(
                           Math.max(
@@ -1170,11 +1187,11 @@ const Drivers: React.FC = () => {
                       startIcon={<VerifiedIcon />}
                       disabled={
                         updatingDocument ||
-                        selectedDriver.documents.some(
+                        (selectedDriver.documents && selectedDriver.documents.some(
                           (d) =>
-                            d.status !== "approved" &&
-                            d.status !== "notSubmitted",
-                        )
+                            d?.status !== "approved" &&
+                            d?.status !== "notSubmitted",
+                        ))
                       }
                       onClick={() => {
                         const pendingDocs = selectedDriver.documents.filter(
