@@ -24,7 +24,6 @@ import {
   People as PeopleIcon,
   AttachMoney as MoneyIcon,
   Menu as MenuIcon,
-  ChevronLeft as ChevronLeftIcon,
   Logout as LogoutIcon,
   AccountCircle as AccountIcon,
   DirectionsCar as CarIcon,
@@ -122,6 +121,7 @@ const Layout: React.FC = () => {
     return () => {
       clearInterval(interval);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getPageTitle = () => {

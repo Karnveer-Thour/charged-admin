@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Container,
   Typography,
@@ -31,7 +30,6 @@ import {
   Tabs,
   Tab,
   Badge,
-  TextField as MuiTextField,
   Accordion,
   AccordionSummary,
   AccordionDetails,
@@ -43,7 +41,6 @@ import {
   Search as SearchIcon,
   Visibility as ViewIcon,
   Star as StarIcon,
-  FilterList as FilterIcon,
   DirectionsCar as CarIcon,
   ElectricCar as ElectricIcon,
   AirportShuttle as SuvIcon,
@@ -59,8 +56,6 @@ import {
   OpenInNew as OpenIcon,
   AssignmentTurnedIn as DocumentIcon,
   UploadFile as UploadFileIcon,
-  CameraAlt as CameraIcon,
-  DocumentScanner as DocumentScannerIcon,
 } from "@mui/icons-material";
 import { mockApi } from "../services/mockApi";
 import {
@@ -96,7 +91,6 @@ function TabPanel(props: TabPanelProps) {
 }
 
 const Drivers: React.FC = () => {
-  const navigate = useNavigate();
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [filteredDrivers, setFilteredDrivers] = useState<Driver[]>([]);
   const [loading, setLoading] = useState(true);
@@ -134,6 +128,7 @@ const Drivers: React.FC = () => {
 
   useEffect(() => {
     fetchDrivers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const applyFilters = useCallback(() => {

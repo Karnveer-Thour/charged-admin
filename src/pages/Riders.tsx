@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Container,
   Typography,
@@ -21,7 +20,6 @@ import {
   CircularProgress,
   Alert,
   IconButton,
-  Tooltip,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -57,6 +55,7 @@ const Riders: React.FC = () => {
   // Load riders on component mount
   useEffect(() => {
     fetchRiders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Filter riders when search query changes

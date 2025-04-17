@@ -90,6 +90,7 @@ const TestRide: React.FC = () => {
     };
 
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Calculate fare whenever distance, duration or ride type changes
