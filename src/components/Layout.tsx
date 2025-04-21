@@ -81,49 +81,6 @@ const Layout: React.FC = () => {
     }
   };
 
-  // Check if the token is expired when the component mounts
-  // and set an interval to check every 15 minutes
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    try {
-      const token = JSON.parse(
-        localStorage.getItem("charged_admin_user") as string,
-      )?.token;
-      if (token) {
-        const decodedToken = token
-          ? JSON.parse(atob(token.split(".")[1]))
-          : null;
-        const expiry = decodedToken?.exp;
-
-        const currentTime = Math.floor(Date.now() / 1000);
-
-        logoutIfTokenExpired(currentTime, expiry);
-
-        interval = setInterval(
-          () => {
-            console.log("Checking token expiry...");
-            const currentTime = Math.floor(Date.now() / 1000);
-            logoutIfTokenExpired(currentTime, expiry);
-          },
-
-          1000 * 60 * 15,
-        ); // Check after every 15 minutes token expired or not
-      }
-    } catch (error) {
-      setAuthState({
-        user: null,
-        error: "Invalid token ",
-      });
-      handleLogout();
-    }
-
-    // Cleanup function to clear the interval when the component unmounts
-    return () => {
-      clearInterval(interval);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const getPageTitle = () => {
     const path = location.pathname;
 
