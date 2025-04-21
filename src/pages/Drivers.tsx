@@ -142,10 +142,10 @@ const Drivers: React.FC = () => {
       const query = searchQuery.toLowerCase();
       result = result.filter(
         (driver) =>
-          driver.name.toLowerCase().includes(query) ||
-          driver.email.toLowerCase().includes(query) ||
-          driver.phone.includes(query) ||
-          driver.license_plate.toLowerCase().includes(query),
+          driver?.name?.toLowerCase()?.includes(query) ||
+          driver?.email?.toLowerCase()?.includes(query) ||
+          driver?.phone?.includes(query) ||
+          driver?.license_plate?.toLowerCase().includes(query),
       );
     }
 
@@ -266,7 +266,6 @@ const Drivers: React.FC = () => {
   ) => {
     if (!selectedDriver) return;
     try {
-      console.log("document", document);
       const updatedDriver = await updateDriverdocsStatus(
         document.user_id,
         document.id,

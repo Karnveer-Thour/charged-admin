@@ -113,7 +113,7 @@ export interface DriverDocument {
   expiry_date?: string;
   reviewed_by?: string;
   notes?: string;
-  rejection_reason?: string;
+  rejection_reason?: string|null;
   file_url?: string;
   user_id: string;
 }
