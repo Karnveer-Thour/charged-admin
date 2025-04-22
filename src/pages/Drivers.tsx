@@ -276,7 +276,9 @@ const Drivers: React.FC = () => {
         },
       );
       const updatedDocuments=selectedDriver.documents.map(doc=>(
-        doc.id===updatedDocument[0].id?updatedDocument[0]:doc
+        doc.id===updatedDocument.id?{...updatedDocument,
+          document_type:doc.document_type
+          }:doc
       ))
       const updatedDriver ={
         ...selectedDriver,
@@ -292,8 +294,9 @@ const Drivers: React.FC = () => {
       );
     } finally {
       setUpdatingDocument(false);
-      setRejectionReason("");
+      setRejectionReason("")
       setVerifyNotes("");
+      setShowRejectionReason(false);
     }
   };
 
@@ -1092,10 +1095,14 @@ const Drivers: React.FC = () => {
                                     setShowRejectionReason(true);
                                     return;
                                     }
-                                    handleUpdateDocumentStatus(
+                                    if(rejectionReason.length!==0){handleUpdateDocumentStatus(
                                       document,
                                       "rejected",
-                                    )
+                                    );}else{
+                                      setDocumentUpdateError(
+                                        "Rejection reason required.",
+                                      );
+                                    }
                                   }
                                   }
                                   disabled={
@@ -1135,7 +1142,6 @@ const Drivers: React.FC = () => {
                                       disabled={updatingDocument || document.status==="rejected"}
                                       required
                                       onChange={(e => setRejectionReason(e.target.value))}
-                                      defaultValue={document.rejection_reason}
                                     />
                                   </Box>
                                   <br/>
@@ -1152,7 +1158,6 @@ const Drivers: React.FC = () => {
                                   placeholder="Add notes about this document..."
                                   disabled={updatingDocument}
                                   onChange={(e) =>{setVerifyNotes(e.target.value)}}
-                                  defaultValue={document.notes}
                                 />
                               </Box>
                             </Grid>
@@ -1174,7 +1179,7 @@ const Drivers: React.FC = () => {
                   <Typography variant="body2" color="text.secondary">
                     Last document update:{" "}
                     {selectedDriver.documents &&
-                    selectedDriver.documents.filter((d) => d.updated_at)
+                    selectedDriver?.documents?.filter((d) => d.updated_at)
                       .length > 0
                       ? new Date(
                           Math.max(

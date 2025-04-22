@@ -219,7 +219,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         documentId,
         data,
       );
-      return driverDocs.data.data;
+      return driverDocs.data.data[0];
     } catch (error: any) {
       let message = "Something went wrong, login again";
       if (
