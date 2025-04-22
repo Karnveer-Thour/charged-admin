@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { User, AuthState, Driver, Rider, DriverDocumentpayload } from "../types";
+import { User, AuthState, Driver, Rider, DriverDocumentpayload, Driverstatuspayload } from "../types";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
 import {
@@ -8,6 +8,7 @@ import {
   getDriversdata,
   getDriverdocsdata,
   updateDriverDocs,
+  updateDriverstatus,
 } from "../API/axios";
 
 interface AuthContextType {
@@ -21,8 +22,12 @@ interface AuthContextType {
   updateDriverdocsStatus: (
     driverId: string,
     documentId: string,
-    data: any,
+    data: DriverDocumentpayload,
   ) => Promise<any>;
+  updateDriveractivestatus:(
+    driverId: string,
+    data: Driverstatuspayload,
+  )=>Promise<any>;
   getRiders: () => Promise<Rider[]>;
   logout: () => void;
 }
@@ -46,6 +51,9 @@ const AuthContext = createContext<AuthContextType>({
   },
   updateDriverdocsStatus: async () => {
     return [];
+  },
+  updateDriveractivestatus:async()=>{
+    return[];
   },
   getRiders: async () => {
     return [];
@@ -229,6 +237,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const updateDriveractivestatus = async (
+    driverId: string,
+    data: Driverstatuspayload,
+  ): Promise<any> => {
+    try {
+      const driverStatus=await updateDriverstatus(driverId,data);
+      return driverStatus.data.data[0];
+    } catch (error: any) {
+      console.error(error);
+      let message = "Something went wrong, login again";
+      if (
+        "auth/id-token-expired" === error.response.data.error.code ||
+        "auth/argument-error" === error.response.data.error.code
+      ) {
+        message = "Token expired. Please login again.";
+        setAuthState({
+          user: null,
+          error: message,
+        });
+        logout();
+      }
+      throw new Error(message);
+    }
+  };
+
   // Function to get Riders
   const getRiders = async (): Promise<Rider[]> => {
     try {
@@ -273,6 +306,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         getDrivers,
         getDriverDocs,
         updateDriverdocsStatus,
+        updateDriveractivestatus,
         getRiders,
         logout,
       }}

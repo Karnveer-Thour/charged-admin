@@ -1,5 +1,5 @@
 import axios from "axios";
-import { DriverDocumentpayload } from "../types";
+import { DriverDocumentpayload, Driverstatuspayload } from "../types";
 
 // This file contains the API calls for the admin panel
 
@@ -67,6 +67,16 @@ export const updateDriverDocs = (
   documentId: string,
   data: DriverDocumentpayload,
 ) => instance.put(`/admin/verifydriverdoc/${driverId}/${documentId}`, data);
+
+// Api to get update driver status
+// It is used in the Drivers component
+
+export const updateDriverstatus=(
+  driverId:string,
+  data:Driverstatuspayload,
+)=>{
+  return instance.put(`/admin/updatestatus/${driverId}`,data);
+}
 
 // Api to get all riders
 // This API is used to get all riders

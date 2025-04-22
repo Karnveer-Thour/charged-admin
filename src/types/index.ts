@@ -104,6 +104,10 @@ export interface DriverDocumentpayload {
   notes?: string,
 }
 
+export interface Driverstatuspayload{
+  "is_active":true|false
+}
+
 export interface DriverDocument {
   id: string;
   document_type: DocumentType;

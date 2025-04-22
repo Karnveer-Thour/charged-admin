@@ -127,7 +127,7 @@ const Drivers: React.FC = () => {
   const [showRejectionReason, setShowRejectionReason] = useState(false);
   const [rejectionReason, setRejectionReason] = useState("");
   const [verifyNotes, setVerifyNotes] = useState("");
-  const { getDrivers, getDriverDocs, updateDriverdocsStatus } = useAuth();
+  const { getDrivers, getDriverDocs, updateDriverdocsStatus,updateDriveractivestatus } = useAuth();
 
   useEffect(() => {
     fetchDrivers();
@@ -241,18 +241,17 @@ const Drivers: React.FC = () => {
 
     setUpdatingStatus(true);
     try {
-      const updatedDriver = await mockApi.updateDriverStatus(
-        selectedDriver.uuid,
-        !selectedDriver.is_active,
+      const updatedDriverstatus = await updateDriveractivestatus(
+        String(selectedDriver.id),
+        {
+          is_active:!selectedDriver.is_active,
+        }
       );
-
-      // Update driver in list
-      setDrivers((prev) =>
-        prev.map((d) => (d.uuid === updatedDriver.uuid ? updatedDriver : d)),
-      );
-
-      // Update selected driver
-      setSelectedDriver(updatedDriver);
+     const updatedDriver={
+      ...selectedDriver,
+      is_active:updatedDriverstatus.is_active
+     }
+     setSelectedDriver(updatedDriver);
     } catch (err) {
       console.error("Error updating driver status:", err);
     } finally {
