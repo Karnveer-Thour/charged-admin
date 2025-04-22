@@ -185,8 +185,11 @@ const Drivers: React.FC = () => {
       setFilteredDrivers(data);
       setError(null);
     } catch (err) {
-      setError("Failed to load drivers. Please try again.");
-      console.error("Error fetching drivers:", err);
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unknown error occurred.");
+      }
     } finally {
       setLoading(false);
     }
@@ -217,7 +220,11 @@ const Drivers: React.FC = () => {
       setTabValue(0);
       // setDriverRides(rides);
     } catch (err) {
-      console.error("Error fetching driver rides:", err);
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unknown error occurred.");
+      }
     } finally {
       setLoadingDriverDetails(false);
     }
@@ -253,7 +260,11 @@ const Drivers: React.FC = () => {
      }
      setSelectedDriver(updatedDriver);
     } catch (err) {
-      console.error("Error updating driver status:", err);
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unknown error occurred.");
+      }
     } finally {
       setUpdatingStatus(false);
     }
@@ -288,10 +299,11 @@ const Drivers: React.FC = () => {
       setSelectedDriver(updatedDriver);
       setDocumentUpdateSuccess(`Document status updated to ${newStatus}`);
     } catch (err) {
-      console.error("Error updating document status:", err);
-      setDocumentUpdateError(
-        "Failed to update document status. Please try again.",
-      );
+      if (err instanceof Error) {
+        setDocumentUpdateError(err.message);
+      } else {
+        setDocumentUpdateError("An unknown error occurred.");
+      }
     } finally {
       setUpdatingDocument(false);
       setRejectionReason("")

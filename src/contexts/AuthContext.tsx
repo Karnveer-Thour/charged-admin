@@ -137,7 +137,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         localStorage.setItem("charged_admin_user", JSON.stringify(User));
       }
     } catch (error) {
-      console.error("Login error:", error);
       let errorMessage: string;
       switch ((error as any).code) {
         case "auth/invalid-credential":
@@ -163,7 +162,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Function to get drivers
 
-  const getDrivers = async (): Promise<Driver[]> => {
+  const getDrivers = async (): Promise<Driver[]>=> {
     try {
       const drivers: any = await getDriversdata();
       return drivers.data.data;
@@ -180,7 +179,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         });
         logout();
       }
-      throw new Error(message);
+      throw new Error(error.response.data.message as string);
     }
   };
 
@@ -202,7 +201,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         });
         logout();
       }
-      throw new Error(message);
+      throw new Error(error.response.data.message as string);
     }
   };
 
@@ -233,7 +232,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         });
         logout();
       }
-      throw new Error(message);
+      throw new Error(error.response.data.message as string);
     }
   };
 
@@ -258,7 +257,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         });
         logout();
       }
-      throw new Error(message);
+      throw new Error(error.response.data.message as string);
     }
   };
 
@@ -280,7 +279,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         });
         logout();
       }
-      throw new Error(message);
+      throw new Error(error.response.data.message as string);
     }
   };
 

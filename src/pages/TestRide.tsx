@@ -83,7 +83,11 @@ const TestRide: React.FC = () => {
         if (fetchedRiders.length > 0) setSelectedRider(fetchedRiders[0] as any);
         if (fetchedDrivers.length > 0) setSelectedDriver(fetchedDrivers[0]);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        if (error instanceof Error) {
+          throw new Error(error.message);
+        } else {
+          throw new Error("An unknown error occurred.");
+        }
       } finally {
         setLoading(false);
       }

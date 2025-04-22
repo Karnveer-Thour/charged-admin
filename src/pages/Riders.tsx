@@ -80,8 +80,11 @@ const Riders: React.FC = () => {
       setFilteredRiders(data);
       setError(null);
     } catch (err) {
-      setError("Failed to load riders. Please try again.");
-      console.error("Error fetching riders:", err);
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unknown error occurred.");
+      }
     } finally {
       setLoading(false);
     }
