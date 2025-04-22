@@ -71,12 +71,12 @@ export const updateDriverDocs = (
 // Api to get update driver status
 // It is used in the Drivers component
 
-export const updateDriverstatus=(
-  driverId:string,
-  data:Driverstatuspayload,
-)=>{
-  return instance.put(`/admin/updatestatus/${driverId}`,data);
-}
+export const updateDriverstatus = (
+  driverId: string,
+  data: Driverstatuspayload,
+) => {
+  return instance.put(`/admin/updatestatus/${driverId}`, data);
+};
 
 // Api to get all riders
 // This API is used to get all riders

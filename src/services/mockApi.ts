@@ -206,7 +206,7 @@ const generateDrivers = (count: number): Driver[] => {
         reviewed_by: dateReviewed ? "Admin User" : undefined,
         notes:
           status === "rejected" ? "Document unclear or incomplete" : undefined,
-          file_url:
+        file_url:
           status !== "notSubmitted"
             ? `https://example.com/documents/${type}-${i}.pdf`
             : undefined,
@@ -540,7 +540,7 @@ export const mockApi = {
       updated_at: updates.status
         ? new Date().toISOString()
         : updatedDocuments[documentIndex].updated_at,
-        reviewed_by: updates.status
+      reviewed_by: updates.status
         ? "Admin User"
         : updatedDocuments[documentIndex].reviewed_by,
     };
@@ -643,7 +643,9 @@ export const mockApi = {
       return {
         success: true,
         message: "Document uploaded successfully",
-        document: updatedDocuments.find((doc) => doc.document_type === documentType),
+        document: updatedDocuments.find(
+          (doc) => doc.document_type === documentType,
+        ),
       };
     } catch (error) {
       console.error("Error uploading document:", error);

@@ -99,13 +99,13 @@ export type DocumentStatus =
   | "notSubmitted";
 
 export interface DriverDocumentpayload {
-  status:string;
-  rejection_reason?: string,
-  notes?: string,
+  status: string;
+  rejection_reason?: string;
+  notes?: string;
 }
 
-export interface Driverstatuspayload{
-  "is_active":true|false
+export interface Driverstatuspayload {
+  is_active: true | false;
 }
 
 export interface DriverDocument {
@@ -117,7 +117,7 @@ export interface DriverDocument {
   expiry_date?: string;
   reviewed_by?: string;
   notes?: string;
-  rejection_reason?: string|null;
+  rejection_reason?: string | null;
   file_url?: string;
   user_id: string;
 }

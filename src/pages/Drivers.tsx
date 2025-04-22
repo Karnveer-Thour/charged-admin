@@ -127,7 +127,12 @@ const Drivers: React.FC = () => {
   const [showRejectionReason, setShowRejectionReason] = useState(false);
   const [rejectionReason, setRejectionReason] = useState("");
   const [verifyNotes, setVerifyNotes] = useState("");
-  const { getDrivers, getDriverDocs, updateDriverdocsStatus,updateDriveractivestatus } = useAuth();
+  const {
+    getDrivers,
+    getDriverDocs,
+    updateDriverdocsStatus,
+    updateDriveractivestatus,
+  } = useAuth();
 
   useEffect(() => {
     fetchDrivers();
@@ -251,14 +256,14 @@ const Drivers: React.FC = () => {
       const updatedDriverstatus = await updateDriveractivestatus(
         String(selectedDriver.id),
         {
-          is_active:!selectedDriver.is_active,
-        }
+          is_active: !selectedDriver.is_active,
+        },
       );
-     const updatedDriver={
-      ...selectedDriver,
-      is_active:updatedDriverstatus.is_active
-     }
-     setSelectedDriver(updatedDriver);
+      const updatedDriver = {
+        ...selectedDriver,
+        is_active: updatedDriverstatus.is_active,
+      };
+      setSelectedDriver(updatedDriver);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -286,15 +291,15 @@ const Drivers: React.FC = () => {
           notes: verifyNotes || "",
         },
       );
-      const updatedDocuments=selectedDriver.documents.map(doc=>(
-        doc.id===updatedDocument.id?{...updatedDocument,
-          document_type:doc.document_type
-          }:doc
-      ))
-      const updatedDriver ={
+      const updatedDocuments = selectedDriver.documents.map((doc) =>
+        doc.id === updatedDocument.id
+          ? { ...updatedDocument, document_type: doc.document_type }
+          : doc,
+      );
+      const updatedDriver = {
         ...selectedDriver,
-        documents:updatedDocuments
-      } 
+        documents: updatedDocuments,
+      };
       // Update selected driver
       setSelectedDriver(updatedDriver);
       setDocumentUpdateSuccess(`Document status updated to ${newStatus}`);
@@ -306,7 +311,7 @@ const Drivers: React.FC = () => {
       }
     } finally {
       setUpdatingDocument(false);
-      setRejectionReason("")
+      setRejectionReason("");
       setVerifyNotes("");
       setShowRejectionReason(false);
     }
@@ -431,7 +436,7 @@ const Drivers: React.FC = () => {
         selectedDocumentType,
         uploadedFile,
         uploadDialogNotes,
-      );  
+      );
 
       // Notify the driver
       const notifyResponse = await mockApi.notifyDriverAboutDocument(
@@ -1010,7 +1015,8 @@ const Drivers: React.FC = () => {
                                   <Typography
                                     variant="body1"
                                     color={
-                                      new Date(document.expiry_date) < new Date()
+                                      new Date(document.expiry_date) <
+                                      new Date()
                                         ? "error"
                                         : "inherit"
                                     }
@@ -1059,7 +1065,9 @@ const Drivers: React.FC = () => {
                                   variant="outlined"
                                   startIcon={<UploadFileIcon />}
                                   onClick={() =>
-                                    handleOpenUploadDialog(document.document_type)
+                                    handleOpenUploadDialog(
+                                      document.document_type,
+                                    )
                                   }
                                   disabled={uploadingDocument}
                                   sx={{ mr: 1 }}
@@ -1102,21 +1110,22 @@ const Drivers: React.FC = () => {
                                 </Button>
                                 <Button
                                   color="error"
-                                  onClick={() =>{
-                                    if(!showRejectionReason){
-                                    setShowRejectionReason(true);
-                                    return;
+                                  onClick={() => {
+                                    if (!showRejectionReason) {
+                                      setShowRejectionReason(true);
+                                      return;
                                     }
-                                    if(rejectionReason.length!==0){handleUpdateDocumentStatus(
-                                      document,
-                                      "rejected",
-                                    );}else{
+                                    if (rejectionReason.length !== 0) {
+                                      handleUpdateDocumentStatus(
+                                        document,
+                                        "rejected",
+                                      );
+                                    } else {
                                       setDocumentUpdateError(
                                         "Rejection reason required.",
                                       );
                                     }
-                                  }
-                                  }
+                                  }}
                                   disabled={
                                     document.status === "rejected" ||
                                     updatingDocument
@@ -1140,10 +1149,10 @@ const Drivers: React.FC = () => {
                                   Mark Pending
                                 </Button>
                               </ButtonGroup>
-                                  {
-                                    (showRejectionReason || document.status==="rejected") &&(
-                                      <>
-                                    <Box>
+                              {(showRejectionReason ||
+                                document.status === "rejected") && (
+                                <>
+                                  <Box>
                                     <TextField
                                       fullWidth
                                       label="Rejection Reason"
@@ -1151,15 +1160,19 @@ const Drivers: React.FC = () => {
                                       rows={3}
                                       size="small"
                                       placeholder="Rejection reason required..."
-                                      disabled={updatingDocument || document.status==="rejected"}
+                                      disabled={
+                                        updatingDocument ||
+                                        document.status === "rejected"
+                                      }
                                       required
-                                      onChange={(e => setRejectionReason(e.target.value))}
+                                      onChange={(e) =>
+                                        setRejectionReason(e.target.value)
+                                      }
                                     />
                                   </Box>
-                                  <br/>
-                                  </>
-                                  )
-                                  }
+                                  <br />
+                                </>
+                              )}
                               <Box>
                                 <TextField
                                   fullWidth
@@ -1169,7 +1182,9 @@ const Drivers: React.FC = () => {
                                   size="small"
                                   placeholder="Add notes about this document..."
                                   disabled={updatingDocument}
-                                  onChange={(e) =>{setVerifyNotes(e.target.value)}}
+                                  onChange={(e) => {
+                                    setVerifyNotes(e.target.value);
+                                  }}
                                 />
                               </Box>
                             </Grid>
@@ -1218,15 +1233,17 @@ const Drivers: React.FC = () => {
                           ))
                       }
                       onClick={() => {
-                        const pendingDocs = selectedDriver.documents?selectedDriver.documents.filter(
-                          (d) =>
-                            d.status !== "verified" &&
-                            d.status !== "notSubmitted",
-                        ):[];
+                        const pendingDocs = selectedDriver.documents
+                          ? selectedDriver.documents.filter(
+                              (d) =>
+                                d.status !== "verified" &&
+                                d.status !== "notSubmitted",
+                            )
+                          : [];
                         if (pendingDocs.length === 0) {
                           setDocumentUpdateSuccess(
                             "All required documents are verified",
-                          )
+                          );
                         }
                       }}
                     >

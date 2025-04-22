@@ -45,7 +45,7 @@ const TestRide: React.FC = () => {
   const [duration, setDuration] = useState(15); // Default 15 minutes
   const [pricingRules, setPricingRules] = useState<PricingRule[]>([]);
   const [selectedRideType, setSelectedRideType] = useState<string>("electric");
-  const { getDrivers,getRiders } = useAuth();
+  const { getDrivers, getRiders } = useAuth();
 
   // Calculated fare
   const [fareBreakdown, setFareBreakdown] = useState({

@@ -1,5 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { User, AuthState, Driver, Rider, DriverDocumentpayload, Driverstatuspayload } from "../types";
+import {
+  User,
+  AuthState,
+  Driver,
+  Rider,
+  DriverDocumentpayload,
+  Driverstatuspayload,
+} from "../types";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
 import {
@@ -24,10 +31,10 @@ interface AuthContextType {
     documentId: string,
     data: DriverDocumentpayload,
   ) => Promise<any>;
-  updateDriveractivestatus:(
+  updateDriveractivestatus: (
     driverId: string,
     data: Driverstatuspayload,
-  )=>Promise<any>;
+  ) => Promise<any>;
   getRiders: () => Promise<Rider[]>;
   logout: () => void;
 }
@@ -52,8 +59,8 @@ const AuthContext = createContext<AuthContextType>({
   updateDriverdocsStatus: async () => {
     return [];
   },
-  updateDriveractivestatus:async()=>{
-    return[];
+  updateDriveractivestatus: async () => {
+    return [];
   },
   getRiders: async () => {
     return [];
@@ -162,7 +169,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Function to get drivers
 
-  const getDrivers = async (): Promise<Driver[]>=> {
+  const getDrivers = async (): Promise<Driver[]> => {
     try {
       const drivers: any = await getDriversdata();
       return drivers.data.data;
@@ -241,7 +248,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     data: Driverstatuspayload,
   ): Promise<any> => {
     try {
-      const driverStatus=await updateDriverstatus(driverId,data);
+      const driverStatus = await updateDriverstatus(driverId, data);
       return driverStatus.data.data[0];
     } catch (error: any) {
       console.error(error);
