@@ -266,7 +266,8 @@ const Drivers: React.FC = () => {
   ) => {
     if (!selectedDriver) return;
     try {
-      const updatedDriver = await updateDriverdocsStatus(
+      setUpdatingDocument(true);
+      const updatedDocument = await updateDriverdocsStatus(
         document.user_id,
         document.id,
         {
@@ -275,12 +276,13 @@ const Drivers: React.FC = () => {
           notes: verifyNotes || "",
         },
       );
-
-      // Update driver in list
-      setDrivers((prev) =>
-        prev.map((d) => (d.uuid === updatedDriver.uuid ? updatedDriver : d)),
-      );
-
+      const updatedDocuments=selectedDriver.documents.map(doc=>(
+        doc.id===updatedDocument[0].id?updatedDocument[0]:doc
+      ))
+      const updatedDriver ={
+        ...selectedDriver,
+        documents:updatedDocuments
+      } 
       // Update selected driver
       setSelectedDriver(updatedDriver);
       setDocumentUpdateSuccess(`Document status updated to ${newStatus}`);
@@ -291,6 +293,8 @@ const Drivers: React.FC = () => {
       );
     } finally {
       setUpdatingDocument(false);
+      setRejectionReason("");
+      setVerifyNotes("");
     }
   };
 
@@ -413,7 +417,7 @@ const Drivers: React.FC = () => {
         selectedDocumentType,
         uploadedFile,
         uploadDialogNotes,
-      );
+      );  
 
       // Notify the driver
       const notifyResponse = await mockApi.notifyDriverAboutDocument(
