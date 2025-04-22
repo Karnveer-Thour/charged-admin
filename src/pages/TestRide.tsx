@@ -45,7 +45,7 @@ const TestRide: React.FC = () => {
   const [duration, setDuration] = useState(15); // Default 15 minutes
   const [pricingRules, setPricingRules] = useState<PricingRule[]>([]);
   const [selectedRideType, setSelectedRideType] = useState<string>("electric");
-  const { getDrivers } = useAuth();
+  const { getDrivers,getRiders } = useAuth();
 
   // Calculated fare
   const [fareBreakdown, setFareBreakdown] = useState({
@@ -70,7 +70,7 @@ const TestRide: React.FC = () => {
       try {
         const [fetchedRiders, fetchedDrivers, fetchedPricingRules] =
           await Promise.all([
-            getDrivers(),
+            getRiders(),
             getDrivers(),
             mockApi.getPricingRules(),
           ]);
