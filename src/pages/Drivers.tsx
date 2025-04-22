@@ -239,6 +239,7 @@ const Drivers: React.FC = () => {
     setDriverDetailsOpen(false);
     setShowRejectionReason(false);
     setSelectedDriver(null);
+    fetchDrivers();
     setDriverRides([]);
     setDocumentUpdateSuccess(null);
     setDocumentUpdateError(null);
