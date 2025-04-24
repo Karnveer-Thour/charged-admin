@@ -106,6 +106,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     checkExistingSession();
   }, []);
 
+  const handleExpiredtoken=(error:any)=>{
+    if (
+      "auth/id-token-expired" === error.response.data.error.code ||
+      "auth/argument-error" === error.response.data.error.code
+    ) {
+      logout();
+      setAuthState({
+        user: null,
+        error: error.response.data.message,
+      });
+    }
+  }
+
   const login = async (email: string, password: string) => {
     setLoading(true);
     try {
@@ -144,23 +157,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         localStorage.setItem("charged_admin_user", JSON.stringify(User));
       }
     } catch (error) {
-      let errorMessage: string;
-      switch ((error as any).code) {
-        case "auth/invalid-credential":
-          errorMessage = "Invalid credentials. Please try again.";
-          break;
-        case "auth/user-not-found":
-          errorMessage = "No user found with this email.";
-          break;
-        case "auth/user-disabled":
-          errorMessage = "This user account has been disabled.";
-          break;
-        default:
-          errorMessage = "Login failed. Please try again.";
+      const errorCases:any={
+        "auth/invalid-credential":"Invalid credentials. Please try again.",
+        "auth/user-not-found":"No user found with this email.",
+        "auth/user-disabled":"This user account has been disabled."
       }
       setAuthState({
         user: null,
-        error: errorMessage,
+        error: errorCases[(error as any).code]||"Login failed. Please try again.",
       });
     } finally {
       setLoading(false);
@@ -174,18 +178,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const drivers: any = await getDriversdata();
       return drivers.data.data;
     } catch (error: any) {
-      let message = "Something went wrong, login again";
-      if (
-        "auth/id-token-expired" === error.response.data.error.code ||
-        "auth/argument-error" === error.response.data.error.code
-      ) {
-        message = "Token expired. Please login again.";
-        setAuthState({
-          user: null,
-          error: message,
-        });
-        logout();
-      }
+      handleExpiredtoken(error);
       throw new Error(error.response.data.message as string);
     }
   };
@@ -196,18 +189,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const driverDocs: any = await getDriverdocsdata(id);
       return driverDocs.data.data;
     } catch (error: any) {
-      let message = "Something went wrong, login again";
-      if (
-        "auth/id-token-expired" === error.response.data.error.code ||
-        "auth/argument-error" === error.response.data.error.code
-      ) {
-        message = "Token expired. Please login again.";
-        setAuthState({
-          user: null,
-          error: message,
-        });
-        logout();
-      }
+      handleExpiredtoken(error);
       throw new Error(error.response.data.message as string);
     }
   };
@@ -227,18 +209,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       );
       return driverDocs.data.data[0];
     } catch (error: any) {
-      let message = "Something went wrong, login again";
-      if (
-        "auth/id-token-expired" === error.response.data.error.code ||
-        "auth/argument-error" === error.response.data.error.code
-      ) {
-        message = "Token expired. Please login again.";
-        setAuthState({
-          user: null,
-          error: message,
-        });
-        logout();
-      }
+      handleExpiredtoken(error);
       throw new Error(error.response.data.message as string);
     }
   };
@@ -248,22 +219,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     data: Driverstatuspayload,
   ): Promise<any> => {
     try {
+      console.log(data,driverId)
       const driverStatus = await updateDriverstatus(driverId, data);
       return driverStatus.data.data[0];
     } catch (error: any) {
-      console.error(error);
-      let message = "Something went wrong, login again";
-      if (
-        "auth/id-token-expired" === error.response.data.error.code ||
-        "auth/argument-error" === error.response.data.error.code
-      ) {
-        message = "Token expired. Please login again.";
-        setAuthState({
-          user: null,
-          error: message,
-        });
-        logout();
-      }
+      handleExpiredtoken(error);
       throw new Error(error.response.data.message as string);
     }
   };
@@ -274,18 +234,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const riders: any = await getridersdata();
       return riders.data.data;
     } catch (error: any) {
-      let message = "Something went wrong, login again";
-      if (
-        "auth/id-token-expired" === error.response.data.error.code ||
-        "auth/argument-error" === error.response.data.error.code
-      ) {
-        message = "Token expired. Please login again.";
-        setAuthState({
-          user: null,
-          error: message,
-        });
-        logout();
-      }
+      handleExpiredtoken(error);
       throw new Error(error.response.data.message as string);
     }
   };
