@@ -219,7 +219,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     data: Driverstatuspayload,
   ): Promise<any> => {
     try {
-      console.log(data,driverId)
       const driverStatus = await updateDriverstatus(driverId, data);
       return driverStatus.data.data[0];
     } catch (error: any) {
