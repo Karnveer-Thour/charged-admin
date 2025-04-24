@@ -112,10 +112,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       "auth/argument-error" === error.response.data.error.code
     ) {
       logout();
-      setAuthState({
-        user: null,
-        error: error.response.data.message,
-      });
     }
   }
 
@@ -173,13 +169,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Function to get drivers
 
-  const getDrivers = async (): Promise<Driver[]> => {
+  const getDrivers = async (): Promise<any> => {
     try {
       const drivers: any = await getDriversdata();
       return drivers.data.data;
     } catch (error: any) {
       handleExpiredtoken(error);
-      throw new Error(error.response.data.message as string);
+      setAuthState({
+        user: null,
+        error: error.response.data.message,
+      });
     }
   };
 
@@ -190,7 +189,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       return driverDocs.data.data;
     } catch (error: any) {
       handleExpiredtoken(error);
-      throw new Error(error.response.data.message as string);
+      setAuthState({
+        user: null,
+        error: error.response.data.message,
+      });
     }
   };
 
@@ -210,7 +212,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       return driverDocs.data.data[0];
     } catch (error: any) {
       handleExpiredtoken(error);
-      throw new Error(error.response.data.message as string);
+      setAuthState({
+        user: null,
+        error: error.response.data.message,
+      });
     }
   };
 
@@ -223,18 +228,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       return driverStatus.data.data[0];
     } catch (error: any) {
       handleExpiredtoken(error);
-      throw new Error(error.response.data.message as string);
+      setAuthState({
+        user: null,
+        error: error.response.data.message,
+      });
     }
   };
 
   // Function to get Riders
-  const getRiders = async (): Promise<Rider[]> => {
+  const getRiders = async (): Promise<any> => {
     try {
       const riders: any = await getridersdata();
       return riders.data.data;
     } catch (error: any) {
       handleExpiredtoken(error);
-      throw new Error(error.response.data.message as string);
+      setAuthState({
+        user: null,
+        error: error.response.data.message,
+      });
     }
   };
 

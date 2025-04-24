@@ -84,9 +84,9 @@ const TestRide: React.FC = () => {
         if (fetchedDrivers.length > 0) setSelectedDriver(fetchedDrivers[0]);
       } catch (error) {
         if (error instanceof Error) {
-          throw new Error(error.message);
+          console.error(error.message);
         } else {
-          throw new Error("An unknown error occurred.");
+          console.error("An unknown error occurred.");
         }
       } finally {
         setLoading(false);
