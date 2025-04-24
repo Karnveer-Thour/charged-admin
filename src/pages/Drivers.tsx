@@ -152,6 +152,7 @@ const Drivers: React.FC = () => {
           driver?.phone?.includes(query) ||
           driver?.license_plate?.toLowerCase().includes(query),
       );
+      setPage(0);
     }
 
     // Apply vehicle type filter
@@ -159,6 +160,7 @@ const Drivers: React.FC = () => {
       result = result.filter(
         (driver) => driver.car_type === selectedVehicleType,
       );
+      setPage(0);
     }
 
     // Apply status filter
@@ -166,9 +168,11 @@ const Drivers: React.FC = () => {
       result = result.filter(
         (driver) => driver.is_active === selectedStatusFilter,
       );
+      setPage(0);
     }
 
     setFilteredDrivers(result);
+    
   }, [drivers, searchQuery, selectedVehicleType, selectedStatusFilter]);
 
   useEffect(() => {
