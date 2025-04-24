@@ -169,7 +169,6 @@ const Drivers: React.FC = () => {
     }
 
     setFilteredDrivers(result);
-    setPage(0); // Reset to first page when filters change
   }, [drivers, searchQuery, selectedVehicleType, selectedStatusFilter]);
 
   useEffect(() => {
@@ -238,8 +237,11 @@ const Drivers: React.FC = () => {
   const handleCloseDriverDetails = () => {
     setDriverDetailsOpen(false);
     setShowRejectionReason(false);
+    const updatedDrivers = drivers.map((driver) =>
+      driver.id === selectedDriver!.id ? selectedDriver! : driver
+    );
+    setDrivers(updatedDrivers as Driver[]);
     setSelectedDriver(null);
-    fetchDrivers();
     setDriverRides([]);
     setDocumentUpdateSuccess(null);
     setDocumentUpdateError(null);
