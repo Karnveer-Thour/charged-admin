@@ -34,6 +34,7 @@ interface AuthContextType {
   updateDriveractivestatus: (
     driverId: string,
     data: Driverstatuspayload,
+    setError:any,
   ) => Promise<any>;
   getRiders: () => Promise<Rider[]>;
   logout: () => void;
@@ -137,6 +138,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       // Check if the user exists or not
       if (userCredential.user) {
         const userData = await getAdmin(User.token || "");
+        console.log(userData);
         //Check if the user is an admin
         if (userData.data.data.user_type !== "admin") {
           setAuthState({
@@ -222,15 +224,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const updateDriveractivestatus = async (
     driverId: string,
     data: Driverstatuspayload,
+    setError:any,
   ): Promise<any> => {
     try {
       const driverStatus = await updateDriverstatus(driverId, data);
       return driverStatus.data.data[0];
     } catch (error: any) {
+      setError(error.response.data.mesage);
       handleExpiredtoken(error);
       setAuthState({
         user: null,
-        error: error.response.data.message,
+        error: error.response.data.mesage,
       });
     }
   };

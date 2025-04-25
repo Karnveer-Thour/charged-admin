@@ -67,6 +67,7 @@ import {
   DocumentType,
 } from "../types";
 import { useAuth } from "../contexts/AuthContext";
+import { updateDriverstatus } from "../API/axios";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -265,6 +266,7 @@ const Drivers: React.FC = () => {
         {
           is_active: !selectedDriver.is_active,
         },
+        setError,
       );
       const updatedDriver = {
         ...selectedDriver,
@@ -272,11 +274,7 @@ const Drivers: React.FC = () => {
       };
       setSelectedDriver(updatedDriver);
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("An unknown error occurred.");
-      }
+      console.error(err);
     } finally {
       setUpdatingStatus(false);
     }
