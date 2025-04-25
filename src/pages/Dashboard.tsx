@@ -35,6 +35,7 @@ import {
 import { mockApi } from "../services/mockApi";
 import { DashboardStats, Ride } from "../types";
 import { formatCurrency, formatDate } from "../utils/formatters";
+import { useAuth } from "../contexts/AuthContext";
 
 // Register ChartJS components
 ChartJS.register(
@@ -50,12 +51,15 @@ const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [stats, setStats] = useState<DashboardStats | null>(null);
-
+  const {getDrivers}=useAuth();
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
         const dashboardStats = await mockApi.getDashboardStats();
+        const drivers=await getDrivers();
+        const activeDrivers=drivers?.filter((driver:any) => driver?.is_active)?.length;
+        dashboardStats.activeDrivers=activeDrivers;
         setStats(dashboardStats);
         setError(null);
       } catch (err) {
