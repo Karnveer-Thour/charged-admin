@@ -16,6 +16,7 @@ import Drivers from "./pages/Drivers";
 import RideDetails from "./pages/RideDetails";
 import TestRide from "./pages/TestRide";
 import NotFound from "./pages/NotFound";
+import { Documents } from "./pages/Documents";
 
 // Create a theme instance
 const theme = createTheme({
@@ -73,6 +74,7 @@ const App: React.FC = () => {
               <Route path="pricing" element={<Pricing />} />
               <Route path="riders" element={<Riders />} />
               <Route path="drivers" element={<Drivers />} />
+              <Route path="documents" element={<Documents />} />
               <Route path="rides/:rideId" element={<RideDetails />} />
               <Route path="test-ride" element={<TestRide />} />
               <Route path="*" element={<NotFound />} />

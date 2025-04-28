@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import {
   AppBar,
@@ -28,6 +28,7 @@ import {
   AccountCircle as AccountIcon,
   DirectionsCar as CarIcon,
   Science as TestIcon,
+  DocumentScanner,
 } from "@mui/icons-material";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -44,6 +45,7 @@ const navItems: NavItem[] = [
   { text: "Pricing", path: "/pricing", icon: <MoneyIcon /> },
   { text: "Riders", path: "/riders", icon: <PeopleIcon /> },
   { text: "Drivers", path: "/drivers", icon: <CarIcon /> },
+  { text: "Documents", path: "/documents", icon: <DocumentScanner /> },
   { text: "Test Ride", path: "/test-ride", icon: <TestIcon /> },
 ];
 
@@ -88,6 +90,7 @@ const Layout: React.FC = () => {
     if (path === "/pricing") return "Pricing Rules";
     if (path === "/riders") return "Rider Management";
     if (path === "/drivers") return "Driver Management";
+    if (path === "/documents") return "Required documents";
     if (path === "/test-ride") return "Test Ride Simulation";
     if (path.startsWith("/rides/")) return "Ride Details";
 
