@@ -278,9 +278,11 @@ const Riders: React.FC = () => {
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "space-around",
-                                background: "black",
-                                color: "white",
+                                background: "white",
+                                border:"none",
                                 fontSize: "1.2rem",
+                                cursor:"pointer",
+                                borderBottom:"2px solid black"
                               }}
                               onClick={undefined}
                             >
@@ -295,9 +297,11 @@ const Riders: React.FC = () => {
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "space-around",
-                                background: "black",
-                                color: "white",
+                                background: "white",
+                                border:"none",
                                 fontSize: "1.2rem",
+                                cursor:"pointer",
+                                borderBottom:"2px solid black"
                               }}
                               onClick={undefined}
                             >

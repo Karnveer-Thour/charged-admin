@@ -41,7 +41,7 @@ function Multiselect({ Heading, children }) {
       {selectorOpened && (
         <div
           ref={menuRef}
-          style={{marginTop:"7.5px",position:"absolute",zIndex:"50",display:"grid"}}
+          style={{marginTop:"7.5px",position:"absolute",zIndex:"50",background:"white",display:"grid"}}
         >
           {children}
         </div>
