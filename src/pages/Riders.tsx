@@ -24,6 +24,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Switch,
 } from "@mui/material";
 import {
   Search as SearchIcon,
@@ -32,11 +33,13 @@ import {
   DirectionsCar as RideIcon,
   Edit as EditIcon,
   Close as CloseIcon,
+  Delete,
 } from "@mui/icons-material";
 import { mockApi } from "../services/mockApi";
 import { Rider, Ride } from "../types";
 import { formatDate, formatRelativeTime } from "../utils/formatters";
 import { useAuth } from "../contexts/AuthContext";
+import Multiselect from "../utils/Multiselect";
 
 const Riders: React.FC = () => {
   const [riders, setRiders] = useState<Rider[]>([]);
@@ -256,13 +259,52 @@ const Riders: React.FC = () => {
                         >
                           <ViewIcon />
                         </IconButton>
-                        <IconButton
-                          color="secondary"
-                          size="small"
-                          title="Edit rider"
+                        <Multiselect
+                          Heading={
+                            <IconButton
+                              color="secondary"
+                              size="small"
+                              title="Edit rider"
+                            >
+                              <EditIcon />
+                            </IconButton>
+                          }
                         >
-                          <EditIcon />
-                        </IconButton>
+                          <div style={{ width: "130px", height: "35px" }}>
+                            <button
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-around",
+                                background: "black",
+                                color: "white",
+                                fontSize: "1.2rem",
+                              }}
+                              onClick={undefined}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                          <div style={{ width: "130px", height: "35px" }}>
+                            <button
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-around",
+                                background: "black",
+                                color: "white",
+                                fontSize: "1.2rem",
+                              }}
+                              onClick={undefined}
+                            >
+                              Active
+                            </button>
+                          </div>
+                        </Multiselect>
                       </Box>
                     </TableCell>
                   </TableRow>
