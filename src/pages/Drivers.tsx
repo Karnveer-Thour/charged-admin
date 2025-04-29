@@ -173,7 +173,6 @@ const Drivers: React.FC = () => {
     }
 
     setFilteredDrivers(result);
-    
   }, [drivers, searchQuery, selectedVehicleType, selectedStatusFilter]);
 
   useEffect(() => {
@@ -243,7 +242,7 @@ const Drivers: React.FC = () => {
     setDriverDetailsOpen(false);
     setShowRejectionReason(false);
     const updatedDrivers = drivers.map((driver) =>
-      driver.id === selectedDriver!.id ? selectedDriver! : driver
+      driver.id === selectedDriver!.id ? selectedDriver! : driver,
     );
     setDrivers(updatedDrivers as Driver[]);
     setSelectedDriver(null);

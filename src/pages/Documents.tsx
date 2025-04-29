@@ -20,18 +20,25 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Delete, Edit, Search as SearchIcon,Visibility as ViewIcon, } from "@mui/icons-material";
+import {
+  Delete,
+  Edit,
+  Search as SearchIcon,
+  Visibility as ViewIcon,
+} from "@mui/icons-material";
 import { requiredDocuments } from "../types";
 import { formatDate } from "../utils/formatters";
 export const Documents = () => {
   const [documentTypes, setDocumentTypes] = useState<requiredDocuments[]>([]);
-  const [filtereddocumentTypes, setFiltereddocumentTypes] = useState<requiredDocuments[]>([]);
+  const [filtereddocumentTypes, setFiltereddocumentTypes] = useState<
+    requiredDocuments[]
+  >([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
 
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const { getDocumenttypes } = useAuth();
   const fetchDocumenttypes = async () => {
     try {
@@ -41,10 +48,9 @@ export const Documents = () => {
       setFiltereddocumentTypes(documentTypes);
     } catch (error) {
       setError(error as string);
-    }finally{
+    } finally {
       setLoading(false);
     }
-   
   };
 
   const handleChangePage = (_: unknown, newPage: number) => {
@@ -52,45 +58,47 @@ export const Documents = () => {
   };
 
   const handleChangeRowsPerPage = (
-      event: React.ChangeEvent<HTMLInputElement>,
-    ) => {
-      setRowsPerPage(parseInt(event.target.value, 10));
-      setPage(0);
-    };
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
   useEffect(() => {
     fetchDocumenttypes();
   }, []);
-   useEffect(() => {
-      if (documentTypes.length) {
-        const filtered = documentTypes.filter(
-          (Documents) =>
-            Documents.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          Documents.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          Documents.created_at.includes(searchQuery)||
+  useEffect(() => {
+    if (documentTypes.length) {
+      const filtered = documentTypes.filter(
+        (Documents) =>
+          Documents.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          Documents.description
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          Documents.created_at.includes(searchQuery) ||
           Documents.user_type.includes(searchQuery),
-        );
-        setFiltereddocumentTypes(filtered);
-      }
-    }, [searchQuery, documentTypes]);
+      );
+      setFiltereddocumentTypes(filtered);
+    }
+  }, [searchQuery, documentTypes]);
   if (loading) {
-      return (
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
-          <CircularProgress />
-        </Box>
-      );
-    }
-    if (error) {
-      return (
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-          <Alert severity="error" sx={{ mb: 4 }}>
-            {error}
-          </Alert>
-          <Button variant="contained" onClick={fetchDocumenttypes}>
-            Retry
-          </Button>
-        </Container>
-      );
-    }
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+  if (error) {
+    return (
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Alert severity="error" sx={{ mb: 4 }}>
+          {error}
+        </Alert>
+        <Button variant="contained" onClick={fetchDocumenttypes}>
+          Retry
+        </Button>
+      </Container>
+    );
+  }
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Box
@@ -139,7 +147,13 @@ export const Documents = () => {
                 .map((documentTypes) => (
                   <TableRow key={documentTypes.id} hover>
                     <TableCell>
-                      <Box sx={{ display: "flex", alignItems: "center",marginLeft:"10.5px" }}>  
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          marginLeft: "10.5px",
+                        }}
+                      >
                         <Box>
                           <Typography variant="body1" fontWeight="medium">
                             {documentTypes.name}
@@ -151,10 +165,12 @@ export const Documents = () => {
                       </Box>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body2">{documentTypes.description}</Typography>
+                      <Typography variant="body2">
+                        {documentTypes.description}
+                      </Typography>
                     </TableCell>
                     <TableCell align="center">
-                      {documentTypes.is_required?"Required":"Not Required"}
+                      {documentTypes.is_required ? "Required" : "Not Required"}
                     </TableCell>
                     <TableCell align="center">
                       {documentTypes.user_type}
@@ -195,15 +211,15 @@ export const Documents = () => {
             </TableBody>
           </Table>
         </TableContainer>
-         <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
-                  component="div"
-                  count={documentTypes.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                />
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={documentTypes.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </Paper>
     </Container>
   );

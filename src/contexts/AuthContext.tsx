@@ -36,9 +36,9 @@ interface AuthContextType {
   updateDriveractivestatus: (
     driverId: string,
     data: Driverstatuspayload,
-    setError:any,
+    setError: any,
   ) => Promise<any>;
-  getDocumenttypes:()=>Promise<requiredDocuments[]>
+  getDocumenttypes: () => Promise<requiredDocuments[]>;
   getRiders: () => Promise<Rider[]>;
   logout: () => void;
 }
@@ -113,14 +113,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     checkExistingSession();
   }, []);
 
-  const handleExpiredtoken=(error:any)=>{
+  const handleExpiredtoken = (error: any) => {
     if (
       "auth/id-token-expired" === error.response.data.error.code ||
       "auth/argument-error" === error.response.data.error.code
     ) {
       logout();
     }
-  }
+  };
 
   const login = async (email: string, password: string) => {
     setLoading(true);
@@ -161,14 +161,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         localStorage.setItem("charged_admin_user", JSON.stringify(User));
       }
     } catch (error) {
-      const errorCases:any={
-        "auth/invalid-credential":"Invalid credentials. Please try again.",
-        "auth/user-not-found":"No user found with this email.",
-        "auth/user-disabled":"This user account has been disabled."
-      }
+      const errorCases: any = {
+        "auth/invalid-credential": "Invalid credentials. Please try again.",
+        "auth/user-not-found": "No user found with this email.",
+        "auth/user-disabled": "This user account has been disabled.",
+      };
       setAuthState({
         user: null,
-        error: errorCases[(error as any).code]||"Login failed. Please try again.",
+        error:
+          errorCases[(error as any).code] || "Login failed. Please try again.",
       });
     } finally {
       setLoading(false);
@@ -183,7 +184,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       return drivers.data.data;
     } catch (error: any) {
       handleExpiredtoken(error);
-      setAuthState(prev=>({
+      setAuthState((prev) => ({
         ...prev,
         error: error.response.data.message,
       }));
@@ -197,7 +198,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       return driverDocs.data.data;
     } catch (error: any) {
       handleExpiredtoken(error);
-      setAuthState(prev=>({
+      setAuthState((prev) => ({
         ...prev,
         error: error.response.data.message,
       }));
@@ -220,7 +221,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       return driverDocs.data.data[0];
     } catch (error: any) {
       handleExpiredtoken(error);
-      setAuthState(prev=>({
+      setAuthState((prev) => ({
         ...prev,
         error: error.response.data.message,
       }));
@@ -230,7 +231,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const updateDriveractivestatus = async (
     driverId: string,
     data: Driverstatuspayload,
-    setError:any,
+    setError: any,
   ): Promise<any> => {
     try {
       const driverStatus = await updateDriverstatus(driverId, data);
@@ -238,20 +239,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } catch (error: any) {
       setError(error.response.data.mesage);
       handleExpiredtoken(error);
-      setAuthState(prev=>({
+      setAuthState((prev) => ({
         ...prev,
         error: error.response.data.message,
       }));
     }
   };
 
-  const getDocumenttypes = async (  ): Promise<any> => {
+  const getDocumenttypes = async (): Promise<any> => {
     try {
       const documentTypes = await getDocumenttypesdata();
       return documentTypes.data.data;
     } catch (error: any) {
       handleExpiredtoken(error);
-      setAuthState(prev=>({
+      setAuthState((prev) => ({
         ...prev,
         error: error.response.data.message,
       }));
@@ -265,7 +266,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       return riders.data.data;
     } catch (error: any) {
       handleExpiredtoken(error);
-      setAuthState(prev=>({
+      setAuthState((prev) => ({
         ...prev,
         error: error.response.data.message,
       }));

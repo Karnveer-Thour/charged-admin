@@ -83,7 +83,7 @@ export const updateDriverstatus = (
 // It returns an array of document types
 // It is used in the documents component
 
-export const getDocumenttypesdata=()=>instance.get("/admin/documenttypes");
+export const getDocumenttypesdata = () => instance.get("/admin/documenttypes");
 
 // Api to get all riders
 // This API is used to get all riders

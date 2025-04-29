@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import {
   AppBar,
@@ -52,7 +52,7 @@ const navItems: NavItem[] = [
 const Layout: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const { authState, logout} = useAuth();
+  const { authState, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 

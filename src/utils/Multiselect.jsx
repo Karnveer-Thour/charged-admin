@@ -1,4 +1,4 @@
-import  { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 function Multiselect({ Heading, children }) {
   const [selectorOpened, setSelectorOpened] = useState(false);
@@ -25,11 +25,11 @@ function Multiselect({ Heading, children }) {
   }, [hideSelector]);
 
   return (
-    <div >
+    <div>
       {/* Button */}
       <div
         ref={buttonRef}
-        style={{border:"none",background:"transparent"}}
+        style={{ border: "none", background: "transparent" }}
         onClick={() => setSelectorOpened((prev) => !prev)}
         role="button"
         aria-expanded={selectorOpened}
@@ -41,7 +41,13 @@ function Multiselect({ Heading, children }) {
       {selectorOpened && (
         <div
           ref={menuRef}
-          style={{marginTop:"7.5px",position:"absolute",zIndex:"50",background:"white",display:"grid"}}
+          style={{
+            marginTop: "7.5px",
+            position: "absolute",
+            zIndex: "50",
+            background: "white",
+            display: "grid",
+          }}
         >
           {children}
         </div>
