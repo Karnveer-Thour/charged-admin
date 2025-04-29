@@ -149,22 +149,22 @@ export interface PricingRule {
 }
 
 export interface rideTypes {
-  "id": number,
-       "name": string,
-       "description": string,
-       "base_price": string,
-       "price_per_km":string,
-       "price_per_minute":string,
-       "min_fare": string,
-       "icon": string,
-       "is_active": boolean,
-       "created_at": string,
-       "updated_at": string,
-       "cancel_fee": string,
-       "refund_distance_in_m": number,
-       "minimum_billable_distance": string,
-       "commission_percentage": string
- }
+  id: number;
+  name: string;
+  description: string;
+  base_price: string;
+  price_per_km: string;
+  price_per_minute: string;
+  min_fare: string;
+  icon: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  cancel_fee: string;
+  refund_distance_in_m: number;
+  minimum_billable_distance: string;
+  commission_percentage: string;
+}
 
 // Dashboard statistics
 export interface DashboardStats {

@@ -45,7 +45,7 @@ const TestRide: React.FC = () => {
   const [duration, setDuration] = useState(15); // Default 15 minutes
   const [pricingRules, setPricingRules] = useState<rideTypes[]>([]);
   const [selectedRideType, setSelectedRideType] = useState<string>("electric");
-  const { getDrivers, getRiders,getRidetypes } = useAuth();
+  const { getDrivers, getRiders, getRidetypes } = useAuth();
 
   // Calculated fare
   const [fareBreakdown, setFareBreakdown] = useState({
@@ -69,11 +69,7 @@ const TestRide: React.FC = () => {
       setLoading(true);
       try {
         const [fetchedRiders, fetchedDrivers, fetchedPricingRules] =
-          await Promise.all([
-            getRiders(),
-            getDrivers(),
-            getRidetypes(),
-          ]);
+          await Promise.all([getRiders(), getDrivers(), getRidetypes()]);
 
         setRiders(fetchedRiders as any);
         setDrivers(fetchedDrivers.filter((d) => d.is_active));
@@ -102,8 +98,7 @@ const TestRide: React.FC = () => {
     if (!pricingRules.length) return;
 
     const rule =
-      pricingRules.find((r) => r?.name === selectedRideType) ||
-      pricingRules[0];
+      pricingRules.find((r) => r?.name === selectedRideType) || pricingRules[0];
 
     const baseFare = Number(rule?.base_price);
 
@@ -117,7 +112,8 @@ const TestRide: React.FC = () => {
     const durationFare = duration * Number(rule?.price_per_minute);
     const totalFare = baseFare + distanceFare + durationFare;
 
-    const commissionAmount = Number(totalFare) * (Number(rule?.commission_percentage) / 100);
+    const commissionAmount =
+      Number(totalFare) * (Number(rule?.commission_percentage) / 100);
     const driverEarnings = Number(totalFare) - commissionAmount;
 
     setFareBreakdown({
@@ -306,9 +302,11 @@ const TestRide: React.FC = () => {
                         native: true,
                       }}
                     >
-                     {pricingRules?.map((ride)=>(
-                       <option key={ride.id} value={ride.name}>{ride.name}</option>
-                     ))}
+                      {pricingRules?.map((ride) => (
+                        <option key={ride.id} value={ride.name}>
+                          {ride.name}
+                        </option>
+                      ))}
                     </TextField>
                   </CardContent>
                 </Card>

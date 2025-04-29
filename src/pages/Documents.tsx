@@ -19,11 +19,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import {
-  Delete,
-  Edit,
-  Search as SearchIcon,
-} from "@mui/icons-material";
+import { Delete, Edit, Search as SearchIcon } from "@mui/icons-material";
 import { requiredDocuments } from "../types";
 import { formatDate } from "../utils/formatters";
 export const Documents = () => {

@@ -14,6 +14,7 @@ import {
   Snackbar,
   Divider,
   InputAdornment,
+  Avatar,
 } from "@mui/material";
 import {
   Save as SaveIcon,
@@ -47,7 +48,7 @@ const Pricing: React.FC = () => {
     message: "",
     severity: "success",
   });
-  const {getRidetypes,updateRidetype}=useAuth();
+  const { getRidetypes, updateRidetype } = useAuth();
 
   // Load pricing rules on component mount
   useEffect(() => {
@@ -75,7 +76,7 @@ const Pricing: React.FC = () => {
   ) => {
     setPricingRules((prevRules) =>
       prevRules.map((rule) =>
-        rule.id === id ? { ...rule, [field]: parseFloat(value) || 0 } : rule,
+        rule.id === id ? { ...rule, [field]: value || 0 } : rule,
       ),
     );
   };
@@ -85,7 +86,8 @@ const Pricing: React.FC = () => {
     setSavingRules((prev) => ({ ...prev, [rule.id]: true }));
 
     try {
-      await updateRidetype(rule.id,rule); 
+      console.log(rule);
+      await updateRidetype(rule.id, rule);
       setNotification({
         open: true,
         message: `Successfully updated ${rule?.name} pricing rules`,
@@ -105,15 +107,6 @@ const Pricing: React.FC = () => {
 
   const handleCloseNotification = () => {
     setNotification({ ...notification, open: false });
-  };
-
-  const getRideTypeLabel = (type: string): string => {
-    const labels: Record<string, string> = {
-      electric: "Electric Vehicle",
-      regular: "Standard Vehicle",
-      suv: "SUV Vehicle",
-    };
-    return labels[type] || type;
   };
 
   if (loading) {
@@ -157,15 +150,17 @@ const Pricing: React.FC = () => {
           {pricingRules.map((rule) => (
             <Grid item xs={12} md={4} key={rule.id}>
               <Card elevation={3}>
-                <CardHeader
-                  avatar={rideTypeIcons[rule.icon]}
-                  title={
-                    <Typography variant="h6">
-                      {getRideTypeLabel(rule.name)}
-                    </Typography>
-                  }
-                  subheader={`Last updated: ${new Date(rule.updated_at).toLocaleDateString()}`}
-                />
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <Avatar
+                    src={rule?.icon}
+                    alt={rule?.name}
+                    sx={{ ml: 2, width: 40, height: 40 }}
+                  />
+                  <CardHeader
+                    title={<Typography variant="h6">{rule.name}</Typography>}
+                    subheader={`Last updated: ${new Date(rule.updated_at).toLocaleDateString()}`}
+                  />
+                </Box>
                 <Divider />
                 <CardContent>
                   <Grid container spacing={2}>
@@ -333,7 +328,7 @@ const Pricing: React.FC = () => {
                           handlePricingChange(
                             rule.id,
                             "commission_percentage",
-                            e.target.value,
+                            e.target.value.toString(),
                           )
                         }
                         helperText="Percentage of driver earnings that go to the platform"

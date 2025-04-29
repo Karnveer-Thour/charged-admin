@@ -285,31 +285,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const getRidetypes=async():Promise<any>=>{
+  const getRidetypes = async (): Promise<any> => {
     try {
-      const rideTypes=await getRidetypesdata();
+      const rideTypes = await getRidetypesdata();
       return rideTypes.data.data;
-    } catch (error:any) {
+    } catch (error: any) {
       handleExpiredtoken(error);
       setAuthState((prev) => ({
         ...prev,
         error: error.response.data.message,
       }));
     }
-  }
+  };
 
-  const updateRidetype=async(id:number,body:object):Promise<any>=>{
+  const updateRidetype = async (id: number, body: object): Promise<any> => {
     try {
-      const updatedRide=await updateRidetypedata(id,body);
+      const updatedRide = await updateRidetypedata(id, body);
       return updatedRide.data.data;
-    } catch (error:any) {
+    } catch (error: any) {
       handleExpiredtoken(error);
       setAuthState((prev) => ({
         ...prev,
         error: error.response.data.message,
       }));
     }
-  }
+  };
 
   const logout = () => {
     // Clear user data from localStorage
