@@ -98,3 +98,6 @@ export const getridersdata = () => instance.get("/admin/getriders");
 // It is used in the pricing component
 
 export const getRidetypesdata=()=> instance.get("/ride/ridetype");
+
+
+export const updateRidetypedata=(id:number,body:object)=>instance.put(`ride/ridetype/${id}`,body);

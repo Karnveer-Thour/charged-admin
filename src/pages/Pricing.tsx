@@ -47,7 +47,7 @@ const Pricing: React.FC = () => {
     message: "",
     severity: "success",
   });
-  const {getRidetypes}=useAuth();
+  const {getRidetypes,updateRidetype}=useAuth();
 
   // Load pricing rules on component mount
   useEffect(() => {
@@ -80,15 +80,15 @@ const Pricing: React.FC = () => {
     );
   };
 
-  const handleSaveRule = async (rule: PricingRule) => {
+  const handleSaveRule = async (rule: rideTypes) => {
     // Set saving state only for this specific rule
     setSavingRules((prev) => ({ ...prev, [rule.id]: true }));
 
     try {
-      await mockApi.updatePricingRule(rule.id, rule);
+      await updateRidetype(rule.id,rule); 
       setNotification({
         open: true,
-        message: `Successfully updated ${rule.rideTypeId} pricing rules`,
+        message: `Successfully updated ${rule?.name} pricing rules`,
         severity: "success",
       });
     } catch (err) {
@@ -346,7 +346,7 @@ const Pricing: React.FC = () => {
                         color="primary"
                         fullWidth
                         startIcon={<SaveIcon />}
-                        // onClick={() => handleSaveRule(rule)}
+                        onClick={() => handleSaveRule(rule)}
                         disabled={savingRules[rule.id]}
                         sx={{ mt: 2 }}
                       >

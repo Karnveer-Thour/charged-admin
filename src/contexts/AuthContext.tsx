@@ -21,6 +21,7 @@ import {
   updateDriverstatus,
   getDocumenttypesdata,
   getRidetypesdata,
+  updateRidetypedata,
 } from "../API/axios";
 
 interface AuthContextType {
@@ -44,6 +45,7 @@ interface AuthContextType {
   getDocumenttypes: () => Promise<requiredDocuments[]>;
   getRiders: () => Promise<Rider[]>;
   getRidetypes: () => Promise<rideTypes[]>;
+  updateRidetype: (id: number, body: object) => Promise<any>;
   logout: () => void;
 }
 
@@ -77,6 +79,9 @@ const AuthContext = createContext<AuthContextType>({
     return [];
   },
   getRidetypes: async () => {
+    return [];
+  },
+  updateRidetype: async () => {
     return [];
   },
   logout: () => {},
@@ -293,6 +298,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }
 
+  const updateRidetype=async(id:number,body:object):Promise<any>=>{
+    try {
+      const updatedRide=await updateRidetypedata(id,body);
+      return updatedRide.data.data;
+    } catch (error:any) {
+      handleExpiredtoken(error);
+      setAuthState((prev) => ({
+        ...prev,
+        error: error.response.data.message,
+      }));
+    }
+  }
+
   const logout = () => {
     // Clear user data from localStorage
     signOut(auth);
@@ -319,6 +337,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         updateDriveractivestatus,
         getRidetypes,
         getRiders,
+        updateRidetype,
         logout,
       }}
     >
