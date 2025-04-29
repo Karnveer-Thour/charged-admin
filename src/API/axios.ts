@@ -78,6 +78,13 @@ export const updateDriverstatus = (
   return instance.put(`/admin/updatestatus/${driverId}`, data);
 };
 
+// Api to get all document types
+// This API is used to get all document types
+// It returns an array of document types
+// It is used in the documents component
+
+export const getDocumenttypesdata=()=>instance.get("/admin/documenttypes");
+
 // Api to get all riders
 // This API is used to get all riders
 // It returns an array of riders

@@ -6,6 +6,7 @@ import {
   Rider,
   DriverDocumentpayload,
   Driverstatuspayload,
+  requiredDocuments,
 } from "../types";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
@@ -16,6 +17,7 @@ import {
   getDriverdocsdata,
   updateDriverDocs,
   updateDriverstatus,
+  getDocumenttypesdata,
 } from "../API/axios";
 
 interface AuthContextType {
@@ -36,6 +38,7 @@ interface AuthContextType {
     data: Driverstatuspayload,
     setError:any,
   ) => Promise<any>;
+  getDocumenttypes:()=>Promise<requiredDocuments[]>
   getRiders: () => Promise<Rider[]>;
   logout: () => void;
 }
@@ -61,6 +64,9 @@ const AuthContext = createContext<AuthContextType>({
     return [];
   },
   updateDriveractivestatus: async () => {
+    return [];
+  },
+  getDocumenttypes: async () => {
     return [];
   },
   getRiders: async () => {
@@ -177,10 +183,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       return drivers.data.data;
     } catch (error: any) {
       handleExpiredtoken(error);
-      setAuthState({
-        user: null,
+      setAuthState(prev=>({
+        ...prev,
         error: error.response.data.message,
-      });
+      }));
     }
   };
 
@@ -191,10 +197,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       return driverDocs.data.data;
     } catch (error: any) {
       handleExpiredtoken(error);
-      setAuthState({
-        user: null,
+      setAuthState(prev=>({
+        ...prev,
         error: error.response.data.message,
-      });
+      }));
     }
   };
 
@@ -214,10 +220,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       return driverDocs.data.data[0];
     } catch (error: any) {
       handleExpiredtoken(error);
-      setAuthState({
-        user: null,
+      setAuthState(prev=>({
+        ...prev,
         error: error.response.data.message,
-      });
+      }));
     }
   };
 
@@ -232,10 +238,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } catch (error: any) {
       setError(error.response.data.mesage);
       handleExpiredtoken(error);
-      setAuthState({
-        user: null,
-        error: error.response.data.mesage,
-      });
+      setAuthState(prev=>({
+        ...prev,
+        error: error.response.data.message,
+      }));
+    }
+  };
+
+  const getDocumenttypes = async (  ): Promise<any> => {
+    try {
+      const documentTypes = await getDocumenttypesdata();
+      return documentTypes.data.data;
+    } catch (error: any) {
+      handleExpiredtoken(error);
+      setAuthState(prev=>({
+        ...prev,
+        error: error.response.data.message,
+      }));
     }
   };
 
@@ -246,10 +265,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       return riders.data.data;
     } catch (error: any) {
       handleExpiredtoken(error);
-      setAuthState({
-        user: null,
+      setAuthState(prev=>({
+        ...prev,
         error: error.response.data.message,
-      });
+      }));
     }
   };
 
@@ -274,6 +293,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         login,
         getDrivers,
         getDriverDocs,
+        getDocumenttypes,
         updateDriverdocsStatus,
         updateDriveractivestatus,
         getRiders,

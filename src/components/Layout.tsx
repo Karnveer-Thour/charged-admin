@@ -43,16 +43,16 @@ interface NavItem {
 const navItems: NavItem[] = [
   { text: "Dashboard", path: "/", icon: <DashboardIcon /> },
   { text: "Pricing", path: "/pricing", icon: <MoneyIcon /> },
+  { text: "Documents", path: "/documents", icon: <DocumentScanner /> },
   { text: "Riders", path: "/riders", icon: <PeopleIcon /> },
   { text: "Drivers", path: "/drivers", icon: <CarIcon /> },
-  { text: "Documents", path: "/documents", icon: <DocumentScanner /> },
   { text: "Test Ride", path: "/test-ride", icon: <TestIcon /> },
 ];
 
 const Layout: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const { authState, logout, setAuthState } = useAuth();
+  const { authState, logout} = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -88,9 +88,9 @@ const Layout: React.FC = () => {
 
     if (path === "/") return "Dashboard";
     if (path === "/pricing") return "Pricing Rules";
+    if (path === "/documents") return "Required Documents";
     if (path === "/riders") return "Rider Management";
     if (path === "/drivers") return "Driver Management";
-    if (path === "/documents") return "Required documents";
     if (path === "/test-ride") return "Test Ride Simulation";
     if (path.startsWith("/rides/")) return "Ride Details";
 

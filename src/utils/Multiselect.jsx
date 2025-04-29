@@ -27,7 +27,7 @@ function Multiselect({ Heading, children }) {
   return (
     <div >
       {/* Button */}
-      <button
+      <div
         ref={buttonRef}
         style={{border:"none",background:"transparent"}}
         onClick={() => setSelectorOpened((prev) => !prev)}
@@ -35,7 +35,7 @@ function Multiselect({ Heading, children }) {
         aria-expanded={selectorOpened}
       >
         <span className="text-md font-medium">{Heading}</span>
-      </button>
+      </div>
 
       {/* Dropdown Menu */}
       {selectorOpened && (

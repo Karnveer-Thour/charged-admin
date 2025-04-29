@@ -271,7 +271,7 @@ const Riders: React.FC = () => {
                           }
                         >
                           <div style={{ width: "130px", height: "35px" }}>
-                            <button
+                            <span
                               style={{
                                 width: "100%",
                                 height: "100%",
@@ -287,10 +287,10 @@ const Riders: React.FC = () => {
                               onClick={undefined}
                             >
                               Delete
-                            </button>
+                            </span>
                           </div>
                           <div style={{ width: "130px", height: "35px" }}>
-                            <button
+                            <span
                               style={{
                                 width: "100%",
                                 height: "100%",
@@ -306,7 +306,7 @@ const Riders: React.FC = () => {
                               onClick={undefined}
                             >
                               Active
-                            </button>
+                            </span>
                           </div>
                         </Multiselect>
                       </Box>

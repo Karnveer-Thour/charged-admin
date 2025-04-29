@@ -122,6 +122,16 @@ export interface DriverDocument {
   user_id: string;
 }
 
+export interface requiredDocuments {
+  id: number;
+  name: string;
+  display_name: string;
+  description: string;
+  is_required: boolean;
+  user_type: string;
+  created_at: string;
+}
+
 // Pricing types
 export interface PricingRule {
   id: string;
