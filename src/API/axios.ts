@@ -92,5 +92,9 @@ export const getDocumenttypesdata = () => instance.get("/admin/documenttypes");
 
 export const getridersdata = () => instance.get("/admin/getriders");
 
+// Api to get all Ridetypes
+// This API is used to get all ridetypes
+// It returns an array of ridetypes
+// It is used in the pricing component
 
 export const getRidetypesdata=()=> instance.get("/ride/ridetype");

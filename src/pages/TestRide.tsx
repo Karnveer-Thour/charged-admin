@@ -29,7 +29,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { mockApi } from "../services/mockApi";
 import { formatCurrency } from "../utils/formatters";
-import { Ride, Rider, Driver, PricingRule } from "../types";
+import { Ride, Rider, Driver, PricingRule, rideTypes } from "../types";
 import { useAuth } from "../contexts/AuthContext";
 
 const TestRide: React.FC = () => {
@@ -43,9 +43,9 @@ const TestRide: React.FC = () => {
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [distance, setDistance] = useState(5); // Default 5km
   const [duration, setDuration] = useState(15); // Default 15 minutes
-  const [pricingRules, setPricingRules] = useState<PricingRule[]>([]);
+  const [pricingRules, setPricingRules] = useState<rideTypes[]>([]);
   const [selectedRideType, setSelectedRideType] = useState<string>("electric");
-  const { getDrivers, getRiders } = useAuth();
+  const { getDrivers, getRiders,getRidetypes } = useAuth();
 
   // Calculated fare
   const [fareBreakdown, setFareBreakdown] = useState({
@@ -72,7 +72,7 @@ const TestRide: React.FC = () => {
           await Promise.all([
             getRiders(),
             getDrivers(),
-            mockApi.getPricingRules(),
+            getRidetypes(),
           ]);
 
         setRiders(fetchedRiders as any);
@@ -102,23 +102,23 @@ const TestRide: React.FC = () => {
     if (!pricingRules.length) return;
 
     const rule =
-      pricingRules.find((r) => r.rideTypeId === selectedRideType) ||
+      pricingRules.find((r) => r?.name === selectedRideType) ||
       pricingRules[0];
 
-    const baseFare = rule.basePrice;
+    const baseFare = Number(rule?.base_price);
 
     // Calculate billable distance (only charge for distance beyond the minimum billable distance)
     const billableDistance = Math.max(
       0,
-      distance - rule.minimumBillableDistance,
+      distance - Number(rule?.minimum_billable_distance),
     );
-    const distanceFare = billableDistance * rule.pricePerKm;
+    const distanceFare = billableDistance * Number(rule?.price_per_km);
 
-    const durationFare = duration * rule.pricePerMinute;
+    const durationFare = duration * Number(rule?.price_per_minute);
     const totalFare = baseFare + distanceFare + durationFare;
 
-    const commissionAmount = totalFare * (rule.commissionPercentage / 100);
-    const driverEarnings = totalFare - commissionAmount;
+    const commissionAmount = Number(totalFare) * (Number(rule?.commission_percentage) / 100);
+    const driverEarnings = Number(totalFare) - commissionAmount;
 
     setFareBreakdown({
       baseFare,
@@ -127,7 +127,7 @@ const TestRide: React.FC = () => {
       totalFare,
       commissionAmount,
       driverEarnings,
-      commissionPercentage: rule.commissionPercentage,
+      commissionPercentage: Number(rule?.commission_percentage),
     });
   }, [distance, duration, selectedRideType, pricingRules]);
 
@@ -306,9 +306,9 @@ const TestRide: React.FC = () => {
                         native: true,
                       }}
                     >
-                      <option value="electric">Electric</option>
-                      <option value="regular">Regular</option>
-                      <option value="suv">SUV</option>
+                     {pricingRules?.map((ride)=>(
+                       <option key={ride.id} value={ride.name}>{ride.name}</option>
+                     ))}
                     </TextField>
                   </CardContent>
                 </Card>
@@ -388,6 +388,7 @@ const TestRide: React.FC = () => {
                           secondary={
                             <>
                               {formatCurrency(fareBreakdown.distanceFare)}
+                              {console.log(distance)}
                               {pricingRules.length > 0 && (
                                 <Typography
                                   variant="caption"
@@ -396,8 +397,8 @@ const TestRide: React.FC = () => {
                                 >
                                   First{" "}
                                   {pricingRules.find(
-                                    (r) => r.rideTypeId === selectedRideType,
-                                  )?.minimumBillableDistance || 0}
+                                    (r) => r?.name === selectedRideType,
+                                  )?.minimum_billable_distance || 0}
                                   km included in base price
                                 </Typography>
                               )}

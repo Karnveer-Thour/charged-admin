@@ -283,11 +283,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const getRidetypes=async():Promise<any>=>{
     try {
       const rideTypes=await getRidetypesdata();
-      console.log(rideTypes);
       return rideTypes.data.data;
     } catch (error:any) {
       handleExpiredtoken(error);
-      console.log(error);
       setAuthState((prev) => ({
         ...prev,
         error: error.response.data.message,
