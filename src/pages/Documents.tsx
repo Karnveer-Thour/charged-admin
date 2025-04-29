@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import {
   Alert,
-  Avatar,
   Box,
   Button,
   CircularProgress,
@@ -24,7 +23,6 @@ import {
   Delete,
   Edit,
   Search as SearchIcon,
-  Visibility as ViewIcon,
 } from "@mui/icons-material";
 import { requiredDocuments } from "../types";
 import { formatDate } from "../utils/formatters";

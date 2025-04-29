@@ -23,7 +23,8 @@ import {
   AirportShuttle as SuvIcon,
 } from "@mui/icons-material";
 import { mockApi } from "../services/mockApi";
-import { PricingRule } from "../types";
+import { PricingRule, rideTypes } from "../types";
+import { useAuth } from "../contexts/AuthContext";
 
 // Ride type icons mapping
 const rideTypeIcons: Record<string, React.ReactNode> = {
@@ -33,7 +34,7 @@ const rideTypeIcons: Record<string, React.ReactNode> = {
 };
 
 const Pricing: React.FC = () => {
-  const [pricingRules, setPricingRules] = useState<PricingRule[]>([]);
+  const [pricingRules, setPricingRules] = useState<rideTypes[]>([]);
   const [loading, setLoading] = useState(true);
   const [savingRules, setSavingRules] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
@@ -46,6 +47,7 @@ const Pricing: React.FC = () => {
     message: "",
     severity: "success",
   });
+  const {getRidetypes}=useAuth();
 
   // Load pricing rules on component mount
   useEffect(() => {
@@ -55,7 +57,7 @@ const Pricing: React.FC = () => {
   const fetchPricingRules = async () => {
     setLoading(true);
     try {
-      const rules = await mockApi.getPricingRules();
+      const rules = await getRidetypes();
       setPricingRules(rules);
       setError(null);
     } catch (err) {
@@ -67,8 +69,8 @@ const Pricing: React.FC = () => {
   };
 
   const handlePricingChange = (
-    id: string,
-    field: keyof PricingRule,
+    id: number,
+    field: keyof rideTypes,
     value: any,
   ) => {
     setPricingRules((prevRules) =>
@@ -156,13 +158,13 @@ const Pricing: React.FC = () => {
             <Grid item xs={12} md={4} key={rule.id}>
               <Card elevation={3}>
                 <CardHeader
-                  avatar={rideTypeIcons[rule.rideTypeId]}
+                  avatar={rideTypeIcons[rule.icon]}
                   title={
                     <Typography variant="h6">
-                      {getRideTypeLabel(rule.rideTypeId)}
+                      {getRideTypeLabel(rule.name)}
                     </Typography>
                   }
-                  subheader={`Last updated: ${new Date(rule.updatedAt).toLocaleDateString()}`}
+                  subheader={`Last updated: ${new Date(rule.updated_at).toLocaleDateString()}`}
                 />
                 <Divider />
                 <CardContent>
@@ -177,11 +179,11 @@ const Pricing: React.FC = () => {
                           ),
                         }}
                         fullWidth
-                        value={rule.basePrice}
+                        value={rule?.base_price}
                         onChange={(e) =>
                           handlePricingChange(
                             rule.id,
-                            "basePrice",
+                            "base_price",
                             e.target.value,
                           )
                         }
@@ -198,11 +200,11 @@ const Pricing: React.FC = () => {
                           ),
                         }}
                         fullWidth
-                        value={rule.pricePerKm}
+                        value={rule?.price_per_km}
                         onChange={(e) =>
                           handlePricingChange(
                             rule.id,
-                            "pricePerKm",
+                            "price_per_km",
                             e.target.value,
                           )
                         }
@@ -219,11 +221,11 @@ const Pricing: React.FC = () => {
                           ),
                         }}
                         fullWidth
-                        value={rule.pricePerMinute}
+                        value={rule?.price_per_minute}
                         onChange={(e) =>
                           handlePricingChange(
                             rule.id,
-                            "pricePerMinute",
+                            "price_per_minute",
                             e.target.value,
                           )
                         }
@@ -247,11 +249,11 @@ const Pricing: React.FC = () => {
                           ),
                         }}
                         fullWidth
-                        value={rule.cancellationFee}
+                        value={rule?.cancel_fee}
                         onChange={(e) =>
                           handlePricingChange(
                             rule.id,
-                            "cancellationFee",
+                            "cancel_fee",
                             e.target.value,
                           )
                         }
@@ -268,11 +270,11 @@ const Pricing: React.FC = () => {
                           ),
                         }}
                         fullWidth
-                        value={rule.refundEligibilityDistance}
+                        value={rule?.refund_distance_in_m}
                         onChange={(e) =>
                           handlePricingChange(
                             rule.id,
-                            "refundEligibilityDistance",
+                            "refund_distance_in_m",
                             e.target.value,
                           )
                         }
@@ -297,11 +299,11 @@ const Pricing: React.FC = () => {
                           ),
                         }}
                         fullWidth
-                        value={rule.minimumBillableDistance}
+                        value={rule?.minimum_billable_distance}
                         onChange={(e) =>
                           handlePricingChange(
                             rule.id,
-                            "minimumBillableDistance",
+                            "minimum_billable_distance",
                             e.target.value,
                           )
                         }
@@ -326,11 +328,11 @@ const Pricing: React.FC = () => {
                           ),
                         }}
                         fullWidth
-                        value={rule.commissionPercentage}
+                        value={rule?.commission_percentage}
                         onChange={(e) =>
                           handlePricingChange(
                             rule.id,
-                            "commissionPercentage",
+                            "commission_percentage",
                             e.target.value,
                           )
                         }
@@ -344,7 +346,7 @@ const Pricing: React.FC = () => {
                         color="primary"
                         fullWidth
                         startIcon={<SaveIcon />}
-                        onClick={() => handleSaveRule(rule)}
+                        // onClick={() => handleSaveRule(rule)}
                         disabled={savingRules[rule.id]}
                         sx={{ mt: 2 }}
                       >

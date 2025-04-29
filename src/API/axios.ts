@@ -91,3 +91,6 @@ export const getDocumenttypesdata = () => instance.get("/admin/documenttypes");
 // It is used in the Riders component
 
 export const getridersdata = () => instance.get("/admin/getriders");
+
+
+export const getRidetypesdata=()=> instance.get("/ride/ridetype");

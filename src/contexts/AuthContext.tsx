@@ -7,6 +7,8 @@ import {
   DriverDocumentpayload,
   Driverstatuspayload,
   requiredDocuments,
+  PricingRule,
+  rideTypes,
 } from "../types";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
@@ -18,6 +20,7 @@ import {
   updateDriverDocs,
   updateDriverstatus,
   getDocumenttypesdata,
+  getRidetypesdata,
 } from "../API/axios";
 
 interface AuthContextType {
@@ -40,6 +43,7 @@ interface AuthContextType {
   ) => Promise<any>;
   getDocumenttypes: () => Promise<requiredDocuments[]>;
   getRiders: () => Promise<Rider[]>;
+  getRidetypes: () => Promise<rideTypes[]>;
   logout: () => void;
 }
 
@@ -70,6 +74,9 @@ const AuthContext = createContext<AuthContextType>({
     return [];
   },
   getRiders: async () => {
+    return [];
+  },
+  getRidetypes: async () => {
     return [];
   },
   logout: () => {},
@@ -273,6 +280,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const getRidetypes=async():Promise<any>=>{
+    try {
+      const rideTypes=await getRidetypesdata();
+      console.log(rideTypes);
+      return rideTypes.data.data;
+    } catch (error:any) {
+      handleExpiredtoken(error);
+      console.log(error);
+      setAuthState((prev) => ({
+        ...prev,
+        error: error.response.data.message,
+      }));
+    }
+  }
+
   const logout = () => {
     // Clear user data from localStorage
     signOut(auth);
@@ -297,6 +319,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         getDocumenttypes,
         updateDriverdocsStatus,
         updateDriveractivestatus,
+        getRidetypes,
         getRiders,
         logout,
       }}
