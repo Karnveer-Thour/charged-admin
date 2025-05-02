@@ -132,7 +132,7 @@ export interface requiredDocuments {
   created_at: string;
 }
 
-// Pricing types
+// Pricing types not required anymore replaced with ridetypes
 export interface PricingRule {
   id: string;
   rideTypeId: RideType;
@@ -148,6 +148,7 @@ export interface PricingRule {
   updatedAt: string;
 }
 
+//Type of rides
 export interface rideTypes {
   id: number;
   name: string;
@@ -164,6 +165,7 @@ export interface rideTypes {
   refund_distance_in_m: number;
   minimum_billable_distance: string;
   commission_percentage: string;
+  tax_percentage: string;
 }
 
 // Dashboard statistics

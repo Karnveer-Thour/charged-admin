@@ -156,7 +156,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       // Check if the user exists or not
       if (userCredential.user) {
         const userData = await getAdmin(User.token || "");
-        console.log(userData);
         //Check if the user is an admin
         if (userData.data.data.user_type !== "admin") {
           setAuthState({

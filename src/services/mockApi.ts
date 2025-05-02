@@ -662,11 +662,6 @@ export const mockApi = {
       // Simulate server delay
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      // In a real app, this would send a push notification to the driver
-      console.log(
-        `Notification sent to driver ${driverId} about ${documentType} upload`,
-      );
-
       return {
         success: true,
         message: "Notification sent to driver",

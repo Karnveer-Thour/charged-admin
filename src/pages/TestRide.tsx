@@ -386,7 +386,6 @@ const TestRide: React.FC = () => {
                           secondary={
                             <>
                               {formatCurrency(fareBreakdown.distanceFare)}
-                              {console.log(distance)}
                               {pricingRules.length > 0 && (
                                 <Typography
                                   variant="caption"

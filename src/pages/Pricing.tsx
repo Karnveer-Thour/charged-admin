@@ -19,20 +19,19 @@ import {
 import {
   Save as SaveIcon,
   Refresh as RefreshIcon,
-  ElectricCar as ElectricIcon,
-  DirectionsCar as CarIcon,
-  AirportShuttle as SuvIcon,
+  // ElectricCar as ElectricIcon,
+  // DirectionsCar as CarIcon,
+  // AirportShuttle as SuvIcon,
 } from "@mui/icons-material";
-import { mockApi } from "../services/mockApi";
-import { PricingRule, rideTypes } from "../types";
+import { rideTypes } from "../types";
 import { useAuth } from "../contexts/AuthContext";
 
-// Ride type icons mapping
-const rideTypeIcons: Record<string, React.ReactNode> = {
-  electric: <ElectricIcon sx={{ fontSize: 40, color: "success.main" }} />,
-  regular: <CarIcon sx={{ fontSize: 40, color: "primary.main" }} />,
-  suv: <SuvIcon sx={{ fontSize: 40, color: "warning.main" }} />,
-};
+// // Ride type icons mapping
+// const rideTypeIcons: Record<string, React.ReactNode> = {
+//   electric: <ElectricIcon sx={{ fontSize: 40, color: "success.main" }} />,
+//   regular: <CarIcon sx={{ fontSize: 40, color: "primary.main" }} />,
+//   suv: <SuvIcon sx={{ fontSize: 40, color: "warning.main" }} />,
+// };
 
 const Pricing: React.FC = () => {
   const [pricingRules, setPricingRules] = useState<rideTypes[]>([]);
@@ -53,6 +52,7 @@ const Pricing: React.FC = () => {
   // Load pricing rules on component mount
   useEffect(() => {
     fetchPricingRules();
+    // eslint-disable-next-line
   }, []);
 
   const fetchPricingRules = async () => {
@@ -332,6 +332,36 @@ const Pricing: React.FC = () => {
                           )
                         }
                         helperText="Percentage of driver earnings that go to the platform"
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Divider sx={{ my: 2 }} />
+                      <Typography variant="subtitle2" gutterBottom>
+                        Government Tax
+                      </Typography>
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        label="Tax Percentage"
+                        type="number"
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">%</InputAdornment>
+                          ),
+                        }}
+                        fullWidth
+                        value={
+                          rule.tax_percentage ? rule.tax_percentage : undefined
+                        }
+                        onChange={(e) =>
+                          handlePricingChange(
+                            rule.id,
+                            "tax_percentage",
+                            e.target.value.toString(),
+                          )
+                        }
+                        helperText="Percentage of driver earnings that goes to the Government"
                       />
                     </Grid>
 
