@@ -165,7 +165,8 @@ export interface rideTypes {
   refund_distance_in_m: number;
   minimum_billable_distance: string;
   commission_percentage: string;
-  tax_percentage: string;
+  "keyword"?: string;
+  govt_tax_percentage: string;
 }
 
 // Dashboard statistics
