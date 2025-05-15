@@ -9,6 +9,7 @@ import {
   requiredDocuments,
   PricingRule,
   rideTypes,
+  Ride,
 } from "../types";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
@@ -22,6 +23,7 @@ import {
   getDocumenttypesdata,
   getRidetypesdata,
   updateRidetypedata,
+  getRecentRidesData,
 } from "../API/axios";
 
 interface AuthContextType {
@@ -46,6 +48,7 @@ interface AuthContextType {
   getRiders: () => Promise<Rider[]>;
   getRidetypes: () => Promise<rideTypes[]>;
   updateRidetype: (id: number, body: object) => Promise<any>;
+  getrecentRides: () => Promise<Ride[]>;
   logout: () => void;
 }
 
@@ -82,6 +85,9 @@ const AuthContext = createContext<AuthContextType>({
     return [];
   },
   updateRidetype: async () => {
+    return [];
+  },
+  getrecentRides: async () => {
     return [];
   },
   logout: () => {},
@@ -310,6 +316,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const getrecentRides = async (): Promise<any> => {
+    try {
+      const rideTypes = await getRecentRidesData();
+      return rideTypes.data.data;
+    } catch (error: any) {
+      handleExpiredtoken(error);
+      setAuthState((prev) => ({
+        ...prev,
+        error: error.response.data.message,
+      }));
+    }
+  };
+
   const logout = () => {
     // Clear user data from localStorage
     signOut(auth);
@@ -337,6 +356,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         getRidetypes,
         getRiders,
         updateRidetype,
+        getrecentRides,
         logout,
       }}
     >

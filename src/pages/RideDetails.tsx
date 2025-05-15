@@ -75,15 +75,15 @@ const RideDetails: React.FC = () => {
       setRide(rideData);
 
       // Also fetch the rider details
-      if (rideData.riderId) {
-        const riderData = await mockApi.getRider(rideData.riderId);
+      if (rideData.rider_id) {
+        const riderData = await mockApi.getRider(rideData.rider_id);
         setRider(riderData);
       }
 
       // Fetch the pricing rule for the ride type
       const pricingRules = await mockApi.getPricingRules();
       const matchingRule = pricingRules.find(
-        (rule) => rule.rideTypeId === rideData.rideType,
+        (rule) => rule.rideTypeId === rideData.ride_type_id,
       );
       setPricingRule(matchingRule || null);
 
@@ -167,7 +167,7 @@ const RideDetails: React.FC = () => {
     // 3. The driver was further than the refund eligibility distance when cancellation occurred
     return (
       ride.status === "cancelled" &&
-      !ride.refunded &&
+      !ride.cancellation_fee &&
       ride.driverDistanceAtCancel !== undefined &&
       ride.driverDistanceAtCancel > 70 // 70m is our threshold
     );
@@ -182,8 +182,8 @@ const RideDetails: React.FC = () => {
 
     // Calculate driver's earnings after platform commission
     const commissionAmount =
-      ride.fare * (pricingRule.commissionPercentage / 100);
-    return ride.fare - commissionAmount;
+      ride.base_fare * (pricingRule.commissionPercentage / 100);
+    return ride.base_fare - commissionAmount;
   };
 
   if (loading) {
@@ -263,7 +263,7 @@ const RideDetails: React.FC = () => {
                   Date & Time
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                  {formatDate(ride.createdAt)}
+                  {formatDate(ride.created_at)}
                 </Typography>
               </Grid>
 
@@ -276,7 +276,7 @@ const RideDetails: React.FC = () => {
                   gutterBottom
                   sx={{ textTransform: "capitalize" }}
                 >
-                  {ride.rideType}
+                  {ride.ride_type_id}
                 </Typography>
               </Grid>
 
@@ -285,7 +285,7 @@ const RideDetails: React.FC = () => {
                   Fare
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                  {formatCurrency(ride.fare)}
+                  {formatCurrency(ride.base_fare)}
                 </Typography>
               </Grid>
 
@@ -294,7 +294,7 @@ const RideDetails: React.FC = () => {
                   Distance
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                  {formatDistance(ride.distance)}
+                  {formatDistance(ride.distance_km)}
                 </Typography>
               </Grid>
 
@@ -303,7 +303,7 @@ const RideDetails: React.FC = () => {
                   Duration
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                  {formatDuration(ride.duration)}
+                  {formatDuration(ride.duration_minutes)}
                 </Typography>
               </Grid>
 
@@ -312,10 +312,10 @@ const RideDetails: React.FC = () => {
                   Points Awarded
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                  {ride.pointsAwarded > 0 ? (
+                  {ride.rating > 0 ? (
                     <Chip
                       icon={<StarIcon fontSize="small" />}
-                      label={ride.pointsAwarded}
+                      label={ride.rating}
                       color="primary"
                       variant="outlined"
                       size="small"
@@ -329,14 +329,14 @@ const RideDetails: React.FC = () => {
               {ride.status === "cancelled" && (
                 <Grid item xs={12}>
                   <Alert
-                    severity={ride.refunded ? "info" : "warning"}
-                    icon={ride.refunded ? <CheckIcon /> : <WarningIcon />}
+                    severity={ride.cancellation_fee ? "info" : "warning"}
+                    icon={ride.cancellation_fee ? <CheckIcon /> : <WarningIcon />}
                     sx={{ mt: 2 }}
                   >
-                    {ride.refunded ? (
+                    {ride.cancellation_fee ? (
                       <>
                         This ride was <strong>refunded</strong>. Cancellation
-                        reason: {ride.cancelReason || "Not provided"}
+                        reason: {ride.cancellation_reason || "Not provided"}
                       </>
                     ) : (
                       <>
@@ -384,7 +384,7 @@ const RideDetails: React.FC = () => {
                       }
                       secondary={
                         <Typography variant="subtitle1">
-                          {formatCurrency(ride.fare)}
+                          {formatCurrency(ride.base_fare)}
                         </Typography>
                       }
                     />
@@ -404,7 +404,7 @@ const RideDetails: React.FC = () => {
                         secondary={
                           <Box>
                             <Typography variant="body2">
-                              Total distance: {formatDistance(ride.distance)}
+                              Total distance: {formatDistance(ride.distance_km)}
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
                               First {pricingRule.minimumBillableDistance}km
@@ -415,7 +415,7 @@ const RideDetails: React.FC = () => {
                               {formatDistance(
                                 Math.max(
                                   0,
-                                  ride.distance -
+                                  ride.distance_km -
                                     pricingRule.minimumBillableDistance,
                                 ),
                               )}
@@ -443,7 +443,7 @@ const RideDetails: React.FC = () => {
                           secondary={
                             <Typography variant="subtitle1" color="info.main">
                               {formatCurrency(
-                                ride.fare *
+                                ride.base_fare *
                                   (pricingRule.commissionPercentage / 100),
                               )}
                             </Typography>
@@ -479,13 +479,13 @@ const RideDetails: React.FC = () => {
                     <ListItem>
                       <ListItemIcon>
                         <CancelIcon
-                          color={ride.refunded ? "error" : "disabled"}
+                          color={ride.cancellation_fee ? "error" : "disabled"}
                         />
                       </ListItemIcon>
                       <ListItemText
-                        primary={ride.refunded ? "Refunded" : "Not Refunded"}
+                        primary={ride.cancellation_fee ? "Refunded" : "Not Refunded"}
                         secondary={
-                          ride.refunded
+                          ride.cancellation_fee
                             ? "The fare has been refunded to the rider"
                             : "No refund was processed"
                         }
@@ -509,7 +509,7 @@ const RideDetails: React.FC = () => {
                 </ListItemIcon>
                 <ListItemText
                   primary="Pickup Location"
-                  secondary={ride.pickupLocation.address}
+                  secondary={ride.pickup_address.address}
                 />
               </ListItem>
 
@@ -521,44 +521,44 @@ const RideDetails: React.FC = () => {
                 </ListItemIcon>
                 <ListItemText
                   primary="Drop-off Location"
-                  secondary={ride.dropoffLocation.address}
+                  secondary={ride.dropoff_address.address}
                 />
               </ListItem>
             </List>
 
             <Box sx={{ mt: 2 }}>
-              {ride.startTime && (
+              {ride.started_at && (
                 <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
                   <TimeIcon
                     fontSize="small"
                     sx={{ mr: 1, color: "text.secondary" }}
                   />
                   <Typography variant="body2" color="text.secondary">
-                    Started: {formatDate(ride.startTime)}
+                    Started: {formatDate(ride.started_at)}
                   </Typography>
                 </Box>
               )}
 
-              {ride.endTime && (
+              {ride.arrived_at && (
                 <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
                   <TimeIcon
                     fontSize="small"
                     sx={{ mr: 1, color: "text.secondary" }}
                   />
                   <Typography variant="body2" color="text.secondary">
-                    Ended: {formatDate(ride.endTime)}
+                    Ended: {formatDate(ride.arrived_at)}
                   </Typography>
                 </Box>
               )}
 
-              {ride.cancelTime && (
+              {ride.cancelled_at && (
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                   <CancelIcon
                     fontSize="small"
                     sx={{ mr: 1, color: "text.secondary" }}
                   />
                   <Typography variant="body2" color="text.secondary">
-                    Cancelled: {formatDate(ride.cancelTime)}
+                    Cancelled: {formatDate(ride.cancelled_at)}
                   </Typography>
                 </Box>
               )}
@@ -709,7 +709,7 @@ const RideDetails: React.FC = () => {
         <DialogContent>
           <Typography paragraph>
             You're about to process a refund for this ride. This will mark the
-            ride as refunded and the fare amount ({formatCurrency(ride.fare)})
+            ride as refunded and the fare amount ({formatCurrency(ride.base_fare)})
             will be credited back to the rider.
           </Typography>
 

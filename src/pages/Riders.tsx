@@ -453,18 +453,18 @@ const Riders: React.FC = () => {
                     <TableBody>
                       {riderRides.map((ride) => (
                         <TableRow key={ride.id} hover>
-                          <TableCell>{formatDate(ride.createdAt)}</TableCell>
+                          <TableCell>{formatDate(ride.created_at)}</TableCell>
                           <TableCell sx={{ textTransform: "capitalize" }}>
-                            {ride.rideType}
+                            {ride.ride_type_id}
                           </TableCell>
                           <TableCell>
-                            {ride.pickupLocation.address.split(",")[0]}
+                            {ride.pickup_address.address.split(",")[0]}
                           </TableCell>
                           <TableCell>
-                            {ride.dropoffLocation.address.split(",")[0]}
+                            {ride.dropoff_address.address.split(",")[0]}
                           </TableCell>
                           <TableCell align="right">
-                            ${ride.fare.toFixed(2)}
+                            ${ride.base_fare.toFixed(2)}
                           </TableCell>
                           <TableCell align="center">
                             <Chip
@@ -475,10 +475,10 @@ const Riders: React.FC = () => {
                             />
                           </TableCell>
                           <TableCell align="center">
-                            {ride.pointsAwarded > 0 ? (
+                            {ride.rating > 0 ? (
                               <Chip
                                 icon={<StarIcon fontSize="small" />}
-                                label={ride.pointsAwarded}
+                                label={ride.rating}
                                 size="small"
                                 variant="outlined"
                               />

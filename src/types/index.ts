@@ -27,23 +27,23 @@ export interface Location {
 
 export interface Ride {
   id: string;
-  riderId: string;
-  driverId: string;
-  rideType: RideType;
+  rider_id: string;
+  driver_id: string;
+  ride_type_id: RideType;
   status: RideStatus;
-  pickupLocation: Location;
-  dropoffLocation: Location;
-  distance: number; // in kilometers
-  duration: number; // in minutes
-  fare: number;
-  startTime?: string;
-  endTime?: string;
-  cancelTime?: string;
-  cancelReason?: string;
-  refunded: boolean;
+  pickup_address: Location;
+  dropoff_address: Location;
+  distance_km: number; // in kilometers
+  duration_minutes: number; // in minutes
+  base_fare: number;
+  started_at?: string;
+  arrived_at?: string;
+  cancelled_at?: string;
+  cancellation_reason?: string;
+  cancellation_fee: boolean;
   driverDistanceAtCancel?: number; // in meters
-  pointsAwarded: number;
-  createdAt: string;
+  rating: number;
+  created_at: string;
 }
 
 // Rider types

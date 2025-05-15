@@ -1292,7 +1292,7 @@ const Drivers: React.FC = () => {
                                 <TableRow key={ride.id} hover>
                                   <TableCell>
                                     {new Date(
-                                      ride.createdAt,
+                                      ride.created_at,
                                     ).toLocaleDateString()}
                                   </TableCell>
                                   <TableCell>
@@ -1311,9 +1311,9 @@ const Drivers: React.FC = () => {
                                       sx={{ textTransform: "capitalize" }}
                                     />
                                   </TableCell>
-                                  <TableCell>{ride.riderId}</TableCell>
+                                  <TableCell>{ride.rider_id}</TableCell>
                                   <TableCell align="right">
-                                    ${ride.fare.toFixed(2)}
+                                    ${ride.base_fare.toFixed(2)}
                                   </TableCell>
                                 </TableRow>
                               ))}

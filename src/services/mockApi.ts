@@ -346,29 +346,29 @@ const generateRides = (count: number): Ride[] => {
 
     rides.push({
       id: `ride-${i}`,
-      riderId,
-      driverId,
-      rideType,
+      rider_id: riderId,
+      driver_id:driverId,
+      ride_type_id:rideType,
       status,
-      pickupLocation: generateLocation(),
-      dropoffLocation: generateLocation(),
-      distance,
-      duration,
-      fare,
-      startTime,
-      endTime,
-      cancelTime,
-      cancelReason,
-      refunded,
+      pickup_address: generateLocation(),
+      dropoff_address: generateLocation(),
+      distance_km:distance,
+      duration_minutes:duration,
+      base_fare:fare,
+      started_at:startTime,
+      arrived_at:endTime,
+      cancelled_at:cancelTime,
+      cancellation_reason:cancelReason,
+      cancellation_fee:refunded,
       driverDistanceAtCancel,
-      pointsAwarded,
-      createdAt,
+      rating:pointsAwarded,
+      created_at:createdAt,
     });
   }
 
   // Sort rides by most recent first
   return rides.sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
   );
 };
 
@@ -383,7 +383,7 @@ const generateDashboardStats = (): DashboardStats => {
     (ride) => ride.status === "cancelled",
   );
 
-  const totalRevenue = completedRides.reduce((sum, ride) => sum + ride.fare, 0);
+  const totalRevenue = completedRides.reduce((sum, ride) => sum + ride.base_fare, 0);
 
   // Calculate commission based on the average of all pricing rules
   const avgCommissionRate =
@@ -392,8 +392,8 @@ const generateDashboardStats = (): DashboardStats => {
   const totalCommission = totalRevenue * (avgCommissionRate / 100);
 
   const totalRefunds = cancelledRides
-    .filter((ride) => ride.refunded)
-    .reduce((sum, ride) => sum + ride.fare, 0);
+    .filter((ride) => ride.cancellation_fee)
+    .reduce((sum, ride) => sum + ride.base_fare, 0);
   const totalPoints = mockRiders.reduce(
     (sum, rider) => sum + rider.rewardPoints,
     0,
@@ -402,15 +402,15 @@ const generateDashboardStats = (): DashboardStats => {
   const ridesByType = [
     {
       type: "Electric",
-      count: mockRides.filter((ride) => ride.rideType === "electric").length,
+      count: mockRides.filter((ride) => ride.ride_type_id === "electric").length,
     },
     {
       type: "Regular",
-      count: mockRides.filter((ride) => ride.rideType === "regular").length,
+      count: mockRides.filter((ride) => ride.ride_type_id === "regular").length,
     },
     {
       type: "SUV",
-      count: mockRides.filter((ride) => ride.rideType === "suv").length,
+      count: mockRides.filter((ride) => ride.ride_type_id === "suv").length,
     },
   ];
 
@@ -555,7 +555,7 @@ export const mockApi = {
 
   getDriverRides: async (driverId: string): Promise<Ride[]> => {
     await new Promise((resolve) => setTimeout(resolve, 600));
-    return mockRides.filter((r) => r.driverId === driverId);
+    return mockRides.filter((r) => r.driver_id === driverId);
   },
 
   // Rides
@@ -573,7 +573,7 @@ export const mockApi = {
 
   getRiderRides: async (riderId: string): Promise<Ride[]> => {
     await new Promise((resolve) => setTimeout(resolve, 600));
-    return mockRides.filter((r) => r.riderId === riderId);
+    return mockRides.filter((r) => r.rider_id === riderId);
   },
 
   getRiderPoints: async (riderId: string): Promise<number> => {
@@ -595,8 +595,8 @@ export const mockApi = {
 
     mockRides[index] = {
       ...mockRides[index],
-      refunded,
-      cancelReason: reason || mockRides[index].cancelReason,
+      cancellation_fee: mockRides[index].cancellation_fee,
+      cancellation_reason: reason || mockRides[index].cancellation_reason,
     };
 
     return mockRides[index];

@@ -51,17 +51,20 @@ const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [stats, setStats] = useState<DashboardStats | null>(null);
-  const { getDrivers } = useAuth();
+  const { getDrivers,getrecentRides } = useAuth();
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
         const dashboardStats = await mockApi.getDashboardStats();
         const drivers = await getDrivers();
+        const recentRides=await getrecentRides();
         const activeDrivers = drivers?.filter(
           (driver: any) => driver?.is_active,
         )?.length;
+        
         dashboardStats.activeDrivers = activeDrivers;
+        dashboardStats.recentRides=recentRides;
         setStats(dashboardStats);
         setError(null);
       } catch (err) {
@@ -150,9 +153,9 @@ const Dashboard: React.FC = () => {
             {stats.recentRides.map((ride) => (
               <TableRow key={ride.id}>
                 <TableCell>{ride.id}</TableCell>
-                <TableCell>{formatDate(ride.createdAt)}</TableCell>
-                <TableCell>{ride.distance.toFixed(1)} km</TableCell>
-                <TableCell>{formatCurrency(ride.fare)}</TableCell>
+                <TableCell>{formatDate(ride.created_at)}</TableCell>
+                <TableCell>{ride.distance_km} km</TableCell>
+                <TableCell>{formatCurrency(ride.base_fare)}</TableCell>
                 <TableCell>
                   <Typography
                     variant="body2"

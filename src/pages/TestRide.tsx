@@ -161,20 +161,20 @@ const TestRide: React.FC = () => {
     // Create a completed ride
     const createdRide: Ride = {
       id: `test-ride-${Date.now()}`,
-      riderId: selectedRider.uuid,
-      driverId: selectedDriver.uuid,
-      rideType: selectedRideType as any,
+      rider_id: selectedRider.uuid,
+      driver_id: selectedDriver.uuid,
+      ride_type_id: selectedRideType as any,
       status: "completed",
-      pickupLocation,
-      dropoffLocation,
-      distance,
-      duration,
-      fare: fareBreakdown.totalFare,
-      startTime: new Date(Date.now() - duration * 60 * 1000).toISOString(),
-      endTime: new Date().toISOString(),
-      refunded: false,
-      pointsAwarded: Math.floor(fareBreakdown.totalFare),
-      createdAt: new Date(
+      pickup_address: pickupLocation,
+      dropoff_address: dropoffLocation,
+      distance_km:distance,
+      duration_minutes:duration,
+      base_fare: fareBreakdown.totalFare,
+      started_at: new Date(Date.now() - duration * 60 * 1000).toISOString(),
+      arrived_at: new Date().toISOString(),
+      cancellation_fee: false,
+      rating: Math.floor(fareBreakdown.totalFare),
+      created_at: new Date(
         Date.now() - (duration + 5) * 60 * 1000,
       ).toISOString(),
     };
