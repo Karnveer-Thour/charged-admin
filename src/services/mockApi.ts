@@ -107,7 +107,7 @@ const generateRiders = (count: number): Rider[] => {
         : undefined;
 
     riders.push({
-      uuid: `rider-${i}`,
+      id:`${i}`,
       name: `Rider ${i}`,
       email: `rider${i}@example.com`,
       phone: `+1${Math.floor(Math.random() * 900) + 100}${Math.floor(Math.random() * 900) + 100}${Math.floor(Math.random() * 9000) + 1000}`,
@@ -225,6 +225,7 @@ const generateDrivers = (count: number): Driver[] => {
 
     drivers.push({
       uuid: `driver-${i}`,
+      id:`${i}`,
       name: `Driver ${i}`,
       email: `driver${i}@example.com`,
       phone: `+1${Math.floor(Math.random() * 900) + 100}${Math.floor(Math.random() * 900) + 100}${Math.floor(Math.random() * 9000) + 1000}`,
@@ -284,7 +285,7 @@ const generateRides = (count: number): Ride[] => {
     ).toISOString();
     const rideType = rideTypes[Math.floor(Math.random() * rideTypes.length)];
     const riderId =
-      mockRiders[Math.floor(Math.random() * mockRiders.length)].uuid;
+      mockRiders[Math.floor(Math.random() * mockRiders.length)].id;
     const driverId =
       mockDrivers[Math.floor(Math.random() * mockDrivers.length)].uuid;
     const status = statuses[Math.floor(Math.random() * statuses.length)];
@@ -494,7 +495,7 @@ export const mockApi = {
 
   getRider: async (id: string): Promise<Rider> => {
     await new Promise((resolve) => setTimeout(resolve, 300));
-    const rider = mockRiders.find((r) => r.uuid === id);
+    const rider = mockRiders.find((r) => r.id === id);
     if (!rider) throw new Error("Rider not found");
     return rider;
   },
@@ -578,7 +579,7 @@ export const mockApi = {
 
   getRiderPoints: async (riderId: string): Promise<number> => {
     await new Promise((resolve) => setTimeout(resolve, 300));
-    const rider = mockRiders.find((r) => r.uuid === riderId);
+    const rider = mockRiders.find((r) => r.id === riderId);
     if (!rider) throw new Error("Rider not found");
     return rider.rewardPoints;
   },

@@ -48,7 +48,7 @@ export interface Ride {
 
 // Rider types
 export interface Rider {
-  uuid: string;
+  id: string;
   name: string;
   email: string;
   phone: string;
@@ -61,7 +61,7 @@ export interface Rider {
 
 // Driver types
 export interface Driver {
-  id?: number;
+  id: string;
   uuid: string;
   name: string;
   email: string;

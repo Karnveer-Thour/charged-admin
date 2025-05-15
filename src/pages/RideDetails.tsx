@@ -584,7 +584,7 @@ const RideDetails: React.FC = () => {
                         {rider.name}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        ID: {rider.uuid}
+                        ID: {rider.id}
                       </Typography>
                     </Box>
                   </Box>
@@ -649,7 +649,7 @@ const RideDetails: React.FC = () => {
                     <Button
                       variant="outlined"
                       fullWidth
-                      onClick={() => navigate(`/riders?id=${rider.uuid}`)}
+                      onClick={() => navigate(`/riders?id=${rider.id}`)}
                     >
                       View Rider Profile
                     </Button>
