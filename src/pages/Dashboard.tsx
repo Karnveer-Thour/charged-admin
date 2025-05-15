@@ -76,6 +76,7 @@ const Dashboard: React.FC = () => {
     };
 
     fetchDashboardData();
+    // eslint-disable-next-line
   }, []);
 
   // Prepare chart data

@@ -7,7 +7,6 @@ import {
   DriverDocumentpayload,
   Driverstatuspayload,
   requiredDocuments,
-  PricingRule,
   rideTypes,
   Ride,
 } from "../types";

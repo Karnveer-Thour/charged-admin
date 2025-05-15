@@ -27,9 +27,8 @@ import {
   Check as CheckIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { mockApi } from "../services/mockApi";
 import { formatCurrency } from "../utils/formatters";
-import { Ride, Rider, Driver, PricingRule, rideTypes } from "../types";
+import { Ride, Rider, Driver, rideTypes } from "../types";
 import { useAuth } from "../contexts/AuthContext";
 
 const TestRide: React.FC = () => {

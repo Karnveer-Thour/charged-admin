@@ -24,7 +24,6 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Switch,
 } from "@mui/material";
 import {
   Search as SearchIcon,
@@ -33,7 +32,6 @@ import {
   DirectionsCar as RideIcon,
   Edit as EditIcon,
   Close as CloseIcon,
-  Delete,
 } from "@mui/icons-material";
 import { mockApi } from "../services/mockApi";
 import { Rider, Ride } from "../types";

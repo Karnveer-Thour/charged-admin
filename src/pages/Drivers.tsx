@@ -67,7 +67,6 @@ import {
   DocumentType,
 } from "../types";
 import { useAuth } from "../contexts/AuthContext";
-import { updateDriverstatus } from "../API/axios";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -434,19 +433,19 @@ const Drivers: React.FC = () => {
     setUploadingDocument(true);
 
     try {
-      // Upload document using the mockApi
-      const uploadResponse = await mockApi.uploadDocumentForDriver(
-        selectedDriver.uuid,
-        selectedDocumentType,
-        uploadedFile,
-        uploadDialogNotes,
-      );
+      // // Upload document using the mockApi
+      // const uploadResponse = await mockApi.uploadDocumentForDriver(
+      //   selectedDriver.uuid,
+      //   selectedDocumentType,
+      //   uploadedFile,
+      //   uploadDialogNotes,
+      // );
 
-      // Notify the driver
-      const notifyResponse = await mockApi.notifyDriverAboutDocument(
-        selectedDriver.uuid,
-        selectedDocumentType,
-      );
+      // // Notify the driver
+      // const notifyResponse = await mockApi.notifyDriverAboutDocument(
+      //   selectedDriver.uuid,
+      //   selectedDocumentType,
+      // );
 
       // Get the updated driver data (in a real app, this would come from the server)
       const updatedDriver = await mockApi.getDriver(selectedDriver.uuid);
