@@ -84,9 +84,7 @@ const Pricing: React.FC = () => {
   const handleSaveRule = async (rule: rideTypes) => {
     // Set saving state only for this specific rule
     setSavingRules((prev) => ({ ...prev, [rule.id]: true }));
-
     try {
-      console.log(rule);
       await updateRidetype(rule.id, rule);
       setNotification({
         open: true,

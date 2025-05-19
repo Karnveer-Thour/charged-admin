@@ -16,7 +16,7 @@ export interface AuthState {
 }
 
 // Ride types
-export type RideStatus = "pending" | "in-progress" | "completed" | "cancelled";
+export type RideStatus = "pending" | "in-progress" | "completed" | "canceled";
 export type RideType = "electric" | "regular" | "suv";
 
 export interface Location {
@@ -31,8 +31,8 @@ export interface Ride {
   driver_id: string;
   ride_type_id: RideType;
   status: RideStatus;
-  pickup_address: Location;
-  dropoff_address: Location;
+  pickup_address: String;
+  dropoff_address: String;
   distance_km: number; // in kilometers
   duration_minutes: number; // in minutes
   base_fare: number;

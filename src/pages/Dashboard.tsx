@@ -126,7 +126,7 @@ const Dashboard: React.FC = () => {
           return "info.main";
         case "pending":
           return "warning.main";
-        case "cancelled":
+        case "canceled":
           return "error.main";
         default:
           return "text.secondary";

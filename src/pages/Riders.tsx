@@ -51,7 +51,7 @@ const Riders: React.FC = () => {
   const [riderRides, setRiderRides] = useState<Ride[]>([]);
   const [rideDialogOpen, setRideDialogOpen] = useState(false);
   const [rideDialogLoading, setRideDialogLoading] = useState(false);
-  const { getRiders } = useAuth();
+  const { getRiders,getRidesByUserId } = useAuth();
 
   // Load riders on component mount
   useEffect(() => {
@@ -108,7 +108,7 @@ const Riders: React.FC = () => {
     setRideDialogLoading(true);
 
     try {
-      const rides = await mockApi.getRiderRides(rider.id);
+      const rides = await getRidesByUserId(Number(rider.id));
       setRiderRides(rides);
     } catch (err) {
       console.error("Error fetching rider rides:", err);
@@ -394,8 +394,7 @@ const Riders: React.FC = () => {
                   <Paper sx={{ p: 2, textAlign: "center" }} elevation={2}>
                     <Typography variant="h4" color="primary">
                       {
-                        riderRides.filter((r) => r.status === "completed")
-                          .length
+                        riderRides?riderRides.filter((r: Ride) => r.status === "completed").length:null
                       }
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -407,7 +406,7 @@ const Riders: React.FC = () => {
                   <Paper sx={{ p: 2, textAlign: "center" }} elevation={2}>
                     <Typography variant="h4" color="primary">
                       {
-                        riderRides.filter((r) => r.status === "cancelled")
+                        riderRides.filter((r) => r.status === "canceled")
                           .length
                       }
                     </Typography>
@@ -456,13 +455,13 @@ const Riders: React.FC = () => {
                             {ride.ride_type_id}
                           </TableCell>
                           <TableCell>
-                            {ride.pickup_address.address.split(",")[0]}
+                            {ride.pickup_address.split(",")[0]}
                           </TableCell>
                           <TableCell>
-                            {ride.dropoff_address.address.split(",")[0]}
+                            {ride.dropoff_address.split(",")[0]}
                           </TableCell>
                           <TableCell align="right">
-                            ${ride.base_fare.toFixed(2)}
+                            ${ride.base_fare}
                           </TableCell>
                           <TableCell align="center">
                             <Chip

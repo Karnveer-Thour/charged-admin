@@ -264,7 +264,7 @@ const generateRides = (count: number): Ride[] => {
     "pending",
     "in-progress",
     "completed",
-    "cancelled",
+    "canceled",
   ];
   const rideTypes: RideType[] = ["electric", "regular", "suv"];
 
@@ -316,7 +316,7 @@ const generateRides = (count: number): Ride[] => {
         : undefined;
 
     const cancelTime =
-      status === "cancelled"
+      status === "canceled"
         ? new Date(
             new Date(startTime || createdAt).getTime() +
               Math.random() * 10 * 60 * 1000,
@@ -324,7 +324,7 @@ const generateRides = (count: number): Ride[] => {
         : undefined;
 
     const cancelReason =
-      status === "cancelled"
+      status === "canceled"
         ? [
             "Change of plans",
             "Driver taking too long",
@@ -334,10 +334,10 @@ const generateRides = (count: number): Ride[] => {
         : undefined;
 
     const driverDistanceAtCancel =
-      status === "cancelled" ? Math.floor(Math.random() * 200) : undefined;
+      status === "canceled" ? Math.floor(Math.random() * 200) : undefined;
 
     const refunded =
-      status === "cancelled" &&
+      status === "canceled" &&
       driverDistanceAtCancel !== undefined &&
       driverDistanceAtCancel > 70
         ? Math.random() > 0.5
@@ -351,8 +351,8 @@ const generateRides = (count: number): Ride[] => {
       driver_id:driverId,
       ride_type_id:rideType,
       status,
-      pickup_address: generateLocation(),
-      dropoff_address: generateLocation(),
+      pickup_address: generateLocation().address,
+      dropoff_address: generateLocation().address,
       distance_km:distance,
       duration_minutes:duration,
       base_fare:fare,
@@ -381,7 +381,7 @@ const generateDashboardStats = (): DashboardStats => {
     (ride) => ride.status === "completed",
   );
   const cancelledRides = mockRides.filter(
-    (ride) => ride.status === "cancelled",
+    (ride) => ride.status === "canceled",
   );
 
   const totalRevenue = completedRides.reduce((sum, ride) => sum + ride.base_fare, 0);

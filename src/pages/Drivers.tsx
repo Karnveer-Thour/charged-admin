@@ -132,6 +132,7 @@ const Drivers: React.FC = () => {
     getDriverDocs,
     updateDriverdocsStatus,
     updateDriveractivestatus,
+    getRidesByUserId,
   } = useAuth();
 
   useEffect(() => {
@@ -222,10 +223,10 @@ const Drivers: React.FC = () => {
       setLoadingDriverDetails(true);
       setDriverDetailsOpen(true);
       const documents = await getDriverDocs(driver.id as any);
-      setLoadingDriverDetails(false);
+      const rides= await getRidesByUserId(Number(driver.id));
       setSelectedDriver({ ...driver, documents });
       setTabValue(0);
-      // setDriverRides(rides);
+      rides?setDriverRides(rides):setDriverRides([]);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -240,10 +241,12 @@ const Drivers: React.FC = () => {
   const handleCloseDriverDetails = () => {
     setDriverDetailsOpen(false);
     setShowRejectionReason(false);
-    const updatedDrivers = drivers.map((driver) =>
-      driver.id === selectedDriver!.id ? selectedDriver! : driver,
-    );
-    setDrivers(updatedDrivers as Driver[]);
+    if(selectedDriver){
+      const updatedDrivers = drivers.map((driver) =>
+        driver.id === selectedDriver.id ? selectedDriver : driver,
+      );
+      setDrivers(updatedDrivers as Driver[]);
+    }
     setSelectedDriver(null);
     setDriverRides([]);
     setDocumentUpdateSuccess(null);
@@ -1301,7 +1304,7 @@ const Drivers: React.FC = () => {
                                       color={
                                         ride.status === "completed"
                                           ? "success"
-                                          : ride.status === "cancelled"
+                                          : ride.status === "canceled"
                                             ? "error"
                                             : ride.status === "in-progress"
                                               ? "primary"
@@ -1312,7 +1315,7 @@ const Drivers: React.FC = () => {
                                   </TableCell>
                                   <TableCell>{ride.rider_id}</TableCell>
                                   <TableCell align="right">
-                                    ${ride.base_fare.toFixed(2)}
+                                    ${ride.base_fare}
                                   </TableCell>
                                 </TableRow>
                               ))}
@@ -1342,7 +1345,7 @@ const Drivers: React.FC = () => {
                             sx={{ p: 1, textAlign: "center" }}
                           >
                             <Typography variant="h6">
-                              {selectedDriver.total_rides}
+                              {driverRides.length}
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
                               Total Rides
@@ -1376,7 +1379,7 @@ const Drivers: React.FC = () => {
                             <Typography variant="h6">
                               {
                                 driverRides.filter(
-                                  (r) => r.status === "cancelled",
+                                  (r) => r.status === "canceled",
                                 ).length
                               }
                             </Typography>

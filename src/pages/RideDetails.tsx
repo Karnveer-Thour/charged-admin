@@ -166,7 +166,7 @@ const RideDetails: React.FC = () => {
     // 2. It's not already refunded
     // 3. The driver was further than the refund eligibility distance when cancellation occurred
     return (
-      ride.status === "cancelled" &&
+      ride.status === "canceled" &&
       !ride.cancellation_fee &&
       ride.driverDistanceAtCancel !== undefined &&
       ride.driverDistanceAtCancel > 70 // 70m is our threshold
@@ -326,7 +326,7 @@ const RideDetails: React.FC = () => {
                 </Typography>
               </Grid>
 
-              {ride.status === "cancelled" && (
+              {ride.status === "canceled" && (
                 <Grid item xs={12}>
                   <Alert
                     severity={ride.cancellation_fee ? "info" : "warning"}
@@ -475,7 +475,7 @@ const RideDetails: React.FC = () => {
                     </>
                   )}
 
-                  {ride.status === "cancelled" && (
+                  {ride.status === "canceled" && (
                     <ListItem>
                       <ListItemIcon>
                         <CancelIcon
@@ -509,7 +509,7 @@ const RideDetails: React.FC = () => {
                 </ListItemIcon>
                 <ListItemText
                   primary="Pickup Location"
-                  secondary={ride.pickup_address.address}
+                  secondary={ride.pickup_address}
                 />
               </ListItem>
 
@@ -521,7 +521,7 @@ const RideDetails: React.FC = () => {
                 </ListItemIcon>
                 <ListItemText
                   primary="Drop-off Location"
-                  secondary={ride.dropoff_address.address}
+                  secondary={ride.dropoff_address}
                 />
               </ListItem>
             </List>

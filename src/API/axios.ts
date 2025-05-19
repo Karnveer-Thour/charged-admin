@@ -114,6 +114,12 @@ export const updateRidetypedata = (id: number, body: object) =>
 
 export const getRecentRidesData = () =>instance.get("/ride");
 
+// Api to get rides data on basis of userId
+// It returns the array of rides
+// It is used in the riders and drivers page
+
+export const getRidesDataByUserId = (Id:number) =>instance.get(`admin/ride/userrides/${Id}`);
+
 // Api to get dashboard Stats
 // This API is used to get all dashboard data
 // It returns the object of dashboard stats

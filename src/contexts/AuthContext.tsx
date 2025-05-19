@@ -25,6 +25,7 @@ import {
   updateRidetypedata,
   getRecentRidesData,
   getDashboardStatsData,
+  getRidesDataByUserId,
 } from "../API/axios";
 
 interface AuthContextType {
@@ -50,6 +51,7 @@ interface AuthContextType {
   getRidetypes: () => Promise<rideTypes[]>;
   updateRidetype: (id: number, body: object) => Promise<any>;
   getrecentRides: () => Promise<Ride[]>;
+  getRidesByUserId : (Id:number) => Promise<Ride[]>;
   getDashboardStats: () => Promise<DashboardStats>;
   logout: () => void;
 }
@@ -90,6 +92,9 @@ const AuthContext = createContext<AuthContextType>({
     return [];
   },
   getrecentRides: async () => {
+    return [];
+  },
+  getRidesByUserId: async (Id:number)=>{
     return [];
   },
   getDashboardStats: async () => {
@@ -329,8 +334,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const getrecentRides = async (): Promise<any> => {
     try {
-      const rideTypes = await getRecentRidesData();
-      return rideTypes.data.data;
+      const recentRides = await getRecentRidesData();
+      return recentRides.data.data;
     } catch (error: any) {
       handleExpiredtoken(error);
       setAuthState((prev) => ({
@@ -340,10 +345,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const getRidesByUserId = async (Id:number): Promise<any> => {
+    try {
+      const RidesByUserId = await getRidesDataByUserId(Id);
+      return RidesByUserId.data.data;
+    } catch (error: any) {
+      setAuthState((prev) => ({
+        ...prev,
+        error: error.response.data.message,
+      }));
+      return error.response.data.status;
+    }
+  };
+
   const getDashboardStats=async (): Promise<any>=>{
     try {
-      const rideTypes = await getDashboardStatsData();
-      return rideTypes.data.data;
+      const dashboardStats = await getDashboardStatsData();
+      return dashboardStats.data.data;
     } catch (error: any) {
       handleExpiredtoken(error);
       setAuthState((prev) => ({
@@ -381,6 +399,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         getRiders,
         updateRidetype,
         getrecentRides,
+        getRidesByUserId,
         getDashboardStats,
         logout,
       }}
