@@ -108,7 +108,7 @@ const Riders: React.FC = () => {
 
     try {
       const rides = await getRidesByUserId(Number(rider.id));
-      setRiderRides(rides);
+      rides?setRiderRides(rides):setRiderRides([]);
     } catch (err) {
       console.error("Error fetching rider rides:", err);
     } finally {
@@ -126,11 +126,11 @@ const Riders: React.FC = () => {
     switch (status) {
       case "completed":
         return "success";
-      case "in-progress":
+      case "accepted":
         return "info";
-      case "pending":
+      case "request":
         return "warning";
-      case "cancelled":
+      case "canceled":
         return "error";
       default:
         return "default";
