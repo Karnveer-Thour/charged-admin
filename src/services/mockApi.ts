@@ -261,8 +261,8 @@ const mockDrivers = generateDrivers(30);
 const generateRides = (count: number): Ride[] => {
   const rides: Ride[] = [];
   const statuses: Ride["status"][] = [
-    "pending",
-    "in-progress",
+    "request",
+    "accepted",
     "completed",
     "canceled",
   ];
@@ -304,7 +304,7 @@ const generateRides = (count: number): Ride[] => {
     fare = Math.round(fare * 100) / 100;
 
     const startTime =
-      status === "pending"
+      status === "request"
         ? undefined
         : new Date(new Date(createdAt).getTime() + 5 * 60 * 1000).toISOString();
 

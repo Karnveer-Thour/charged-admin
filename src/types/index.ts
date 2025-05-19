@@ -16,7 +16,7 @@ export interface AuthState {
 }
 
 // Ride types
-export type RideStatus = "pending" | "in-progress" | "completed" | "canceled";
+export type RideStatus = "request" | "accepted" | "completed" | "canceled";
 export type RideType = "electric" | "regular" | "suv";
 
 export interface Location {

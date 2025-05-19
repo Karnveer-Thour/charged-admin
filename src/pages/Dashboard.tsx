@@ -121,9 +121,9 @@ const Dashboard: React.FC = () => {
       switch (status) {
         case "completed":
           return "success.main";
-        case "in-progress":
+        case "accepted":
           return "info.main";
-        case "pending":
+        case "request":
           return "warning.main";
         case "canceled":
           return "error.main";

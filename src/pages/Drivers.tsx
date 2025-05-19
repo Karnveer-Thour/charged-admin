@@ -1306,7 +1306,7 @@ const Drivers: React.FC = () => {
                                           ? "success"
                                           : ride.status === "canceled"
                                             ? "error"
-                                            : ride.status === "in-progress"
+                                            : ride.status === "accepted"
                                               ? "primary"
                                               : "default"
                                       }
