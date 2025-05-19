@@ -165,23 +165,19 @@ export interface rideTypes {
   refund_distance_in_m: number;
   minimum_billable_distance: string;
   commission_percentage: string;
-  "keyword"?: string;
+  keyword?: string;
   govt_tax_percentage: string;
 }
 
 // Dashboard statistics
 export interface DashboardStats {
-  totalRides: number;
-  activeDrivers: number;
-  totalRevenue: number;
-  totalCommission: number; // Total commission earned from rides
-  commissionRate: number; // Current average commission rate
-  totalUsers: number;
-  totalRefunds: number;
-  totalPoints: number;
-  recentRides: Ride[];
-  ridesByType: {
-    type: string;
-    count: number;
-  }[];
+    rideCount: string,
+    activeDrivers: string,
+    totalRevenue:string,
+    platformCommission: string,
+    rideTypeCounts: {
+      name:string,
+      count:string,
+    }[],
+    recentRides?:Ride[],
 }

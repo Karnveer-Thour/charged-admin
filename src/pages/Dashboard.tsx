@@ -51,19 +51,14 @@ const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [stats, setStats] = useState<DashboardStats | null>(null);
-  const { getDrivers,getrecentRides } = useAuth();
+  const { getDrivers,getrecentRides,getDashboardStats } = useAuth();
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
-        const dashboardStats = await mockApi.getDashboardStats();
-        const drivers = await getDrivers();
+        const dashboardStats = await getDashboardStats();
         const recentRides=await getrecentRides();
-        const activeDrivers = drivers?.filter(
-          (driver: any) => driver?.is_active,
-        )?.length;
         
-        dashboardStats.activeDrivers = activeDrivers;
         dashboardStats.recentRides=recentRides;
         setStats(dashboardStats);
         setError(null);
@@ -81,11 +76,11 @@ const Dashboard: React.FC = () => {
 
   // Prepare chart data
   const chartData = {
-    labels: stats?.ridesByType.map((item) => item.type) || [],
+    labels: stats?.rideTypeCounts.map((item) => item.name) || [],
     datasets: [
       {
         label: "Number of Rides",
-        data: stats?.ridesByType.map((item) => item.count) || [],
+        data: stats?.rideTypeCounts.map((item) => item.count) || [],
         backgroundColor: [
           "rgba(75, 192, 192, 0.6)",
           "rgba(54, 162, 235, 0.6)",
@@ -151,7 +146,7 @@ const Dashboard: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {stats.recentRides.map((ride) => (
+            {(stats?.recentRides ?? []).map((ride) => (
               <TableRow key={ride.id}>
                 <TableCell>{ride.id}</TableCell>
                 <TableCell>{formatDate(ride.created_at)}</TableCell>
@@ -236,7 +231,7 @@ const Dashboard: React.FC = () => {
                 </Grid>
                 <Grid item xs>
                   <Typography variant="h5" component="div">
-                    {stats?.totalRides || 0}
+                    {stats?.rideCount || 0}
                   </Typography>
                   <Typography variant="body2">Total Rides</Typography>
                 </Grid>
@@ -292,7 +287,7 @@ const Dashboard: React.FC = () => {
                 </Grid>
                 <Grid item xs>
                   <Typography variant="h5" component="div">
-                    {formatCurrency(stats?.totalRevenue || 0)}
+                    {formatCurrency(Number(stats?.totalRevenue) || 0)}
                   </Typography>
                   <Typography variant="body2">Total Revenue</Typography>
                 </Grid>
@@ -320,10 +315,10 @@ const Dashboard: React.FC = () => {
                 </Grid>
                 <Grid item xs>
                   <Typography variant="h5" component="div">
-                    {formatCurrency(stats?.totalCommission || 0)}
+                    {formatCurrency(Number(stats?.platformCommission) || 0)}
                   </Typography>
                   <Typography variant="body2">
-                    Platform Commission ({stats?.commissionRate || 0}%)
+                    Platform Commission ({stats?.platformCommission || 0}%)
                   </Typography>
                 </Grid>
               </Grid>

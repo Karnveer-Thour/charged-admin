@@ -107,5 +107,16 @@ export const getRidetypesdata = () => instance.get("/ride/ridetype");
 export const updateRidetypedata = (id: number, body: object) =>
   instance.put(`/ride/ridetype/${id}`, body);
 
+// Api to get Rides
+// This API is used to get all rides
+// It returns the array of rides
+// It is used in the dashboard page
 
 export const getRecentRidesData = () =>instance.get("/ride");
+
+// Api to get dashboard Stats
+// This API is used to get all dashboard data
+// It returns the object of dashboard stats
+// It is used in the dashboard page
+
+export const getDashboardStatsData= () =>instance.get("/admin/dashboardstats");

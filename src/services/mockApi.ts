@@ -402,30 +402,25 @@ const generateDashboardStats = (): DashboardStats => {
 
   const ridesByType = [
     {
-      type: "Electric",
-      count: mockRides.filter((ride) => ride.ride_type_id === "electric").length,
+      name: "Electric",
+      count: mockRides.filter((ride) => ride.ride_type_id === "electric").length.toString(),
     },
     {
-      type: "Regular",
-      count: mockRides.filter((ride) => ride.ride_type_id === "regular").length,
+      name: "Regular",
+      count: mockRides.filter((ride) => ride.ride_type_id === "regular").length.toString(),
     },
     {
-      type: "SUV",
-      count: mockRides.filter((ride) => ride.ride_type_id === "suv").length,
+      name: "SUV",
+      count: mockRides.filter((ride) => ride.ride_type_id === "suv").length.toString(),
     },
   ];
 
   return {
-    totalRides: mockRides.length,
-    activeDrivers: mockDrivers.filter((driver) => driver.is_active).length,
-    totalRevenue,
-    totalCommission,
-    commissionRate: avgCommissionRate,
-    totalUsers: mockRiders.length,
-    totalRefunds,
-    totalPoints,
-    recentRides: mockRides.slice(0, 10),
-    ridesByType,
+    rideCount: mockRides.length.toString(),
+    activeDrivers: mockDrivers.filter((driver) => driver.is_active).length.toString(),
+    totalRevenue: totalRevenue.toString(),
+    platformCommission:totalCommission.toString(),
+    rideTypeCounts:ridesByType,
   };
 };
 

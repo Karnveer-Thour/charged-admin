@@ -9,6 +9,7 @@ import {
   requiredDocuments,
   rideTypes,
   Ride,
+  DashboardStats,
 } from "../types";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
@@ -23,6 +24,7 @@ import {
   getRidetypesdata,
   updateRidetypedata,
   getRecentRidesData,
+  getDashboardStatsData,
 } from "../API/axios";
 
 interface AuthContextType {
@@ -48,6 +50,7 @@ interface AuthContextType {
   getRidetypes: () => Promise<rideTypes[]>;
   updateRidetype: (id: number, body: object) => Promise<any>;
   getrecentRides: () => Promise<Ride[]>;
+  getDashboardStats: () => Promise<DashboardStats>;
   logout: () => void;
 }
 
@@ -88,6 +91,15 @@ const AuthContext = createContext<AuthContextType>({
   },
   getrecentRides: async () => {
     return [];
+  },
+  getDashboardStats: async () => {
+    return {
+      rideCount: "0",
+      activeDrivers: "0",
+      totalRevenue: "0",
+      platformCommission: "0",
+      rideTypeCounts: [],
+    };
   },
   logout: () => {},
 });
@@ -328,6 +340,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const getDashboardStats=async (): Promise<any>=>{
+    try {
+      const rideTypes = await getDashboardStatsData();
+      return rideTypes.data.data;
+    } catch (error: any) {
+      handleExpiredtoken(error);
+      setAuthState((prev) => ({
+        ...prev,
+        error: error.response.data.message,
+      }));
+    }
+  }
+
   const logout = () => {
     // Clear user data from localStorage
     signOut(auth);
@@ -356,6 +381,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         getRiders,
         updateRidetype,
         getrecentRides,
+        getDashboardStats,
         logout,
       }}
     >
