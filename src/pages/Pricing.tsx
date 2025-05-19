@@ -350,7 +350,9 @@ const Pricing: React.FC = () => {
                         }}
                         fullWidth
                         value={
-                          rule.govt_tax_percentage ? rule.govt_tax_percentage : undefined
+                          rule.govt_tax_percentage
+                            ? rule.govt_tax_percentage
+                            : undefined
                         }
                         onChange={(e) =>
                           handlePricingChange(

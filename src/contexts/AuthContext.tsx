@@ -51,7 +51,7 @@ interface AuthContextType {
   getRidetypes: () => Promise<rideTypes[]>;
   updateRidetype: (id: number, body: object) => Promise<any>;
   getrecentRides: () => Promise<Ride[]>;
-  getRidesByUserId : (Id:number) => Promise<Ride[]>;
+  getRidesByUserId: (Id: number) => Promise<Ride[]>;
   getDashboardStats: () => Promise<DashboardStats>;
   logout: () => void;
 }
@@ -94,7 +94,7 @@ const AuthContext = createContext<AuthContextType>({
   getrecentRides: async () => {
     return [];
   },
-  getRidesByUserId: async (Id:number)=>{
+  getRidesByUserId: async (Id: number) => {
     return [];
   },
   getDashboardStats: async () => {
@@ -345,7 +345,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const getRidesByUserId = async (Id:number): Promise<any> => {
+  const getRidesByUserId = async (Id: number): Promise<any> => {
     try {
       const RidesByUserId = await getRidesDataByUserId(Id);
       return RidesByUserId.data.data;
@@ -358,7 +358,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const getDashboardStats=async (): Promise<any>=>{
+  const getDashboardStats = async (): Promise<any> => {
     try {
       const dashboardStats = await getDashboardStatsData();
       return dashboardStats.data.data;
@@ -369,7 +369,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         error: error.response.data.message,
       }));
     }
-  }
+  };
 
   const logout = () => {
     // Clear user data from localStorage

@@ -223,10 +223,10 @@ const Drivers: React.FC = () => {
       setLoadingDriverDetails(true);
       setDriverDetailsOpen(true);
       const documents = await getDriverDocs(driver.id as any);
-      const rides= await getRidesByUserId(Number(driver.id));
+      const rides = await getRidesByUserId(Number(driver.id));
       setSelectedDriver({ ...driver, documents });
       setTabValue(0);
-      rides?setDriverRides(rides):setDriverRides([]);
+      rides ? setDriverRides(rides) : setDriverRides([]);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -241,7 +241,7 @@ const Drivers: React.FC = () => {
   const handleCloseDriverDetails = () => {
     setDriverDetailsOpen(false);
     setShowRejectionReason(false);
-    if(selectedDriver){
+    if (selectedDriver) {
       const updatedDrivers = drivers.map((driver) =>
         driver.id === selectedDriver.id ? selectedDriver : driver,
       );

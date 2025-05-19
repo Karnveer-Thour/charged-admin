@@ -32,7 +32,6 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { mockApi } from "../services/mockApi";
 import { DashboardStats, Ride } from "../types";
 import { formatCurrency, formatDate } from "../utils/formatters";
 import { useAuth } from "../contexts/AuthContext";
@@ -51,15 +50,15 @@ const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [stats, setStats] = useState<DashboardStats | null>(null);
-  const { getDrivers,getrecentRides,getDashboardStats } = useAuth();
+  const { getrecentRides, getDashboardStats } = useAuth();
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
         const dashboardStats = await getDashboardStats();
-        const recentRides=await getrecentRides();
-        
-        dashboardStats.recentRides=recentRides;
+        const recentRides = await getrecentRides();
+
+        dashboardStats.recentRides = recentRides;
         setStats(dashboardStats);
         setError(null);
       } catch (err) {

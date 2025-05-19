@@ -107,7 +107,7 @@ const generateRiders = (count: number): Rider[] => {
         : undefined;
 
     riders.push({
-      id:`${i}`,
+      id: `${i}`,
       name: `Rider ${i}`,
       email: `rider${i}@example.com`,
       phone: `+1${Math.floor(Math.random() * 900) + 100}${Math.floor(Math.random() * 900) + 100}${Math.floor(Math.random() * 9000) + 1000}`,
@@ -225,7 +225,7 @@ const generateDrivers = (count: number): Driver[] => {
 
     drivers.push({
       uuid: `driver-${i}`,
-      id:`${i}`,
+      id: `${i}`,
       name: `Driver ${i}`,
       email: `driver${i}@example.com`,
       phone: `+1${Math.floor(Math.random() * 900) + 100}${Math.floor(Math.random() * 900) + 100}${Math.floor(Math.random() * 9000) + 1000}`,
@@ -348,28 +348,29 @@ const generateRides = (count: number): Ride[] => {
     rides.push({
       id: `ride-${i}`,
       rider_id: riderId,
-      driver_id:driverId,
-      ride_type_id:rideType,
+      driver_id: driverId,
+      ride_type_id: rideType,
       status,
       pickup_address: generateLocation().address,
       dropoff_address: generateLocation().address,
-      distance_km:distance,
-      duration_minutes:duration,
-      base_fare:fare,
-      started_at:startTime,
-      arrived_at:endTime,
-      cancelled_at:cancelTime,
-      cancellation_reason:cancelReason,
-      cancellation_fee:refunded,
+      distance_km: distance,
+      duration_minutes: duration,
+      base_fare: fare,
+      started_at: startTime,
+      arrived_at: endTime,
+      cancelled_at: cancelTime,
+      cancellation_reason: cancelReason,
+      cancellation_fee: refunded,
       driverDistanceAtCancel,
-      rating:pointsAwarded,
-      created_at:createdAt,
+      rating: pointsAwarded,
+      created_at: createdAt,
     });
   }
 
   // Sort rides by most recent first
   return rides.sort(
-    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+    (a, b) =>
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
   );
 };
 
@@ -380,11 +381,14 @@ const generateDashboardStats = (): DashboardStats => {
   const completedRides = mockRides.filter(
     (ride) => ride.status === "completed",
   );
-  const cancelledRides = mockRides.filter(
-    (ride) => ride.status === "canceled",
-  );
+  // const cancelledRides = mockRides.filter(
+  //   (ride) => ride.status === "canceled",
+  // );
 
-  const totalRevenue = completedRides.reduce((sum, ride) => sum + ride.base_fare, 0);
+  const totalRevenue = completedRides.reduce(
+    (sum, ride) => sum + ride.base_fare,
+    0,
+  );
 
   // Calculate commission based on the average of all pricing rules
   const avgCommissionRate =
@@ -392,35 +396,43 @@ const generateDashboardStats = (): DashboardStats => {
     pricingRules.length;
   const totalCommission = totalRevenue * (avgCommissionRate / 100);
 
-  const totalRefunds = cancelledRides
-    .filter((ride) => ride.cancellation_fee)
-    .reduce((sum, ride) => sum + ride.base_fare, 0);
-  const totalPoints = mockRiders.reduce(
-    (sum, rider) => sum + rider.rewardPoints,
-    0,
-  );
+  // const totalRefunds = cancelledRides
+  //   .filter((ride) => ride.cancellation_fee)
+  //   .reduce((sum, ride) => sum + ride.base_fare, 0);
+  // const totalPoints = mockRiders.reduce(
+  //   (sum, rider) => sum + rider.rewardPoints,
+  //   0,
+  // );
 
   const ridesByType = [
     {
       name: "Electric",
-      count: mockRides.filter((ride) => ride.ride_type_id === "electric").length.toString(),
+      count: mockRides
+        .filter((ride) => ride.ride_type_id === "electric")
+        .length.toString(),
     },
     {
       name: "Regular",
-      count: mockRides.filter((ride) => ride.ride_type_id === "regular").length.toString(),
+      count: mockRides
+        .filter((ride) => ride.ride_type_id === "regular")
+        .length.toString(),
     },
     {
       name: "SUV",
-      count: mockRides.filter((ride) => ride.ride_type_id === "suv").length.toString(),
+      count: mockRides
+        .filter((ride) => ride.ride_type_id === "suv")
+        .length.toString(),
     },
   ];
 
   return {
     rideCount: mockRides.length.toString(),
-    activeDrivers: mockDrivers.filter((driver) => driver.is_active).length.toString(),
+    activeDrivers: mockDrivers
+      .filter((driver) => driver.is_active)
+      .length.toString(),
     totalRevenue: totalRevenue.toString(),
-    platformCommission:totalCommission.toString(),
-    rideTypeCounts:ridesByType,
+    platformCommission: totalCommission.toString(),
+    rideTypeCounts: ridesByType,
   };
 };
 

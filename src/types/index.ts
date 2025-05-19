@@ -171,13 +171,13 @@ export interface rideTypes {
 
 // Dashboard statistics
 export interface DashboardStats {
-    rideCount: string,
-    activeDrivers: string,
-    totalRevenue:string,
-    platformCommission: string,
-    rideTypeCounts: {
-      name:string,
-      count:string,
-    }[],
-    recentRides?:Ride[],
+  rideCount: string;
+  activeDrivers: string;
+  totalRevenue: string;
+  platformCommission: string;
+  rideTypeCounts: {
+    name: string;
+    count: string;
+  }[];
+  recentRides?: Ride[];
 }

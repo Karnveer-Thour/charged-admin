@@ -33,7 +33,6 @@ import {
   Edit as EditIcon,
   Close as CloseIcon,
 } from "@mui/icons-material";
-import { mockApi } from "../services/mockApi";
 import { Rider, Ride } from "../types";
 import { formatDate, formatRelativeTime } from "../utils/formatters";
 import { useAuth } from "../contexts/AuthContext";
@@ -51,7 +50,7 @@ const Riders: React.FC = () => {
   const [riderRides, setRiderRides] = useState<Ride[]>([]);
   const [rideDialogOpen, setRideDialogOpen] = useState(false);
   const [rideDialogLoading, setRideDialogLoading] = useState(false);
-  const { getRiders,getRidesByUserId } = useAuth();
+  const { getRiders, getRidesByUserId } = useAuth();
 
   // Load riders on component mount
   useEffect(() => {
@@ -393,9 +392,11 @@ const Riders: React.FC = () => {
                 <Grid item xs={6} md={3}>
                   <Paper sx={{ p: 2, textAlign: "center" }} elevation={2}>
                     <Typography variant="h4" color="primary">
-                      {
-                        riderRides?riderRides.filter((r: Ride) => r.status === "completed").length:null
-                      }
+                      {riderRides
+                        ? riderRides.filter(
+                            (r: Ride) => r.status === "completed",
+                          ).length
+                        : null}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       Completed Rides
@@ -405,10 +406,7 @@ const Riders: React.FC = () => {
                 <Grid item xs={6} md={3}>
                   <Paper sx={{ p: 2, textAlign: "center" }} elevation={2}>
                     <Typography variant="h4" color="primary">
-                      {
-                        riderRides.filter((r) => r.status === "canceled")
-                          .length
-                      }
+                      {riderRides.filter((r) => r.status === "canceled").length}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       Cancelled Rides
@@ -460,9 +458,7 @@ const Riders: React.FC = () => {
                           <TableCell>
                             {ride.dropoff_address.split(",")[0]}
                           </TableCell>
-                          <TableCell align="right">
-                            ${ride.base_fare}
-                          </TableCell>
+                          <TableCell align="right">${ride.base_fare}</TableCell>
                           <TableCell align="center">
                             <Chip
                               label={ride.status}

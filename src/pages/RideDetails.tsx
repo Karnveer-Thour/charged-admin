@@ -330,7 +330,9 @@ const RideDetails: React.FC = () => {
                 <Grid item xs={12}>
                   <Alert
                     severity={ride.cancellation_fee ? "info" : "warning"}
-                    icon={ride.cancellation_fee ? <CheckIcon /> : <WarningIcon />}
+                    icon={
+                      ride.cancellation_fee ? <CheckIcon /> : <WarningIcon />
+                    }
                     sx={{ mt: 2 }}
                   >
                     {ride.cancellation_fee ? (
@@ -483,7 +485,9 @@ const RideDetails: React.FC = () => {
                         />
                       </ListItemIcon>
                       <ListItemText
-                        primary={ride.cancellation_fee ? "Refunded" : "Not Refunded"}
+                        primary={
+                          ride.cancellation_fee ? "Refunded" : "Not Refunded"
+                        }
                         secondary={
                           ride.cancellation_fee
                             ? "The fare has been refunded to the rider"
@@ -709,8 +713,9 @@ const RideDetails: React.FC = () => {
         <DialogContent>
           <Typography paragraph>
             You're about to process a refund for this ride. This will mark the
-            ride as refunded and the fare amount ({formatCurrency(ride.base_fare)})
-            will be credited back to the rider.
+            ride as refunded and the fare amount (
+            {formatCurrency(ride.base_fare)}) will be credited back to the
+            rider.
           </Typography>
 
           <TextField
