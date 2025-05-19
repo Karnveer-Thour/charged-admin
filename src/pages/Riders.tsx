@@ -372,7 +372,7 @@ const Riders: React.FC = () => {
                 <Grid item xs={6} md={3}>
                   <Paper sx={{ p: 2, textAlign: "center" }} elevation={2}>
                     <Typography variant="h4" color="primary">
-                      {selectedRider?.totalRides || 0}
+                      {riderRides.length || 0}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       Total Rides
