@@ -442,7 +442,7 @@ const Riders: React.FC = () => {
                         <TableCell>To</TableCell>
                         <TableCell align="right">Fare</TableCell>
                         <TableCell align="center">Status</TableCell>
-                        <TableCell align="center">Points</TableCell>
+                        <TableCell align="center">Ratings</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
