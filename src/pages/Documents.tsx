@@ -6,6 +6,9 @@ import {
   Button,
   CircularProgress,
   Container,
+  Dialog,
+  DialogActions,
+  DialogTitle,
   IconButton,
   InputAdornment,
   Paper,
@@ -29,7 +32,9 @@ export const Documents = () => {
   >([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
-
+  const [updateDocumentLoading, setUpdateDocumentLoading] = useState(true);
+  const [isUpdateDocumentOpened, setIsUpdateDocumentOpened] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -50,6 +55,25 @@ export const Documents = () => {
   const handleChangePage = (_: unknown, newPage: number) => {
     setPage(newPage);
   };
+
+  const handleOpenUpdateDocument = () => {
+  setUpdateDocumentLoading(true);
+  setIsUpdateDocumentOpened(true);
+  setTimeout(() => {
+    setSelectedDocument(true);
+    setUpdateDocumentLoading(false);
+  }, 2000);
+};
+
+const handleSubmitUpdateDocument=()=>{
+
+}
+
+const handleCloseUpdateDocument = () => {
+  setSelectedDocument(false);
+  setIsUpdateDocumentOpened(false);
+};
+
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -178,6 +202,7 @@ export const Documents = () => {
                           color="primary"
                           size="small"
                           title="Edit Document"
+                          onClick={handleOpenUpdateDocument}
                         >
                           <Edit />
                         </IconButton>
@@ -197,7 +222,7 @@ export const Documents = () => {
                 <TableRow>
                   <TableCell colSpan={7} align="center" sx={{ py: 3 }}>
                     <Typography variant="body1" color="text.secondary">
-                      No riders found matching your search.
+                      No Documents found matching your search.
                     </Typography>
                   </TableCell>
                 </TableRow>
@@ -215,6 +240,79 @@ export const Documents = () => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+
+      {/* Update document dialog */}
+      <Dialog
+  open={isUpdateDocumentOpened}
+  onClose={handleCloseUpdateDocument}
+  maxWidth="md"
+  fullWidth
+>
+  {updateDocumentLoading && (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: 200,
+        padding: 2,
+      }}
+    >
+      <CircularProgress />
+    </Box>
+  )}
+
+  {!updateDocumentLoading && selectedDocument && (
+    <>
+      <DialogTitle>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Typography variant="h6" sx={{ textAlign: "center" }}>
+            Update Document
+          </Typography>
+        </Box>
+      </DialogTitle>
+      <Box
+        component="form"
+        onSubmit={() => {}}
+        sx={{ mt: 1, mx: 3}}
+      >
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="Name"
+          label="Document Name"
+          name="Name"
+          autoComplete="Name"
+          autoFocus
+          disabled={loading}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="Description"
+          label="Document Description"
+          name="Description"
+          autoComplete="Description"
+          autoFocus
+          disabled={loading}
+        />
+      </Box>
+      <DialogActions>
+        <Button onClick={handleCloseUpdateDocument}>Close</Button>
+        <Button onClick={handleSubmitUpdateDocument}>Submit</Button>
+      </DialogActions>
+    </>
+  )}
+</Dialog>
+
     </Container>
   );
 };
