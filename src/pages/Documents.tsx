@@ -32,9 +32,11 @@ export const Documents = () => {
   >([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
-  const [updateDocumentLoading, setUpdateDocumentLoading] = useState(true);
+  const [updateDocumentLoading, setUpdateDocumentLoading] = useState(false);
   const [isUpdateDocumentOpened, setIsUpdateDocumentOpened] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState(false);
+  const [addDocumentLoading, setAddDocumentLoading] = useState(false);
+  const [isAddDocumentOpened, setIsAddDocumentOpened] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -74,6 +76,20 @@ const handleCloseUpdateDocument = () => {
   setIsUpdateDocumentOpened(false);
 };
 
+const handleOpenAddDocument = () => {
+  setAddDocumentLoading(true);
+  setIsAddDocumentOpened(true);
+  setAddDocumentLoading(false);
+};
+
+const handleSubmitAddDocument=()=>{
+
+}
+
+const handleCloseAddDocument = () => {
+  setSelectedDocument(false);
+  setIsAddDocumentOpened(false);
+};
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -83,6 +99,7 @@ const handleCloseUpdateDocument = () => {
   };
   useEffect(() => {
     fetchDocumenttypes();
+    // eslint-disable-next-line
   }, []);
   useEffect(() => {
     if (documentTypes.length) {
@@ -118,7 +135,7 @@ const handleCloseUpdateDocument = () => {
     );
   }
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 0 }}>
       <Box
         sx={{
           display: "flex",
@@ -145,6 +162,17 @@ const handleCloseUpdateDocument = () => {
           sx={{ width: 300 }}
         />
       </Box>
+
+      <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mb: 2 }}
+                    disabled={addDocumentLoading}
+                    onClick={handleOpenAddDocument}
+                  >
+                    Add Document
+                  </Button>
 
       <Paper elevation={3}>
         <TableContainer>
@@ -240,7 +268,64 @@ const handleCloseUpdateDocument = () => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-
+      {/*Add document dialog*/ }
+       <Dialog
+  open={isAddDocumentOpened}
+  onClose={handleCloseAddDocument}
+  maxWidth="md"
+  fullWidth
+>
+         {addDocumentLoading && (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: 200,
+        padding: 2,
+      }}
+    >
+      <CircularProgress />
+    </Box>
+  )}
+  {!addDocumentLoading && (
+    <>
+    <DialogTitle>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Typography variant="h6" sx={{ textAlign: "center" }}>
+            Add Document
+          </Typography>
+        </Box>
+      </DialogTitle>
+      <Box
+        component="form"
+        onSubmit={() => {}}
+        sx={{ mt: 1, mx: 3}}
+      >
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="Name"
+          label="Document Name"
+          name="Name"
+          autoComplete="Name"
+          autoFocus
+          disabled={loading}
+        />
+        </Box>
+    <DialogActions>
+        <Button onClick={handleCloseAddDocument}>Close</Button>
+        <Button onClick={handleSubmitAddDocument}>Submit</Button>
+      </DialogActions> 
+    </>)}    
+</Dialog>
       {/* Update document dialog */}
       <Dialog
   open={isUpdateDocumentOpened}
