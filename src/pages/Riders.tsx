@@ -37,6 +37,7 @@ import { Rider, Ride } from "../types";
 import { formatDate, formatRelativeTime } from "../utils/formatters";
 import { useAuth } from "../contexts/AuthContext";
 import Multiselect from "../utils/Multiselect";
+import RewardPointsDialog from "../components/Riders/RewardPoints/RewardPointsDialog";
 
 const Riders: React.FC = () => {
   const [riders, setRiders] = useState<Rider[]>([]);
@@ -50,6 +51,8 @@ const Riders: React.FC = () => {
   const [riderRides, setRiderRides] = useState<Ride[]>([]);
   const [rideDialogOpen, setRideDialogOpen] = useState(false);
   const [rideDialogLoading, setRideDialogLoading] = useState(false);
+  const [displayRewardPointsModel, setDisplayRewardPointsModel] =
+    useState(false);
   const { getRiders, getRidesByUserId } = useAuth();
 
   // Load riders on component mount
@@ -108,7 +111,7 @@ const Riders: React.FC = () => {
 
     try {
       const rides = await getRidesByUserId(Number(rider.id));
-      rides?setRiderRides(rides):setRiderRides([]);
+      rides ? setRiderRides(rides) : setRiderRides([]);
     } catch (err) {
       console.error("Error fetching rider rides:", err);
     } finally {
@@ -135,6 +138,10 @@ const Riders: React.FC = () => {
       default:
         return "default";
     }
+  };
+
+  const handleRewardPoints = (e: React.MouseEvent<HTMLDivElement>) => {
+    setDisplayRewardPointsModel(true);
   };
 
   if (loading) {
@@ -379,8 +386,12 @@ const Riders: React.FC = () => {
                     </Typography>
                   </Paper>
                 </Grid>
-                <Grid item xs={6} md={3}>
-                  <Paper sx={{ p: 2, textAlign: "center" }} elevation={2}>
+                <Grid item xs={6} md={3} sx={{ cursor: "pointer" }}>
+                  <Paper
+                    sx={{ p: 2, textAlign: "center" }}
+                    elevation={2}
+                    onClick={handleRewardPoints}
+                  >
                     <Typography variant="h4" color="primary">
                       {selectedRider?.rewardPoints || 0}
                     </Typography>
@@ -497,6 +508,14 @@ const Riders: React.FC = () => {
           <Button onClick={handleCloseRideDialog}>Close</Button>
         </DialogActions>
       </Dialog>
+
+      {/* Reward points Dialog */}
+      <RewardPointsDialog
+        rewardDialogOpen={displayRewardPointsModel}
+        setDisplayRewardPointsModel={setDisplayRewardPointsModel}
+        rewards={selectedRider?.rewardPoints || 0}
+        userName={selectedRider?.name || ""}
+      />
     </Container>
   );
 };
