@@ -8,6 +8,7 @@ import {
   Container,
   Dialog,
   DialogActions,
+  DialogContent,
   DialogTitle,
   IconButton,
   InputAdornment,
@@ -59,37 +60,32 @@ export const Documents = () => {
   };
 
   const handleOpenUpdateDocument = () => {
-  setUpdateDocumentLoading(true);
-  setIsUpdateDocumentOpened(true);
-  setTimeout(() => {
-    setSelectedDocument(true);
-    setUpdateDocumentLoading(false);
-  }, 2000);
-};
+    setUpdateDocumentLoading(true);
+    setIsUpdateDocumentOpened(true);
+    setTimeout(() => {
+      setSelectedDocument(true);
+      setUpdateDocumentLoading(false);
+    }, 2000);
+  };
 
-const handleSubmitUpdateDocument=()=>{
+  const handleSubmitUpdateDocument = () => {};
 
-}
+  const handleCloseUpdateDocument = () => {
+    setSelectedDocument(false);
+    setIsUpdateDocumentOpened(false);
+  };
 
-const handleCloseUpdateDocument = () => {
-  setSelectedDocument(false);
-  setIsUpdateDocumentOpened(false);
-};
+  const handleOpenAddDocument = () => {
+    setAddDocumentLoading(false);
+    setIsAddDocumentOpened(true);
+  };
 
-const handleOpenAddDocument = () => {
-  setAddDocumentLoading(true);
-  setIsAddDocumentOpened(true);
-  setAddDocumentLoading(false);
-};
+  const handleSubmitAddDocument = () => {};
 
-const handleSubmitAddDocument=()=>{
-
-}
-
-const handleCloseAddDocument = () => {
-  setSelectedDocument(false);
-  setIsAddDocumentOpened(false);
-};
+  const handleCloseAddDocument = () => {
+    setSelectedDocument(false);
+    setIsAddDocumentOpened(false);
+  };
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -164,15 +160,15 @@ const handleCloseAddDocument = () => {
       </Box>
 
       <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    sx={{ mb: 2 }}
-                    disabled={addDocumentLoading}
-                    onClick={handleOpenAddDocument}
-                  >
-                    Add Document
-                  </Button>
+        type="submit"
+        fullWidth
+        variant="contained"
+        sx={{ mb: 2 }}
+        disabled={addDocumentLoading}
+        onClick={handleOpenAddDocument}
+      >
+        Add Document
+      </Button>
 
       <Paper elevation={3}>
         <TableContainer>
@@ -268,136 +264,137 @@ const handleCloseAddDocument = () => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      {/*Add document dialog*/ }
-       <Dialog
-  open={isAddDocumentOpened}
-  onClose={handleCloseAddDocument}
-  maxWidth="md"
-  fullWidth
->
-         {addDocumentLoading && (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: 200,
-        padding: 2,
-      }}
+      {/*Add document dialog*/}
+      <Dialog
+      open={isAddDocumentOpened}
+      onClose={handleCloseAddDocument}
+      maxWidth="sm"
+      fullWidth
     >
-      <CircularProgress />
-    </Box>
-  )}
-  {!addDocumentLoading && (
-    <>
-    <DialogTitle>
+      {addDocumentLoading ? (
         <Box
           sx={{
             display: "flex",
-            alignItems: "center",
             justifyContent: "center",
+            alignItems: "center",
+            height: 200,
           }}
         >
-          <Typography variant="h6" sx={{ textAlign: "center" }}>
-            Add Document
-          </Typography>
+          <CircularProgress />
         </Box>
-      </DialogTitle>
-      <Box
-        component="form"
-        onSubmit={() => {}}
-        sx={{ mt: 1, mx: 3}}
-      >
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          id="Name"
-          label="Document Name"
-          name="Name"
-          autoComplete="Name"
-          autoFocus
-          disabled={loading}
-        />
-        </Box>
-    <DialogActions>
-        <Button onClick={handleCloseAddDocument}>Close</Button>
-        <Button onClick={handleSubmitAddDocument}>Submit</Button>
-      </DialogActions> 
-    </>)}    
-</Dialog>
+      ) : (
+        <>
+          <DialogTitle>
+            <Typography variant="h6" textAlign="center" fontWeight="bold">
+              Add New Document
+            </Typography>
+          </DialogTitle>
+
+          <DialogContent dividers>
+            <Box
+              component="form"
+              onSubmit={handleSubmitAddDocument}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+                mt: 1,
+              }}
+            >
+              <TextField
+                label="Document Name"
+                name="documentName"
+                required
+                fullWidth
+                disabled={loading}
+              />
+            </Box>
+          </DialogContent>
+
+          <DialogActions sx={{ px: 3, pb: 2 }}>
+            <Button onClick={handleCloseAddDocument} disabled={loading}>
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              onClick={handleSubmitAddDocument}
+              variant="contained"
+              color="primary"
+              disabled={loading}
+            >
+              {loading ? <CircularProgress size={22} color="inherit" /> : "Add Document"}
+            </Button>
+          </DialogActions>
+        </>
+      )}
+    </Dialog>
       {/* Update document dialog */}
       <Dialog
-  open={isUpdateDocumentOpened}
-  onClose={handleCloseUpdateDocument}
-  maxWidth="md"
-  fullWidth
->
-  {updateDocumentLoading && (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: 200,
-        padding: 2,
-      }}
-    >
-      <CircularProgress />
-    </Box>
-  )}
-
-  {!updateDocumentLoading && selectedDocument && (
-    <>
-      <DialogTitle>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Typography variant="h6" sx={{ textAlign: "center" }}>
-            Update Document
-          </Typography>
-        </Box>
-      </DialogTitle>
-      <Box
-        component="form"
-        onSubmit={() => {}}
-        sx={{ mt: 1, mx: 3}}
+        open={isUpdateDocumentOpened}
+        onClose={handleCloseUpdateDocument}
+        maxWidth="md"
+        fullWidth
       >
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          id="Name"
-          label="Document Name"
-          name="Name"
-          autoComplete="Name"
-          autoFocus
-          disabled={loading}
-        />
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          id="Description"
-          label="Document Description"
-          name="Description"
-          autoComplete="Description"
-          autoFocus
-          disabled={loading}
-        />
-      </Box>
-      <DialogActions>
-        <Button onClick={handleCloseUpdateDocument}>Close</Button>
-        <Button onClick={handleSubmitUpdateDocument}>Submit</Button>
-      </DialogActions>
-    </>
-  )}
-</Dialog>
+        {updateDocumentLoading && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: 200,
+              padding: 2,
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        )}
 
+        {!updateDocumentLoading && selectedDocument && (
+          <>
+            <DialogTitle>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Typography variant="h6" sx={{ textAlign: "center" }}>
+                  Update Document
+                </Typography>
+              </Box>
+            </DialogTitle>
+            <Box component="form" onSubmit={() => {}} sx={{ mt: 1, mx: 3 }}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="Name"
+                label="Document Name"
+                name="Name"
+                autoComplete="Name"
+                autoFocus
+                disabled={loading}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="Description"
+                label="Document Description"
+                name="Description"
+                autoComplete="Description"
+                autoFocus
+                disabled={loading}
+              />
+            </Box>
+            <DialogActions>
+              <Button onClick={handleCloseUpdateDocument}>Close</Button>
+              <Button onClick={handleSubmitUpdateDocument}>Submit</Button>
+            </DialogActions>
+          </>
+        )}
+      </Dialog>
     </Container>
   );
 };

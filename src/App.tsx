@@ -17,6 +17,7 @@ import RideDetails from "./pages/RideDetails";
 import TestRide from "./pages/TestRide";
 import NotFound from "./pages/NotFound";
 import { Documents } from "./pages/Documents";
+import Rewards from "./pages/Rewards";
 
 // Create a theme instance
 const theme = createTheme({
@@ -73,6 +74,7 @@ const App: React.FC = () => {
               <Route index element={<Dashboard />} />
               <Route path="pricing" element={<Pricing />} />
               <Route path="riders" element={<Riders />} />
+              <Route path="rewards" element={<Rewards />} />
               <Route path="drivers" element={<Drivers />} />
               <Route path="documents" element={<Documents />} />
               <Route path="rides/:rideId" element={<RideDetails />} />

@@ -181,3 +181,24 @@ export interface DashboardStats {
   }[];
   recentRides?: Ride[];
 }
+
+export interface RewardPointDetail {
+  id: string;
+  points: number;
+  description: string;
+  created_at: string;
+}
+
+export interface Reward {
+  id: number;
+  title: string;
+  description: string;
+  point_required: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export enum AdjustmentType {
+  INCREMENT = "INCREMENT",
+  DECREMENT = "DECREMENT",
+}
