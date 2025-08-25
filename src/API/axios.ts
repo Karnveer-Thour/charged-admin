@@ -1,5 +1,10 @@
 import axios from "axios";
-import { DriverDocumentpayload, Driverstatuspayload } from "../types";
+import {
+  ChangeRewardPointsBody,
+  CreateRewardBody,
+  DriverDocumentpayload,
+  Driverstatuspayload,
+} from "../types";
 
 // This file contains the API calls for the admin panel
 
@@ -128,3 +133,22 @@ export const getRidesDataByUserId = (Id: number) =>
 
 export const getDashboardStatsData = () =>
   instance.get("/admin/dashboardstats");
+
+export const getRewards = () => instance.get("/admin/rewards");
+
+export const createReward = (data: CreateRewardBody) =>
+  instance.post("/admin/rewards", data);
+
+export const deleteReward = (rewardId: number) =>
+  instance.delete(`/admin/rewards/${rewardId}`);
+
+export const getRewardPoints = (userId: number) =>
+  instance.get(`/admin/rewardpoints/${userId}`);
+
+export const changeRewardPoints = (
+  userId: number,
+  data: ChangeRewardPointsBody,
+) => instance.post(`/admin/rewardpoints/${userId}`, data);
+
+export const deleteRewardPoints = (userId: number) =>
+  instance.delete(`/admin/rewardpoints/${userId}`);

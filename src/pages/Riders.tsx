@@ -33,11 +33,11 @@ import {
   Edit as EditIcon,
   Close as CloseIcon,
 } from "@mui/icons-material";
-import { Rider, Ride } from "../types";
+import { Rider, Ride, RewardPointDetail } from "../types";
 import { formatDate, formatRelativeTime } from "../utils/formatters";
 import { useAuth } from "../contexts/AuthContext";
 import Multiselect from "../utils/Multiselect";
-import RewardPointsDialog from "../components/Riders/RewardPoints/RewardPointsDialog";
+import RewardPointsDialog from "../components/Riders/RewardPoints/RewardPointsDialog/RewardPointsDialog";
 
 const Riders: React.FC = () => {
   const [riders, setRiders] = useState<Rider[]>([]);
@@ -50,10 +50,14 @@ const Riders: React.FC = () => {
   const [selectedRider, setSelectedRider] = useState<Rider | null>(null);
   const [riderRides, setRiderRides] = useState<Ride[]>([]);
   const [rideDialogOpen, setRideDialogOpen] = useState(false);
+  const [totalPoints, setTotalPoints] = useState<number>(0);
+  const [RewardPointDetails, setRewardPointDetails] = useState<
+    RewardPointDetail[]
+  >([]);
   const [rideDialogLoading, setRideDialogLoading] = useState(false);
   const [displayRewardPointsModel, setDisplayRewardPointsModel] =
     useState(false);
-  const { getRiders, getRidesByUserId } = useAuth();
+  const { getRiders, getRidesByUserId, getRewardPointsData } = useAuth();
 
   // Load riders on component mount
   useEffect(() => {
@@ -108,10 +112,11 @@ const Riders: React.FC = () => {
     setSelectedRider(rider);
     setRideDialogOpen(true);
     setRideDialogLoading(true);
+    await fetchRewardPoints(Number(rider.id));
 
     try {
       const rides = await getRidesByUserId(Number(rider.id));
-      rides ? setRiderRides(rides) : setRiderRides([]);
+      rides.length>0 ? setRiderRides(rides) : setRiderRides([]);
     } catch (err) {
       console.error("Error fetching rider rides:", err);
     } finally {
@@ -142,6 +147,25 @@ const Riders: React.FC = () => {
 
   const handleRewardPoints = (e: React.MouseEvent<HTMLDivElement>) => {
     setDisplayRewardPointsModel(true);
+  };
+
+  const fetchRewardPoints = async (riderId:number) => {
+    try {
+      const data = await getRewardPointsData(riderId);
+      let totalPoints: number = 0;
+      data?.map((rewardPoint) => {
+        totalPoints += rewardPoint?.amount?Number(rewardPoint.amount):0;
+      });
+      setTotalPoints(totalPoints);
+      setRewardPointDetails(data?.length>0?data:[]);
+      setError(null);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unknown error occurred.");
+      }
+    }
   };
 
   if (loading) {
@@ -393,7 +417,7 @@ const Riders: React.FC = () => {
                     onClick={handleRewardPoints}
                   >
                     <Typography variant="h4" color="primary">
-                      {selectedRider?.rewardPoints || 0}
+                      {totalPoints || 0}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       Reward Points
@@ -510,12 +534,15 @@ const Riders: React.FC = () => {
       </Dialog>
 
       {/* Reward points Dialog */}
-      <RewardPointsDialog
-        rewardDialogOpen={displayRewardPointsModel}
-        setDisplayRewardPointsModel={setDisplayRewardPointsModel}
-        rewards={selectedRider?.rewardPoints || 0}
-        userName={selectedRider?.name || ""}
-      />
+      {selectedRider && (
+        <RewardPointsDialog
+          rewardDialogOpen={displayRewardPointsModel}
+          setDisplayRewardPointsModel={setDisplayRewardPointsModel}
+          rewards={totalPoints || 0}
+          rider={selectedRider}
+          RewardPointDetails={RewardPointDetails.length>0?RewardPointDetails:[]}
+        />
+      )}
     </Container>
   );
 };

@@ -183,10 +183,20 @@ export interface DashboardStats {
 }
 
 export interface RewardPointDetail {
-  id: string;
-  points: number;
+  id: number;
   description: string;
+  reward: string;
+  amount: number;
+  ride_id: number;
   created_at: string;
+  updated_at: string;
+  user_id: number;
+  redeem_by: number;
+}
+
+export interface ChangeRewardPointsBody {
+  description?: string;
+  amount?: number;
 }
 
 export interface Reward {
@@ -196,6 +206,12 @@ export interface Reward {
   point_required: number;
   created_at: string;
   updated_at: string;
+}
+
+export interface CreateRewardBody {
+  title: string;
+  description: string;
+  point_required: string;
 }
 
 export enum AdjustmentType {

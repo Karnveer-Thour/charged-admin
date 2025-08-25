@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { formatDate } from "../../../utils/formatters";
-import { Delete, Edit } from "@mui/icons-material";
+import { Delete } from "@mui/icons-material";
 import { Reward } from "../../../types";
 const dummyRewards:Reward[] = Array.from({ length: 50 }, (_, i) => ({
   id: i + 1,

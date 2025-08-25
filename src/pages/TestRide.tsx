@@ -160,7 +160,7 @@ const TestRide: React.FC = () => {
     // Create a completed ride
     const createdRide: Ride = {
       id: `test-ride-${Date.now()}`,
-      rider_id: selectedRider.id,
+      rider_id: selectedRider.id ,
       driver_id: selectedDriver.id,
       ride_type_id: selectedRideType as any,
       status: "completed",

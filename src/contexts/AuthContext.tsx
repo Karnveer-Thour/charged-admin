@@ -10,6 +10,10 @@ import {
   rideTypes,
   Ride,
   DashboardStats,
+  Reward,
+  CreateRewardBody,
+  ChangeRewardPointsBody,
+  RewardPointDetail,
 } from "../types";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
@@ -26,6 +30,12 @@ import {
   getRecentRidesData,
   getDashboardStatsData,
   getRidesDataByUserId,
+  getRewards,
+  createReward,
+  deleteReward,
+  getRewardPoints,
+  changeRewardPoints,
+  deleteRewardPoints,
 } from "../API/axios";
 
 interface AuthContextType {
@@ -51,8 +61,17 @@ interface AuthContextType {
   getRidetypes: () => Promise<rideTypes[]>;
   updateRidetype: (id: number, body: object) => Promise<any>;
   getrecentRides: () => Promise<Ride[]>;
-  getRidesByUserId: (Id: number) => Promise<Ride[]>;
+  getRidesByUserId: (id: number) => Promise<Ride[]>;
   getDashboardStats: () => Promise<DashboardStats>;
+  getRewardsData: () => Promise<any>;
+  createNewReward: (data: CreateRewardBody) => Promise<Reward>;
+  deleteExistingReward: (Id: number) => Promise<Reward>;
+  getRewardPointsData: (id: number) => Promise<RewardPointDetail[]>;
+  updateRewardPoints: (
+    id: number,
+    data: ChangeRewardPointsBody,
+  ) => Promise<RewardPointDetail>;
+  deleteExistingRewardPoints: (id: number) => Promise<RewardPointDetail>;
   logout: () => void;
 }
 
@@ -106,6 +125,58 @@ const AuthContext = createContext<AuthContextType>({
       rideTypeCounts: [],
     };
   },
+  getRewardsData: async () => {
+    return [];
+  },
+  createNewReward: async (data: CreateRewardBody) => {
+    return {
+      id: 1,
+      title: "anything",
+      description: "anything",
+      point_required: 100,
+      created_at: "Date",
+      updated_at: "Date",
+    };
+  },
+  deleteExistingReward: async (Id: number) => {
+    return {
+      id: 1,
+      title: "anything",
+      description: "anything",
+      point_required: 100,
+      created_at: "Date",
+      updated_at: "Date",
+    };
+  },
+  getRewardPointsData: async (id: number) => {
+    return [];
+  },
+  updateRewardPoints: async (id: number, data: ChangeRewardPointsBody) => {
+    return {
+      id: 1,
+      description: "Sample Description",
+      reward: "",
+      amount: 500,
+      ride_id: 7,
+      created_at: "2025-08-22T13:03:53.007Z",
+      updated_at: "2025-08-22T13:03:53.007Z",
+      user_id: 7,
+      redeem_by: 8,
+    };
+  },
+  deleteExistingRewardPoints: async (id: number) => {
+    return {
+      id: 1,
+      description: "Sample Description",
+      reward: "",
+      amount: 500,
+      ride_id: 7,
+      created_at: "2025-08-22T13:03:53.007Z",
+      updated_at: "2025-08-22T13:03:53.007Z",
+      user_id: 7,
+      redeem_by: 8,
+    };
+  },
   logout: () => {},
 });
 
@@ -149,8 +220,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const handleExpiredtoken = (error: any) => {
     if (
-      "auth/id-token-expired" === error.response.data.error.code ||
-      "auth/argument-error" === error.response.data.error.code
+      "auth/id-token-expired" === error.response.data.error?.code ||
+      "auth/argument-error" === error.response.data.error?.code
     ) {
       logout();
     }
@@ -371,6 +442,91 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const getRewardsData = async (): Promise<any> => {
+    try {
+      const Rewards = await getRewards();
+      return Rewards.data.data;
+    } catch (error: any) {
+      handleExpiredtoken(error);
+      setAuthState((prev) => ({
+        ...prev,
+        error: error.response.data.message,
+      }));
+    }
+  };
+
+  const createNewReward = async (data: CreateRewardBody): Promise<any> => {
+    try {
+      const newReward = await createReward(data);
+      return newReward.data.data;
+    } catch (error: any) {
+      handleExpiredtoken(error);
+      setAuthState((prev) => ({
+        ...prev,
+        error: error.response.data.message,
+      }));
+    }
+  };
+
+  const deleteExistingReward = async (rewardId: number): Promise<any> => {
+    try {
+      const deletedReward = await deleteReward(rewardId);
+      return deletedReward.data.data;
+    } catch (error: any) {
+      handleExpiredtoken(error);
+      setAuthState((prev) => ({
+        ...prev,
+        error: error.response.data.message,
+      }));
+    }
+  };
+
+  const getRewardPointsData = async (userId: number): Promise<any> => {
+    try {
+      const rewardPoints = await getRewardPoints(userId);
+      console.log(rewardPoints);
+      return rewardPoints.data.data?.rewards;
+    } catch (error: any) {
+      handleExpiredtoken(error);
+      setAuthState((prev) => ({
+        ...prev,
+        error: error.response.data.message,
+      }));
+    }
+  };
+
+  const updateRewardPoints = async (
+    userId: number,
+    data: ChangeRewardPointsBody,
+  ) => {
+    try {
+      console.log(data,"----->503");
+      const updatedRewardPoints = await changeRewardPoints(userId, data);
+      console.log(updateRewardPoints);
+      return updatedRewardPoints.data.data;
+    } catch (error: any) {
+      console.log(error);
+      handleExpiredtoken(error);
+      setAuthState((prev) => ({
+        ...prev,
+        error: error.response.data.message,
+      }));
+    }
+  };
+
+  const deleteExistingRewardPoints = async (userId: number) => {
+    try {
+      const deletedRewardPoints = await deleteRewardPoints(userId);
+      return deletedRewardPoints.data.data;
+    } catch (error: any) {
+      handleExpiredtoken(error);
+      setAuthState((prev) => ({
+        ...prev,
+        error: error.response.data.message,
+      }));
+    }
+  };
+
   const logout = () => {
     // Clear user data from localStorage
     signOut(auth);
@@ -401,6 +557,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         getrecentRides,
         getRidesByUserId,
         getDashboardStats,
+        getRewardsData,
+        createNewReward,
+        deleteExistingReward,
+        getRewardPointsData,
+        updateRewardPoints,
+        deleteExistingRewardPoints,
         logout,
       }}
     >
