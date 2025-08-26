@@ -10,7 +10,7 @@ import { SearchIcon } from "lucide-react";
 import React, { useState } from "react";
 import RewardsTable from "./RewardsTable/RewardsTable";
 import CreateRewardForm from "./CreateRewardForm/CreateRewardForm";
-import DeleteRewardDialog from "./DeleteRewardDialog/DeleteRewardDialog";
+import { useAuth } from "../../contexts/AuthContext";
 import { Reward } from "../../types";
 
 const RewardsComponent: React.FC = () => {
@@ -18,14 +18,35 @@ const RewardsComponent: React.FC = () => {
     useState<boolean>(false);
   const [isCreateRewardFormOpened, setIsCreateRewardFormOpened] =
     useState<boolean>(false);
-  const [isDeleteRewardDialogOpened, setIsDeleteRewardDialogOpened] =
-    useState<boolean>(false);
-  const [selectedRewardToDelete, setSelectedRewardToDelete] = useState<Reward|undefined>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [rewards, setRewards] = useState<Reward[] | []>([]);
+  const [filteredRewards, setFilteredRewards] = useState<Reward[]>([]);
+  const { getRewardsData } = useAuth();
+
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   const handleOpenCreateRewardForm = () => {
     setIsCreateRewardFormOpened(true);
     setCreateRewardFormLoading(false);
+  };
+
+  const fetchRewards = async () => {
+    setLoading(true);
+    try {
+      const data = await getRewardsData();
+      setRewards(data?.length ? data : []);
+      setFilteredRewards(data?.length ? data : []);
+      setError(null);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unknown error occurred.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <>
@@ -70,18 +91,17 @@ const RewardsComponent: React.FC = () => {
           isCreateRewardFormOpened={isCreateRewardFormOpened}
           setIsCreateRewardFormOpened={setIsCreateRewardFormOpened}
           CreateRewardFormLoading={createRewardFormLoading}
+          fetchRewards={fetchRewards}
         />
         <RewardsTable
           searchQuery={searchQuery}
-          setIsDeleteRewardDialogOpened={setIsDeleteRewardDialogOpened}
-          setSelectedRewardToDelete={setSelectedRewardToDelete}
+          fetchRewards={fetchRewards}
+          rewards={rewards}
+          setFilteredRewards={setFilteredRewards}
+          filteredRewards={filteredRewards}
+          loading={loading}
+          error={error}
         />
-        {selectedRewardToDelete && <DeleteRewardDialog
-          isDeleteRewardDialogOpened={isDeleteRewardDialogOpened}
-          SelectedRewardToDelete={selectedRewardToDelete}
-          setIsDeleteRewardDialogOpened={setIsDeleteRewardDialogOpened}
-          setSelectedRewardToDelete={setSelectedRewardToDelete}
-        />}
       </Container>
     </>
   );

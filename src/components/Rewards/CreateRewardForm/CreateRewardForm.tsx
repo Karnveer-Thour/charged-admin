@@ -9,35 +9,84 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import React, { useState } from "react";
+import { CreateRewardBody } from "../../../types";
+import { useAuth } from "../../../contexts/AuthContext";
 
 interface CreateRewardFormProps {
   isCreateRewardFormOpened: boolean;
   CreateRewardFormLoading: boolean;
   setIsCreateRewardFormOpened: React.Dispatch<React.SetStateAction<boolean>>;
+  fetchRewards: () => Promise<void>;
 }
 
 const CreateRewardForm = ({
   isCreateRewardFormOpened,
   CreateRewardFormLoading,
   setIsCreateRewardFormOpened,
+  fetchRewards,
 }: CreateRewardFormProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [submitFormValues, setSubmitFormValues] = useState<CreateRewardBody>({
+    title: "",
+    description: "",
+    point_required: "",
+  });
+  const { createNewReward } = useAuth();
 
   const handleCloseCreateRewardFormDocument = () => {
     setIsCreateRewardFormOpened(false);
+    setSubmitFormValues({
+      title: "",
+      description: "",
+      point_required: "",
+    });
   };
 
-  const handleSubmitCreateRewardForm = (e: React.FormEvent) => {
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setSubmitFormValues((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmitCreateRewardForm = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
     e.preventDefault();
     setLoading(true);
 
-    // Simulate submit
-    setTimeout(() => {
+    try {
+      if (
+        !submitFormValues.title.trim() ||
+        !submitFormValues.description.trim() ||
+        !submitFormValues.point_required
+      ) {
+        throw new Error("All fields are required");
+      }
+
+      const newReward: CreateRewardBody = {
+        title: submitFormValues.title.trim(),
+        description: submitFormValues.description.trim(),
+        point_required: Number(submitFormValues.point_required),
+      };
+
+      await createNewReward(newReward);
+      await fetchRewards();
+      handleCloseCreateRewardFormDocument();
+    } catch (error) {
+      console.error(error);
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Unable to create a new reward."
+      );
+    } finally {
       setLoading(false);
-      setIsCreateRewardFormOpened(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -82,6 +131,8 @@ const CreateRewardForm = ({
                 name="title"
                 required
                 fullWidth
+                value={submitFormValues.title}
+                onChange={handleOnChange}
                 disabled={loading}
               />
               <TextField
@@ -91,14 +142,18 @@ const CreateRewardForm = ({
                 fullWidth
                 multiline
                 minRows={3}
+                value={submitFormValues.description}
+                onChange={handleOnChange}
                 disabled={loading}
               />
               <TextField
                 label="Points Required"
-                name="pointsRequired"
+                name="point_required"
                 type="number"
                 required
                 fullWidth
+                value={submitFormValues.point_required}
+                onChange={handleOnChange}
                 disabled={loading}
               />
               {error && (
@@ -106,29 +161,34 @@ const CreateRewardForm = ({
                   {error}
                 </Typography>
               )}
+
+              <DialogActions sx={{ px: 0, pb: 0, pt: 2 }}>
+                <Button
+                  onClick={handleCloseCreateRewardFormDocument}
+                  disabled={loading}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  disabled={
+                    loading ||
+                    Number(submitFormValues.point_required) <= 0 ||
+                    !submitFormValues.title ||
+                    !submitFormValues.description
+                  }
+                >
+                  {loading ? (
+                    <CircularProgress size={22} color="inherit" />
+                  ) : (
+                    "Create Reward"
+                  )}
+                </Button>
+              </DialogActions>
             </Box>
           </DialogContent>
-
-          <DialogActions sx={{ px: 3, pb: 2 }}>
-            <Button
-              onClick={handleCloseCreateRewardFormDocument}
-              disabled={loading}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleSubmitCreateRewardForm}
-              variant="contained"
-              color="primary"
-              disabled={loading}
-            >
-              {loading ? (
-                <CircularProgress size={22} color="inherit" />
-              ) : (
-                "Create Reward"
-              )}
-            </Button>
-          </DialogActions>
         </>
       )}
     </Dialog>

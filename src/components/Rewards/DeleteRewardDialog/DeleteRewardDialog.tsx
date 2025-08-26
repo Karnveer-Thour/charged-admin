@@ -1,23 +1,52 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material"
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Typography,
+} from "@mui/material";
 import { Reward } from "../../../types";
+import { useAuth } from "../../../contexts/AuthContext";
 
-interface DeleteRewardDialogProps{
-    isDeleteRewardDialogOpened:boolean;
-    SelectedRewardToDelete:Reward;
-    setIsDeleteRewardDialogOpened:React.Dispatch<React.SetStateAction<boolean>>
-    setSelectedRewardToDelete:React.Dispatch<React.SetStateAction<Reward|undefined>>
+interface DeleteRewardDialogProps {
+  isDeleteRewardDialogOpened: boolean;
+  SelectedRewardToDelete: Reward;
+  setIsDeleteRewardDialogOpened: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedRewardToDelete: React.Dispatch<
+    React.SetStateAction<Reward | undefined>
+  >;
+  fetchRewards: () => Promise<void>;
 }
 
-const DeleteRewardDialog = ({isDeleteRewardDialogOpened,SelectedRewardToDelete,setIsDeleteRewardDialogOpened,setSelectedRewardToDelete}:DeleteRewardDialogProps) => {
-    const handleCloseDeleteRewardDialog=()=>{
-        setIsDeleteRewardDialogOpened(false);
-        setSelectedRewardToDelete(undefined);
+const DeleteRewardDialog = ({
+  isDeleteRewardDialogOpened,
+  SelectedRewardToDelete,
+  setIsDeleteRewardDialogOpened,
+  setSelectedRewardToDelete,
+  fetchRewards,
+}: DeleteRewardDialogProps) => {
+  const {deleteExistingReward}=useAuth();
+  const handleCloseDeleteRewardDialog = () => {
+    setIsDeleteRewardDialogOpened(false);
+    setSelectedRewardToDelete(undefined);
+  };
+  const handleDeleteReward = async() => {
+    try {
+      await deleteExistingReward(SelectedRewardToDelete.id);
+      await fetchRewards();
+      handleCloseDeleteRewardDialog();
+    } catch (error) {
+      console.log(error);
     }
-    const handleDeleteReward=()=>{
-
-    }
+  };
   return (
-    <Dialog open={isDeleteRewardDialogOpened} onClose={handleCloseDeleteRewardDialog} maxWidth="sm" fullWidth>
+    <Dialog
+      open={isDeleteRewardDialogOpened}
+      onClose={handleCloseDeleteRewardDialog}
+      maxWidth="sm"
+      fullWidth
+    >
       <DialogTitle>Delete Reward</DialogTitle>
       <DialogContent>
         <Typography variant="body1">
@@ -33,7 +62,7 @@ const DeleteRewardDialog = ({isDeleteRewardDialogOpened,SelectedRewardToDelete,s
         </Button>
       </DialogActions>
     </Dialog>
-  )
-}
+  );
+};
 
-export default DeleteRewardDialog
+export default DeleteRewardDialog;

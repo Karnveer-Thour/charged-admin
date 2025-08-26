@@ -211,7 +211,7 @@ export interface Reward {
 export interface CreateRewardBody {
   title: string;
   description: string;
-  point_required: string;
+  point_required: string|number;
 }
 
 export enum AdjustmentType {

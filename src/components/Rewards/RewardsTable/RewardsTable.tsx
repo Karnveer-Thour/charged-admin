@@ -19,65 +19,64 @@ import React, { useEffect, useState } from "react";
 import { formatDate } from "../../../utils/formatters";
 import { Delete } from "@mui/icons-material";
 import { Reward } from "../../../types";
-const dummyRewards:Reward[] = Array.from({ length: 50 }, (_, i) => ({
-  id: i + 1,
-  title: `Reward Item ${i + 1}`,
-  description: `This is a description for reward item ${i + 1}.`,
-  point_required: Math.floor(Math.random() * 1000) + 100, // between 100–1100
-  created_at: new Date(
-    2025,
-    Math.floor(Math.random() * 12), // random month
-    Math.floor(Math.random() * 28) + 1, // random day
-    Math.floor(Math.random() * 24), // random hour
-    Math.floor(Math.random() * 60), // random minute
-  ).toISOString(),
-  updated_at: new Date(
-    2025,
-    Math.floor(Math.random() * 12), // random month
-    Math.floor(Math.random() * 28) + 1, // random day
-    Math.floor(Math.random() * 24), // random hour
-    Math.floor(Math.random() * 60), // random minute
-  ).toISOString(),
-}));
+import { useAuth } from "../../../contexts/AuthContext";
+import DeleteRewardDialog from "../DeleteRewardDialog/DeleteRewardDialog";
 
-interface RewardsTableProps{
-  searchQuery:string;
-  setIsDeleteRewardDialogOpened:React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedRewardToDelete:React.Dispatch<React.SetStateAction<Reward | undefined>>
+interface RewardsTableProps {
+  searchQuery: string;
+  fetchRewards: () => Promise<void>;
+  rewards: Reward[];
+  setFilteredRewards: React.Dispatch<React.SetStateAction<Reward[]>>;
+  filteredRewards: Reward[];
+  loading:boolean,
+  error:string|null,
 }
 
-const RewardsTable = ({searchQuery,setIsDeleteRewardDialogOpened,setSelectedRewardToDelete}:RewardsTableProps) => {
+const RewardsTable = ({
+  searchQuery,
+  fetchRewards,
+  rewards,
+  setFilteredRewards,
+  filteredRewards,
+  loading,
+  error
+}: RewardsTableProps) => {
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
-  const [loading, setLoading] = useState<false>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [filteredRewards, setFilteredRewards] = useState<Reward[]>([]);
+  const [selectedRewardToDelete, setSelectedRewardToDelete] = useState<
+    Reward | undefined
+  >();
+  const [isDeleteRewardDialogOpened, setIsDeleteRewardDialogOpened] =
+    useState<boolean>(false);
   const handleChangePage = (_: unknown, newPage: number) => {
     setPage(newPage);
   };
   const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>,
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-    const handleOpenDeleteRewardDialog=()=>{
+  const handleOpenDeleteRewardDialog = () => {
     setIsDeleteRewardDialogOpened(true);
-  }
+  };
   useEffect(() => {
-      if (dummyRewards.length) {
-        const filtered = dummyRewards.filter(
-          (Documents) =>
-            Documents.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            Documents.description
-              .toLowerCase()
-              .includes(searchQuery.toLowerCase()) ||
-            Documents.created_at.includes(searchQuery) ||
-            Documents.point_required.toString().includes(searchQuery),
-        );
-        setFilteredRewards(filtered);
-      }
-    }, [searchQuery, dummyRewards]);
+    fetchRewards();
+  }, []);
+  useEffect(() => {
+    if (rewards.length) {
+      const filtered = rewards.filter(
+        (Documents) =>
+          Documents.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          Documents.description
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          Documents.created_at.includes(searchQuery) ||
+          Documents.point_required.toString().includes(searchQuery)
+      );
+      setFilteredRewards(filtered);
+    }
+  }, [searchQuery, rewards]);
   if (loading) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
@@ -91,7 +90,7 @@ const RewardsTable = ({searchQuery,setIsDeleteRewardDialogOpened,setSelectedRewa
         <Alert severity="error" sx={{ mb: 4 }}>
           {error}
         </Alert>
-        <Button variant="contained" onClick={()=>{}}>
+        <Button variant="contained" onClick={fetchRewards}>
           Retry
         </Button>
       </Container>
@@ -114,7 +113,7 @@ const RewardsTable = ({searchQuery,setIsDeleteRewardDialogOpened,setSelectedRewa
             <TableBody>
               {filteredRewards
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((Reward:Reward) => (
+                .map((Reward: Reward) => (
                   <TableRow key={Reward.id} hover>
                     <TableCell>
                       <Box
@@ -125,10 +124,18 @@ const RewardsTable = ({searchQuery,setIsDeleteRewardDialogOpened,setSelectedRewa
                         }}
                       >
                         <Box>
-                          <Typography variant="body1" fontWeight="medium" align="center">
+                          <Typography
+                            variant="body1"
+                            fontWeight="medium"
+                            align="center"
+                          >
                             {Reward.title}
                           </Typography>
-                          <Typography variant="body2" color="text.secondary" align="left">
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            align="left"
+                          >
                             ID: RWD{Reward.id.toString().padStart(3, "0")}
                           </Typography>
                         </Box>
@@ -139,10 +146,10 @@ const RewardsTable = ({searchQuery,setIsDeleteRewardDialogOpened,setSelectedRewa
                         {Reward.description}
                       </Typography>
                     </TableCell>
-                    <TableCell align="center" >
+                    <TableCell align="center">
                       {Reward.point_required}
                     </TableCell>
-                    <TableCell align="center" >
+                    <TableCell align="center">
                       {formatDate(Reward.created_at)}
                     </TableCell>
                     <TableCell align="center">
@@ -151,7 +158,10 @@ const RewardsTable = ({searchQuery,setIsDeleteRewardDialogOpened,setSelectedRewa
                           color="secondary"
                           size="small"
                           title="Delete Document"
-                          onClick={()=>{handleOpenDeleteRewardDialog();setSelectedRewardToDelete(Reward)}}
+                          onClick={() => {
+                            handleOpenDeleteRewardDialog();
+                            setSelectedRewardToDelete(Reward);
+                          }}
                         >
                           <Delete />
                         </IconButton>
@@ -182,6 +192,15 @@ const RewardsTable = ({searchQuery,setIsDeleteRewardDialogOpened,setSelectedRewa
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+      {selectedRewardToDelete && (
+        <DeleteRewardDialog
+          isDeleteRewardDialogOpened={isDeleteRewardDialogOpened}
+          SelectedRewardToDelete={selectedRewardToDelete}
+          setIsDeleteRewardDialogOpened={setIsDeleteRewardDialogOpened}
+          setSelectedRewardToDelete={setSelectedRewardToDelete}
+          fetchRewards={fetchRewards}
+        />
+      )}
     </>
   );
 };
