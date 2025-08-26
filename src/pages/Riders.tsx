@@ -541,6 +541,7 @@ const Riders: React.FC = () => {
           rewards={totalPoints || 0}
           rider={selectedRider}
           RewardPointDetails={RewardPointDetails.length>0?RewardPointDetails:[]}
+          fetchRewardPoints={fetchRewardPoints}
         />
       )}
     </Container>

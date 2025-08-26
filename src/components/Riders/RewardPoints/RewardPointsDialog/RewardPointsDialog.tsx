@@ -25,7 +25,6 @@ import { formatDate } from "../../../../utils/formatters";
 import { Minus, Plus } from "lucide-react";
 import { AdjustmentType, RewardPointDetail, Rider } from "../../../../types";
 import RewardAdjustmentDialog from "../RewardAdjustmentDialog";
-import { useAuth } from "../../../../contexts/AuthContext";
 import DeleteRewardPointDialog from "./DeleteRewardPointDialog";
 
 interface RewardPointsDialogProps {
@@ -34,6 +33,7 @@ interface RewardPointsDialogProps {
   rewards: number;
   rider: Rider;
   RewardPointDetails: RewardPointDetail[];
+  fetchRewardPoints:(riderId:number)=>Promise<void>
 }
 const RewardPointsDialog: React.FC<RewardPointsDialogProps> = ({
   rewardDialogOpen,
@@ -41,6 +41,7 @@ const RewardPointsDialog: React.FC<RewardPointsDialogProps> = ({
   rewards,
   rider,
   RewardPointDetails,
+  fetchRewardPoints,
 }) => {
   const [isAdujstingRewards, setIsAdjustingRewards] = useState(false);
   const [adjustmentType, setAdjustmentType] = useState<
@@ -224,6 +225,7 @@ const RewardPointsDialog: React.FC<RewardPointsDialogProps> = ({
             setIsAdjustmentDialogOpen={setIsAdjustingRewards}
             rider={rider}
             adjustmentType={adjustmentType}
+            fetchRewardPoints={fetchRewardPoints}
           />
         )}
       </Dialog>
@@ -233,6 +235,7 @@ const RewardPointsDialog: React.FC<RewardPointsDialogProps> = ({
           selectedDeleteRewardPoint={selectedRewardPointToDelete}
           setSelectedDeleteRewardPoint={setSelectedRewardPointToDelete}
           setIsDeleteRewardPointDialogOpened={setIsRewardPointDeleting}
+          fetchRewardPoints={fetchRewardPoints}
         />
       )}
     </>

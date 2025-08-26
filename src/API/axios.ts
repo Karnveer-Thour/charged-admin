@@ -30,7 +30,7 @@ instance.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  },
+  }
 );
 
 // Api to get admin data
@@ -70,7 +70,7 @@ export const getDriverdocsdata = (id: string) =>
 export const updateDriverDocs = (
   driverId: string,
   documentId: string,
-  data: DriverDocumentpayload,
+  data: DriverDocumentpayload
 ) => instance.put(`/admin/verifydriverdoc/${driverId}/${documentId}`, data);
 
 // Api to get update driver status
@@ -78,7 +78,7 @@ export const updateDriverDocs = (
 
 export const updateDriverstatus = (
   driverId: string,
-  data: Driverstatuspayload,
+  data: Driverstatuspayload
 ) => {
   return instance.put(`/admin/updatestatus/${driverId}`, data);
 };
@@ -147,7 +147,7 @@ export const getRewardPoints = (userId: number) =>
 
 export const changeRewardPoints = (
   userId: number,
-  data: ChangeRewardPointsBody,
+  data: ChangeRewardPointsBody
 ) => instance.post(`/admin/rewardpoints/${userId}`, data);
 
 export const deleteRewardPoints = (userId: number) =>

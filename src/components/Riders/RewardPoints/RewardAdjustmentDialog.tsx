@@ -8,15 +8,13 @@ import {
   DialogTitle,
   Divider,
   IconButton,
-  InputAdornment,
-  Paper,
   TextField,
   Typography,
+  Grid,
 } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
 import React, { useState } from "react";
 import { AdjustmentType, ChangeRewardPointsBody, Rider } from "../../../types";
-import { Grid } from "@mui/material";
 import { useAuth } from "../../../contexts/AuthContext";
 
 interface RewardAdjustmentDialogProps {
@@ -24,7 +22,7 @@ interface RewardAdjustmentDialogProps {
   setIsAdjustmentDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   rider: Rider;
   adjustmentType: AdjustmentType;
-  rewards?: number;
+  fetchRewardPoints:(riderId:number)=>Promise<void>
 }
 
 const RewardAdjustmentDialog: React.FC<RewardAdjustmentDialogProps> = ({
@@ -32,11 +30,12 @@ const RewardAdjustmentDialog: React.FC<RewardAdjustmentDialogProps> = ({
   setIsAdjustmentDialogOpen,
   rider,
   adjustmentType,
-  rewards = 0,
+  fetchRewardPoints,
 }) => {
   const [formSubmitValues, setFormSubmitValues] =
     useState<ChangeRewardPointsBody>();
   const { updateRewardPoints } = useAuth();
+
   const handleCloseAdjustmentDialog = () => {
     setFormSubmitValues({
       amount: undefined,
@@ -44,15 +43,22 @@ const RewardAdjustmentDialog: React.FC<RewardAdjustmentDialogProps> = ({
     });
     setIsAdjustmentDialogOpen(false);
   };
+
   const handleFormSubmit = async () => {
     const newForm: ChangeRewardPointsBody = {
-      amount: formSubmitValues?.amount ?adjustmentType===AdjustmentType.DECREMENT? -Math.abs(formSubmitValues.amount) : formSubmitValues.amount:0,
+      amount: formSubmitValues?.amount
+        ? adjustmentType === AdjustmentType.DECREMENT
+          ? -Math.abs(Number(formSubmitValues.amount))
+          : Math.abs(Number(formSubmitValues.amount))
+        : 0,
       description: formSubmitValues?.description || "",
     };
 
     await updateRewardPoints(Number(rider.id), newForm);
+    await fetchRewardPoints(Number(rider.id));
     handleCloseAdjustmentDialog();
   };
+
   return (
     <Dialog
       open={adjustmentDialogOpen}
@@ -80,13 +86,11 @@ const RewardAdjustmentDialog: React.FC<RewardAdjustmentDialogProps> = ({
           </IconButton>
         </Box>
       </DialogTitle>
+
       <DialogContent dividers>
-        <Grid
-          container
-          spacing={4}
-          justifyContent="center"
-          sx={{ mb: 3 }}
-        ></Grid>
+        <Grid container spacing={4} justifyContent="center" sx={{ mb: 3 }} />
+
+        {/* Amount input */}
         <Grid item xs={12}>
           <Typography variant="h6" gutterBottom>
             {adjustmentType === AdjustmentType.INCREMENT
@@ -108,12 +112,12 @@ const RewardAdjustmentDialog: React.FC<RewardAdjustmentDialogProps> = ({
                 ? "Enter the number of rewards to add"
                 : "Enter the number of rewards to consume"
             }
-            onChange={(e) =>
+            onChange={(e) => {
               setFormSubmitValues((prev) => ({
-                amount: e.target.value ? Number(e.target.value) : undefined,
+                amount: Number(e.target.value),
                 description: prev?.description ?? "",
-              }))
-            }
+              }));
+            }}
             helperText={
               adjustmentType === AdjustmentType.INCREMENT
                 ? "Specify how many reward points you want to add."
@@ -121,6 +125,8 @@ const RewardAdjustmentDialog: React.FC<RewardAdjustmentDialogProps> = ({
             }
           />
         </Grid>
+
+        {/* Reason input */}
         <Grid item xs={12}>
           <Typography variant="h6" gutterBottom>
             Reason
@@ -142,23 +148,26 @@ const RewardAdjustmentDialog: React.FC<RewardAdjustmentDialogProps> = ({
             }
             onChange={(e) =>
               setFormSubmitValues((prev) => ({
-                quantity: formSubmitValues?.amount ?? undefined,
+                amount: prev?.amount ?? undefined,
                 description: e.target.value,
               }))
             }
-            helperText={`Justify your reason to ${adjustmentType === AdjustmentType.INCREMENT ? "add" : "cosume"} points...`}
+            helperText={`Justify your reason to ${
+              adjustmentType === AdjustmentType.INCREMENT ? "add" : "consume"
+            } points...`}
           />
         </Grid>
+
+        {/* Submit button */}
         <Grid item sx={{ mt: 2 }}>
-          <Divider />
+          <Divider sx={{ mb: 2 }} />
           <Button
             variant="contained"
             color="primary"
             fullWidth
             onClick={handleFormSubmit}
             disabled={
-              formSubmitValues?.amount === undefined &&
-              formSubmitValues?.description === undefined
+              !formSubmitValues?.amount || !formSubmitValues?.description
             }
           >
             Submit

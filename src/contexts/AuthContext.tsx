@@ -70,7 +70,7 @@ interface AuthContextType {
   updateRewardPoints: (
     id: number,
     data: ChangeRewardPointsBody,
-  ) => Promise<RewardPointDetail>;
+  ) => Promise<void>;
   deleteExistingRewardPoints: (id: number) => Promise<RewardPointDetail>;
   logout: () => void;
 }
@@ -152,17 +152,7 @@ const AuthContext = createContext<AuthContextType>({
     return [];
   },
   updateRewardPoints: async (id: number, data: ChangeRewardPointsBody) => {
-    return {
-      id: 1,
-      description: "Sample Description",
-      reward: "",
-      amount: 500,
-      ride_id: 7,
-      created_at: "2025-08-22T13:03:53.007Z",
-      updated_at: "2025-08-22T13:03:53.007Z",
-      user_id: 7,
-      redeem_by: 8,
-    };
+    return 
   },
   deleteExistingRewardPoints: async (id: number) => {
     return {
@@ -484,7 +474,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const getRewardPointsData = async (userId: number): Promise<any> => {
     try {
       const rewardPoints = await getRewardPoints(userId);
-      console.log(rewardPoints);
       return rewardPoints.data.data?.rewards;
     } catch (error: any) {
       handleExpiredtoken(error);
@@ -500,12 +489,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     data: ChangeRewardPointsBody,
   ) => {
     try {
-      console.log(data,"----->503");
       const updatedRewardPoints = await changeRewardPoints(userId, data);
-      console.log(updateRewardPoints);
-      return updatedRewardPoints.data.data;
+      // return updatedRewardPoints.data.data;
     } catch (error: any) {
-      console.log(error);
       handleExpiredtoken(error);
       setAuthState((prev) => ({
         ...prev,
