@@ -20,12 +20,12 @@ import {
   Container,
   Alert,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { formatDate } from "../../../../utils/formatters";
+import React, { useState } from "react";
+import { formatDate } from "../../../utils/formatters";
 import { Minus, Plus } from "lucide-react";
-import { AdjustmentType, RewardPointDetail, Rider } from "../../../../types";
-import RewardAdjustmentDialog from "../RewardAdjustmentDialog";
-import DeleteRewardPointDialog from "./DeleteRewardPointDialog";
+import { AdjustmentType, RewardPointDetail, Rider } from "../../../types";
+import RewardAdjustmentDialog from "./RewardAdjustmentDialog/RewardAdjustmentDialog";
+import DeleteRewardPointDialog from "./DeleteRewardPointDialog/DeleteRewardPointDialog";
 
 interface RewardPointsDialogProps {
   rewardDialogOpen: boolean;
@@ -33,7 +33,7 @@ interface RewardPointsDialogProps {
   rewards: number;
   rider: Rider;
   RewardPointDetails: RewardPointDetail[];
-  fetchRewardPoints:(riderId:number)=>Promise<void>
+  fetchRewardPoints: (riderId: number) => Promise<void>;
 }
 const RewardPointsDialog: React.FC<RewardPointsDialogProps> = ({
   rewardDialogOpen,
@@ -58,7 +58,7 @@ const RewardPointsDialog: React.FC<RewardPointsDialogProps> = ({
     setIsRewardPointDeleting(true);
   };
   const handleRewardPointsAdjustmentDialog = (
-    adjustmentType: AdjustmentType,
+    adjustmentType: AdjustmentType
   ) => {
     setIsAdjustingRewards(true);
     setAdjustmentType(adjustmentType);
@@ -123,7 +123,7 @@ const RewardPointsDialog: React.FC<RewardPointsDialogProps> = ({
                       startIcon={<Minus />}
                       onClick={() =>
                         handleRewardPointsAdjustmentDialog(
-                          AdjustmentType.DECREMENT,
+                          AdjustmentType.DECREMENT
                         )
                       }
                       disabled={false}
@@ -139,7 +139,7 @@ const RewardPointsDialog: React.FC<RewardPointsDialogProps> = ({
                       startIcon={<Plus />}
                       onClick={() =>
                         handleRewardPointsAdjustmentDialog(
-                          AdjustmentType.INCREMENT,
+                          AdjustmentType.INCREMENT
                         )
                       }
                       disabled={false}
@@ -199,7 +199,7 @@ const RewardPointsDialog: React.FC<RewardPointsDialogProps> = ({
                               onClick={() => {
                                 handleDeleteRewardPoint();
                                 setSelectedRewardPointToDelete(
-                                  RewardPointDetail,
+                                  RewardPointDetail
                                 );
                               }}
                             >

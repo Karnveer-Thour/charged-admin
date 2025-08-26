@@ -14,8 +14,8 @@ import {
 } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
 import React, { useState } from "react";
-import { AdjustmentType, ChangeRewardPointsBody, Rider } from "../../../types";
-import { useAuth } from "../../../contexts/AuthContext";
+import { useAuth } from "../../../../contexts/AuthContext";
+import { AdjustmentType, ChangeRewardPointsBody, Rider } from "../../../../types";
 
 interface RewardAdjustmentDialogProps {
   adjustmentDialogOpen: boolean;
