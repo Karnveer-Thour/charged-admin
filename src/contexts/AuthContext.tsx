@@ -37,6 +37,7 @@ import {
   changeRewardPoints,
   deleteRewardPoints,
 } from "../API/axios";
+import toast from "react-hot-toast";
 
 interface AuthContextType {
   authState: AuthState;
@@ -65,13 +66,13 @@ interface AuthContextType {
   getDashboardStats: () => Promise<DashboardStats>;
   getRewardsData: () => Promise<any>;
   createNewReward: (data: CreateRewardBody) => Promise<Reward>;
-  deleteExistingReward: (Id: number) => Promise<Reward>;
+  deleteExistingReward: (Id: number) => Promise<void>;
   getRewardPointsData: (id: number) => Promise<RewardPointDetail[]>;
   updateRewardPoints: (
     id: number,
     data: ChangeRewardPointsBody,
   ) => Promise<void>;
-  deleteExistingRewardPoints: (id: number) => Promise<RewardPointDetail>;
+  deleteExistingRewardPoints: (id: number) => Promise<void>;
   logout: () => void;
 }
 
@@ -139,33 +140,16 @@ const AuthContext = createContext<AuthContextType>({
     };
   },
   deleteExistingReward: async (Id: number) => {
-    return {
-      id: 1,
-      title: "anything",
-      description: "anything",
-      point_required: 100,
-      created_at: "Date",
-      updated_at: "Date",
-    };
+    return;
   },
   getRewardPointsData: async (id: number) => {
     return [];
   },
   updateRewardPoints: async (id: number, data: ChangeRewardPointsBody) => {
-    return 
+    return;
   },
   deleteExistingRewardPoints: async (id: number) => {
-    return {
-      id: 1,
-      description: "Sample Description",
-      reward: "",
-      amount: 500,
-      ride_id: 7,
-      created_at: "2025-08-22T13:03:53.007Z",
-      updated_at: "2025-08-22T13:03:53.007Z",
-      user_id: 7,
-      redeem_by: 8,
-    };
+    return;
   },
   logout: () => {},
 });
@@ -251,7 +235,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           user: User,
           error: null,
         });
-        // Store user data in localStorage
+
+        toast.success(`${User.name} login successfully!`);
         localStorage.setItem("charged_admin_user", JSON.stringify(User));
       }
     } catch (error) {
@@ -312,9 +297,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         documentId,
         data,
       );
+      toast.success(driverDocs.data?.message);
       return driverDocs.data.data[0];
     } catch (error: any) {
       handleExpiredtoken(error);
+      toast.error(error.data?.message);
       setAuthState((prev) => ({
         ...prev,
         error: error.response.data.message,
@@ -382,10 +369,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const updateRidetype = async (id: number, body: object): Promise<any> => {
     try {
-      const updatedRide = await updateRidetypedata(id, body);
-      return updatedRide.data.data;
+      await updateRidetypedata(id, body);
     } catch (error: any) {
       handleExpiredtoken(error);
+      toast.error(error.data?.message);
       setAuthState((prev) => ({
         ...prev,
         error: error.response.data.message,
@@ -448,9 +435,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const createNewReward = async (data: CreateRewardBody): Promise<any> => {
     try {
       const newReward = await createReward(data);
+      toast.success(newReward.data?.message);
       return newReward.data.data;
     } catch (error: any) {
       handleExpiredtoken(error);
+      toast.error(error.data?.message);
       setAuthState((prev) => ({
         ...prev,
         error: error.response.data.message,
@@ -461,9 +450,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const deleteExistingReward = async (rewardId: number): Promise<any> => {
     try {
       const deletedReward = await deleteReward(rewardId);
+      toast.success(deletedReward.data?.message);
       return deletedReward.data.data;
     } catch (error: any) {
       handleExpiredtoken(error);
+      toast.error(error.data?.message);
       setAuthState((prev) => ({
         ...prev,
         error: error.response.data.message,
@@ -489,10 +480,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     data: ChangeRewardPointsBody,
   ) => {
     try {
-      const updatedRewardPoints = await changeRewardPoints(userId, data);
-      // return updatedRewardPoints.data.data;
+      const changedRewardPoints = await changeRewardPoints(userId, data);
+      toast.success(changedRewardPoints.data?.message);
     } catch (error: any) {
       handleExpiredtoken(error);
+      toast.error(error.data?.message);
       setAuthState((prev) => ({
         ...prev,
         error: error.response.data.message,
@@ -500,12 +492,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const deleteExistingRewardPoints = async (userId: number) => {
+  const deleteExistingRewardPoints = async (rewardPointId: number) => {
     try {
-      const deletedRewardPoints = await deleteRewardPoints(userId);
-      return deletedRewardPoints.data.data;
+      const deletedRewardPoints = await deleteRewardPoints(rewardPointId);
+      toast.success(deletedRewardPoints.data?.message);
     } catch (error: any) {
       handleExpiredtoken(error);
+      toast.error(error.data?.message);
       setAuthState((prev) => ({
         ...prev,
         error: error.response.data.message,
@@ -517,7 +510,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     // Clear user data from localStorage
     signOut(auth);
     localStorage.removeItem("charged_admin_user");
-
+    toast.success("Logout succesfully");
     // Reset auth state
     setAuthState(initialAuthState);
   };

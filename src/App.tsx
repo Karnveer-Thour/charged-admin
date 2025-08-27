@@ -18,6 +18,7 @@ import TestRide from "./pages/TestRide";
 import NotFound from "./pages/NotFound";
 import { Documents } from "./pages/Documents";
 import Rewards from "./pages/Rewards";
+import { Toaster } from "react-hot-toast";
 
 // Create a theme instance
 const theme = createTheme({
@@ -84,6 +85,7 @@ const App: React.FC = () => {
           </Routes>
         </Router>
       </AuthProvider>
+      <Toaster/>
     </ThemeProvider>
   );
 };

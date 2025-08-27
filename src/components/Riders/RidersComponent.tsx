@@ -91,7 +91,7 @@ const RidersComponent: React.FC = () => {
     try {
       const data = await getRewardPointsData(riderId);
       let totalPoints: number = 0;
-      data?.map((rewardPoint) => {
+      data?.forEach((rewardPoint) => {
         totalPoints += rewardPoint?.amount ? Number(rewardPoint.amount) : 0;
       });
       setTotalPoints(totalPoints);

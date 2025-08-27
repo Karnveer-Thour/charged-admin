@@ -19,7 +19,6 @@ import React, { useEffect, useState } from "react";
 import { formatDate } from "../../../utils/formatters";
 import { Delete } from "@mui/icons-material";
 import { Reward } from "../../../types";
-import { useAuth } from "../../../contexts/AuthContext";
 import DeleteRewardDialog from "../DeleteRewardDialog/DeleteRewardDialog";
 
 interface RewardsTableProps {
@@ -62,6 +61,7 @@ const RewardsTable = ({
   };
   useEffect(() => {
     fetchRewards();
+    // eslint-disable-next-line
   }, []);
   useEffect(() => {
     if (rewards.length) {
@@ -76,6 +76,7 @@ const RewardsTable = ({
       );
       setFilteredRewards(filtered);
     }
+    // eslint-disable-next-line
   }, [searchQuery, rewards]);
   if (loading) {
     return (

@@ -25,6 +25,7 @@ import {
 } from "@mui/icons-material";
 import { rideTypes } from "../types";
 import { useAuth } from "../contexts/AuthContext";
+import toast from "react-hot-toast";
 
 // // Ride type icons mapping
 // const rideTypeIcons: Record<string, React.ReactNode> = {
@@ -91,6 +92,7 @@ const Pricing: React.FC = () => {
         message: `Successfully updated ${rule?.name} pricing rules`,
         severity: "success",
       });
+      toast.success(notification.message);
     } catch (err) {
       setNotification({
         open: true,
@@ -385,21 +387,6 @@ const Pricing: React.FC = () => {
           ))}
         </Grid>
       </Box>
-
-      <Snackbar
-        open={notification.open}
-        autoHideDuration={6000}
-        onClose={handleCloseNotification}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert
-          onClose={handleCloseNotification}
-          severity={notification.severity}
-          variant="filled"
-        >
-          {notification.message}
-        </Alert>
-      </Snackbar>
     </Container>
   );
 };

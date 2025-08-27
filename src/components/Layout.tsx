@@ -78,13 +78,6 @@ const Layout: React.FC = () => {
     navigate("/login");
   };
 
-  // Function to check if the token is expired and logout if it is
-  const logoutIfTokenExpired = (currentTime: number, expiry: number): void => {
-    if (expiry && currentTime > expiry) {
-      handleLogout();
-    }
-  };
-
   const getPageTitle = () => {
     const path = location.pathname;
 

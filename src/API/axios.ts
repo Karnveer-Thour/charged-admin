@@ -150,5 +150,5 @@ export const changeRewardPoints = (
   data: ChangeRewardPointsBody
 ) => instance.post(`/admin/rewardpoints/${userId}`, data);
 
-export const deleteRewardPoints = (userId: number) =>
-  instance.delete(`/admin/rewardpoints/${userId}`);
+export const deleteRewardPoints = (rewardPointId: number) =>
+  instance.delete(`/admin/rewardpoints/${rewardPointId}`);
