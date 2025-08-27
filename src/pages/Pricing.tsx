@@ -11,7 +11,6 @@ import {
   Button,
   CircularProgress,
   Alert,
-  Snackbar,
   Divider,
   InputAdornment,
   Avatar,
@@ -39,15 +38,6 @@ const Pricing: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [savingRules, setSavingRules] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
-  const [notification, setNotification] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error";
-  }>({
-    open: false,
-    message: "",
-    severity: "success",
-  });
   const { getRidetypes, updateRidetype } = useAuth();
 
   // Load pricing rules on component mount
@@ -83,30 +73,15 @@ const Pricing: React.FC = () => {
   };
 
   const handleSaveRule = async (rule: rideTypes) => {
-    // Set saving state only for this specific rule
     setSavingRules((prev) => ({ ...prev, [rule.id]: true }));
     try {
       await updateRidetype(rule.id, rule);
-      setNotification({
-        open: true,
-        message: `Successfully updated ${rule?.name} pricing rules`,
-        severity: "success",
-      });
-      toast.success(notification.message);
+      toast.success(`Successfully updated ${rule?.name} pricing rules`);
     } catch (err) {
-      setNotification({
-        open: true,
-        message: `Failed to update pricing rules: ${err}`,
-        severity: "error",
-      });
+      toast.error(`Failed to update pricing rules: ${err}`);
     } finally {
-      // Clear saving state only for this specific rule
       setSavingRules((prev) => ({ ...prev, [rule.id]: false }));
     }
-  };
-
-  const handleCloseNotification = () => {
-    setNotification({ ...notification, open: false });
   };
 
   if (loading) {
