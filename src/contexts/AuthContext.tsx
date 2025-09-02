@@ -316,8 +316,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   ): Promise<any> => {
     try {
       const driverStatus = await updateDriverstatus(driverId, data);
+      toast.success(`Driver updated to ${data.is_active?"active":"inactive"} successfully`);
       return driverStatus.data.data[0];
     } catch (error: any) {
+      toast.error(error.response.data?.message);
       setError(error.response.data.mesage);
       handleExpiredtoken(error);
       setAuthState((prev) => ({
