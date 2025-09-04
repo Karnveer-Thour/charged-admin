@@ -27,7 +27,6 @@ import {
   Logout as LogoutIcon,
   AccountCircle as AccountIcon,
   DirectionsCar as CarIcon,
-  Science as TestIcon,
   DocumentScanner,
   CardGiftcard as Rewards,
 } from "@mui/icons-material";
