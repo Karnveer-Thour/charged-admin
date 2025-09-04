@@ -14,7 +14,6 @@ import Pricing from "./pages/Pricing";
 import Riders from "./pages/Riders";
 import Drivers from "./pages/Drivers";
 import RideDetails from "./pages/RideDetails";
-import TestRide from "./pages/TestRide";
 import NotFound from "./pages/NotFound";
 import { Documents } from "./pages/Documents";
 import Rewards from "./pages/Rewards";
@@ -79,7 +78,6 @@ const App: React.FC = () => {
               <Route path="drivers" element={<Drivers />} />
               <Route path="documents" element={<Documents />} />
               <Route path="rides/:rideId" element={<RideDetails />} />
-              <Route path="test-ride" element={<TestRide />} />
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>

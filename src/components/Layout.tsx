@@ -48,7 +48,6 @@ const navItems: NavItem[] = [
   { text: "Rewards", path: "/rewards", icon: <Rewards /> },
   { text: "Riders", path: "/riders", icon: <PeopleIcon /> },
   { text: "Drivers", path: "/drivers", icon: <CarIcon /> },
-  { text: "Test Ride", path: "/test-ride", icon: <TestIcon /> },
 ];
 
 const Layout: React.FC = () => {
