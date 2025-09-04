@@ -16,18 +16,19 @@ import {
 import {
   Star as StarIcon,
   Visibility as ViewIcon,
-  Edit as EditIcon,
+  Delete,
 } from "@mui/icons-material";
 import React, { useState } from "react";
 import { formatDate, formatRelativeTime } from "../../../utils/formatters";
-import Multiselect from "../../../utils/Multiselect";
 import { Rider } from "../../../types";
+import DeleteRiderDialog from "./DeleteRider/DeleteRiderDialog";
 
 interface RidersTableProps {
   filteredRiders: Rider[];
   handleViewRiderRides: (rider: Rider) => Promise<void>;
   page: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
+  fetchRiders: () => void;
 }
 
 const RidersTable = ({
@@ -35,7 +36,10 @@ const RidersTable = ({
   handleViewRiderRides,
   page,
   setPage,
+  fetchRiders,
 }: RidersTableProps) => {
+  const [isRiderDeleting, setIsRiderDeleting] = useState(false);
+  const [riderToDelete, setRiderToDelete] = useState<Rider | null>(null);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const handleChangePage = (_: unknown, newPage: number) => {
     setPage(newPage);
@@ -45,6 +49,11 @@ const RidersTable = ({
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+  const handleDeleteRider = (rider: Rider) => {
+    setRiderToDelete(rider);
+    setIsRiderDeleting(true);
   };
 
   return (
@@ -117,56 +126,14 @@ const RidersTable = ({
                       >
                         <ViewIcon />
                       </IconButton>
-                      <Multiselect
-                        Heading={
-                          <IconButton
-                            color="secondary"
-                            size="small"
-                            title="Edit rider"
-                          >
-                            <EditIcon />
-                          </IconButton>
-                        }
+                      <IconButton
+                        color="error"
+                        size="small"
+                        onClick={() => handleDeleteRider(rider)}
+                        title="Delete rider"
                       >
-                        <div style={{ width: "130px", height: "35px" }}>
-                          <span
-                            style={{
-                              width: "100%",
-                              height: "100%",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-around",
-                              background: "white",
-                              border: "none",
-                              fontSize: "1.2rem",
-                              cursor: "pointer",
-                              borderBottom: "2px solid black",
-                            }}
-                            onClick={undefined}
-                          >
-                            Delete
-                          </span>
-                        </div>
-                        <div style={{ width: "130px", height: "35px" }}>
-                          <span
-                            style={{
-                              width: "100%",
-                              height: "100%",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-around",
-                              background: "white",
-                              border: "none",
-                              fontSize: "1.2rem",
-                              cursor: "pointer",
-                              borderBottom: "2px solid black",
-                            }}
-                            onClick={undefined}
-                          >
-                            Active
-                          </span>
-                        </div>
-                      </Multiselect>
+                        <Delete />
+                      </IconButton>
                     </Box>
                   </TableCell>
                 </TableRow>
@@ -184,6 +151,14 @@ const RidersTable = ({
           </TableBody>
         </Table>
       </TableContainer>
+
+      <DeleteRiderDialog
+        open={isRiderDeleting}
+        setOpen={setIsRiderDeleting}
+        removeRider={setRiderToDelete}
+        riderToDelete={riderToDelete!}
+        fetchRiders={fetchRiders}
+      />
 
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}

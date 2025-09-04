@@ -6,7 +6,7 @@ import {
   DialogTitle,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
 import { Driver } from "../../../types";
 
@@ -25,20 +25,23 @@ const DeleteDriverDialog = ({
   removeDriver,
   fetchDrivers,
 }: DeleteDriverDialogProps) => {
-  const { deleteExistingDriver } = useAuth();
-  const handleCloseDeleteDeleteDriverDialog = () => {
+  const [isDriverDeleting, setIsDriverDeleting] = useState<boolean>(false);
+  const { deleteExistingUser } = useAuth();
+  const handleCloseDeleteDriverDialog = () => {
     setOpen(false);
   };
-  const handleDeleteRewardPoint = async () => {
-    await deleteExistingDriver(driverId);
+  const handleDeleteDriver = async () => {
+    setIsDriverDeleting(true);
+    await deleteExistingUser(driverId);
     removeDriver(null);
     setOpen(false);
     fetchDrivers();
+    setIsDriverDeleting(false);
   };
   return (
     <Dialog
       open={open}
-      onClose={handleCloseDeleteDeleteDriverDialog}
+      onClose={handleCloseDeleteDriverDialog}
       maxWidth="sm"
       fullWidth
     >
@@ -49,13 +52,18 @@ const DeleteDriverDialog = ({
         </Typography>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCloseDeleteDeleteDriverDialog} color="inherit">
+        <Button
+          onClick={handleCloseDeleteDriverDialog}
+          color="inherit"
+          disabled={isDriverDeleting}
+        >
           Close
         </Button>
         <Button
-          onClick={handleDeleteRewardPoint}
+          onClick={handleDeleteDriver}
           color="error"
           variant="contained"
+          disabled={isDriverDeleting}
         >
           Delete
         </Button>

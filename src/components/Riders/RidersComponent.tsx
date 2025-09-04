@@ -161,6 +161,7 @@ const RidersComponent: React.FC = () => {
         handleViewRiderRides={handleViewRiderRides}
         page={page}
         setPage={setPage}
+        fetchRiders={fetchRiders}
       />
 
       {/* Rider Rides Dialog */}

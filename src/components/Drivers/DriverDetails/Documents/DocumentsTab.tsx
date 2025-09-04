@@ -1,10 +1,8 @@
 import { Alert, Box, Button, Typography } from "@mui/material";
 import { VerifiedIcon } from "lucide-react";
 import {
-  DocumentStatus,
   DocumentType,
   Driver,
-  DriverDocument,
 } from "../../../../types";
 import { TabPanelProps } from "../DriverDetailsDialog";
 import { useState } from "react";
