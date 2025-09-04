@@ -76,6 +76,8 @@ const DriversComponent: React.FC = () => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [uploadDialogNotes, setUploadDialogNotes] = useState("");
   const [uploadingDocument, setUploadingDocument] = useState(false);
+  const [isDriverDeleted, setIsDriverDeleted] = useState(false);
+  const [deletingDriver, setDeletingDriver] = useState<Driver|null>(null);
   const { getDrivers, getDriverDocs, getRidesByUserId } = useAuth();
 
   useEffect(() => {
@@ -475,6 +477,7 @@ const DriversComponent: React.FC = () => {
                         color="secondary"
                         size="small"
                         title="Delete Document"
+                        onClick={()=>{}}
                       >
                         <Delete />
                       </IconButton>
