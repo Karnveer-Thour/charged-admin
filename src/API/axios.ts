@@ -152,3 +152,6 @@ export const changeRewardPoints = (
 
 export const deleteRewardPoints = (rewardPointId: number) =>
   instance.delete(`/admin/rewardpoints/${rewardPointId}`);
+
+export const deleteDriver = (driverId: string) =>
+  instance.delete(`/admin/deleteusers/${driverId}`);

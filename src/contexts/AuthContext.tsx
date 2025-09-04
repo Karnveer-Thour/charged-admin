@@ -36,6 +36,7 @@ import {
   getRewardPoints,
   changeRewardPoints,
   deleteRewardPoints,
+  deleteDriver,
 } from "../API/axios";
 import toast from "react-hot-toast";
 
@@ -50,12 +51,12 @@ interface AuthContextType {
   updateDriverdocsStatus: (
     driverId: string,
     documentId: string,
-    data: DriverDocumentpayload,
+    data: DriverDocumentpayload
   ) => Promise<any>;
   updateDriveractivestatus: (
     driverId: string,
     data: Driverstatuspayload,
-    setError: any,
+    setError: any
   ) => Promise<any>;
   getDocumenttypes: () => Promise<requiredDocuments[]>;
   getRiders: () => Promise<Rider[]>;
@@ -70,9 +71,10 @@ interface AuthContextType {
   getRewardPointsData: (id: number) => Promise<RewardPointDetail[]>;
   updateRewardPoints: (
     id: number,
-    data: ChangeRewardPointsBody,
+    data: ChangeRewardPointsBody
   ) => Promise<void>;
   deleteExistingRewardPoints: (id: number) => Promise<void>;
+  deleteExistingDriver: (id: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -151,6 +153,9 @@ const AuthContext = createContext<AuthContextType>({
   deleteExistingRewardPoints: async (id: number) => {
     return;
   },
+  deleteExistingDriver: async (id: string) => {
+    return;
+  },
   logout: () => {},
 });
 
@@ -208,7 +213,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const userCredential: any = await signInWithEmailAndPassword(
         auth,
         email,
-        password,
+        password
       );
 
       const User: User = {
@@ -289,13 +294,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const updateDriverdocsStatus = async (
     driverId: string,
     documentId: string,
-    data: DriverDocumentpayload,
+    data: DriverDocumentpayload
   ): Promise<any> => {
     try {
       const driverDocs: any = await updateDriverDocs(
         driverId,
         documentId,
-        data,
+        data
       );
       toast.success(driverDocs.data?.message);
       return driverDocs.data.data[0];
@@ -312,11 +317,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const updateDriveractivestatus = async (
     driverId: string,
     data: Driverstatuspayload,
-    setError: any,
+    setError: any
   ): Promise<any> => {
     try {
       const driverStatus = await updateDriverstatus(driverId, data);
-      toast.success(`Driver updated to ${data.is_active?"active":"inactive"} successfully`);
+      toast.success(
+        `Driver updated to ${data.is_active ? "active" : "inactive"} successfully`
+      );
       return driverStatus.data.data[0];
     } catch (error: any) {
       toast.error(error.response.data?.message);
@@ -479,7 +486,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const updateRewardPoints = async (
     userId: number,
-    data: ChangeRewardPointsBody,
+    data: ChangeRewardPointsBody
   ) => {
     try {
       const changedRewardPoints = await changeRewardPoints(userId, data);
@@ -498,6 +505,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const deletedRewardPoints = await deleteRewardPoints(rewardPointId);
       toast.success(deletedRewardPoints.data?.message);
+    } catch (error: any) {
+      handleExpiredtoken(error);
+      toast.error(error.data?.message);
+      setAuthState((prev) => ({
+        ...prev,
+        error: error.response.data.message,
+      }));
+    }
+  };
+
+  const deleteExistingDriver = async (driverId: string) => {
+    try {
+      const deletedDriver = await deleteDriver(driverId);
+      toast.success(deletedDriver.data?.message);
     } catch (error: any) {
       handleExpiredtoken(error);
       toast.error(error.data?.message);
@@ -544,6 +565,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         getRewardPointsData,
         updateRewardPoints,
         deleteExistingRewardPoints,
+        deleteExistingDriver,
         logout,
       }}
     >

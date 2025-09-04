@@ -43,6 +43,7 @@ import { Driver, Ride, RideType, DocumentType } from "../../types";
 import { useAuth } from "../../contexts/AuthContext";
 import { mockApi } from "../../services/mockApi";
 import DriverDetailsDialog from "./DriverDetails/DriverDetailsDialog";
+import DeleteDriverDialog from "./DeleteDriverDialog/DeleteDriverDialog";
 
 const DriversComponent: React.FC = () => {
   const [drivers, setDrivers] = useState<Driver[]>([]);
@@ -67,7 +68,7 @@ const DriversComponent: React.FC = () => {
     string | null
   >(null);
   const [documentUpdateError, setDocumentUpdateError] = useState<string | null>(
-    null,
+    null
   );
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [selectedDocumentType, setSelectedDocumentType] = useState<
@@ -77,7 +78,7 @@ const DriversComponent: React.FC = () => {
   const [uploadDialogNotes, setUploadDialogNotes] = useState("");
   const [uploadingDocument, setUploadingDocument] = useState(false);
   const [isDriverDeleted, setIsDriverDeleted] = useState(false);
-  const [deletingDriver, setDeletingDriver] = useState<Driver|null>(null);
+  const [deletingDriver, setDeletingDriver] = useState<Driver | null>(null);
   const { getDrivers, getDriverDocs, getRidesByUserId } = useAuth();
 
   useEffect(() => {
@@ -96,7 +97,7 @@ const DriversComponent: React.FC = () => {
           driver?.name?.toLowerCase()?.includes(query) ||
           driver?.email?.toLowerCase()?.includes(query) ||
           driver?.phone?.includes(query) ||
-          driver?.license_plate?.toLowerCase().includes(query),
+          driver?.license_plate?.toLowerCase().includes(query)
       );
       setPage(0);
     }
@@ -104,7 +105,7 @@ const DriversComponent: React.FC = () => {
     // Apply vehicle type filter
     if (selectedVehicleType !== "all") {
       result = result.filter(
-        (driver) => driver.car_type === selectedVehicleType,
+        (driver) => driver.car_type === selectedVehicleType
       );
       setPage(0);
     }
@@ -112,7 +113,7 @@ const DriversComponent: React.FC = () => {
     // Apply status filter
     if (selectedStatusFilter !== "all") {
       result = result.filter(
-        (driver) => driver.is_active === selectedStatusFilter,
+        (driver) => driver.is_active === selectedStatusFilter
       );
       setPage(0);
     }
@@ -157,7 +158,7 @@ const DriversComponent: React.FC = () => {
   };
 
   const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>,
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
@@ -258,7 +259,7 @@ const DriversComponent: React.FC = () => {
       setSelectedDriver(updatedDriver);
 
       setDocumentUpdateSuccess(
-        `Document ${getDocumentTitle(selectedDocumentType)} uploaded successfully and driver has been notified!`,
+        `Document ${getDocumentTitle(selectedDocumentType)} uploaded successfully and driver has been notified!`
       );
       handleCloseUploadDialog();
     } catch (error) {
@@ -274,6 +275,11 @@ const DriversComponent: React.FC = () => {
     setUploadedFile(null);
     setUploadDialogNotes("");
     setUploadDialogOpen(true);
+  };
+
+  const handleDeleteDriver = (driver: Driver) => {
+    setDeletingDriver(driver);
+    setIsDriverDeleted(true);
   };
 
   if (loading) {
@@ -477,7 +483,7 @@ const DriversComponent: React.FC = () => {
                         color="secondary"
                         size="small"
                         title="Delete Document"
-                        onClick={()=>{}}
+                        onClick={() => handleDeleteDriver(driver)}
                       >
                         <Delete />
                       </IconButton>
@@ -616,6 +622,15 @@ const DriversComponent: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      {deletingDriver && (
+        <DeleteDriverDialog
+          driverId={deletingDriver.id}
+          open={isDriverDeleted}
+          setOpen={setIsDriverDeleted}
+          removeDriver={setDeletingDriver}
+          fetchDrivers={fetchDrivers}
+        />
+      )}
     </Container>
   );
 };
