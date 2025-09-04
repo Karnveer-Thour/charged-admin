@@ -15,7 +15,7 @@ import {
   ChangeRewardPointsBody,
   RewardPointDetail,
 } from "../types";
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import {signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
 import {
   getAdmin,
@@ -36,7 +36,7 @@ import {
   getRewardPoints,
   changeRewardPoints,
   deleteRewardPoints,
-  deleteDriver,
+  deleteUser,
 } from "../API/axios";
 import toast from "react-hot-toast";
 
@@ -74,7 +74,7 @@ interface AuthContextType {
     data: ChangeRewardPointsBody
   ) => Promise<void>;
   deleteExistingRewardPoints: (id: number) => Promise<void>;
-  deleteExistingDriver: (id: string) => Promise<void>;
+  deleteExistingUser: (id: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -153,7 +153,7 @@ const AuthContext = createContext<AuthContextType>({
   deleteExistingRewardPoints: async (id: number) => {
     return;
   },
-  deleteExistingDriver: async (id: string) => {
+  deleteExistingUser: async (id: string) => {
     return;
   },
   logout: () => {},
@@ -515,10 +515,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const deleteExistingDriver = async (driverId: string) => {
+  const deleteExistingUser = async (userId: string) => {
     try {
-      const deletedDriver = await deleteDriver(driverId);
-      toast.success(deletedDriver.data?.message);
+      const deletedUser = await deleteUser(userId);
+      toast.success(deletedUser.data?.message);
     } catch (error: any) {
       handleExpiredtoken(error);
       toast.error(error.data?.message);
@@ -565,7 +565,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         getRewardPointsData,
         updateRewardPoints,
         deleteExistingRewardPoints,
-        deleteExistingDriver,
+        deleteExistingUser,
         logout,
       }}
     >
