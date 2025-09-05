@@ -8,7 +8,6 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { requiredDocuments } from "../../../types";
-import { useDocuments } from "../Hooks/useDocument";
 import { useAuth } from "../../../contexts/AuthContext";
 
 interface DeleteDocumentDialogProps {
