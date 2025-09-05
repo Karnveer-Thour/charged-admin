@@ -14,6 +14,7 @@ import {
   CreateRewardBody,
   ChangeRewardPointsBody,
   RewardPointDetail,
+  createDocumentType,
 } from "../types";
 import {signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
@@ -37,6 +38,9 @@ import {
   changeRewardPoints,
   deleteRewardPoints,
   deleteUser,
+  deleteDocument,
+  createDocumenttype,
+  updateDocumenttype,
 } from "../API/axios";
 import toast from "react-hot-toast";
 
@@ -59,6 +63,9 @@ interface AuthContextType {
     setError: any
   ) => Promise<any>;
   getDocumenttypes: () => Promise<requiredDocuments[]>;
+  deleteExistingDocument: (documentId: string) => Promise<void>;
+  createNewDocument: (data:createDocumentType) => Promise<requiredDocuments>;
+  updateExistingDocument:(documentId:string,data:Partial<createDocumentType>)=>Promise<requiredDocuments>;
   getRiders: () => Promise<Rider[]>;
   getRidetypes: () => Promise<rideTypes[]>;
   updateRidetype: (id: number, body: object) => Promise<any>;
@@ -103,6 +110,13 @@ const AuthContext = createContext<AuthContextType>({
   },
   getDocumenttypes: async () => {
     return [];
+  },
+  deleteExistingDocument: async () => {},
+  createNewDocument: async (data: createDocumentType): Promise<requiredDocuments> => {
+    return {} as requiredDocuments;
+  },
+  updateExistingDocument:async (documentId:string,data:Partial<createDocumentType>):Promise<requiredDocuments>=>{
+    return {} as requiredDocuments;
   },
   getRiders: async () => {
     return [];
@@ -349,6 +363,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const deleteExistingDocument = async (documentId: string): Promise<void> => {
+    try {
+      const deletedDocument = await deleteDocument(documentId);
+      toast.success(deletedDocument.data?.message);
+    } catch (error: any) {
+      toast.error(error.data?.message);
+      handleExpiredtoken(error);
+      setAuthState((prev) => ({
+        ...prev,
+        error: error.response.data.message,
+      }));
+    }
+  };
+
   // Function to get Riders
   const getRiders = async (): Promise<any> => {
     try {
@@ -501,6 +529,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const createNewDocument = async (data:createDocumentType):Promise<requiredDocuments> => {
+    try {
+      const newDocument = await createDocumenttype(data);
+      toast.success(newDocument.data?.message);
+      return newDocument.data.data;
+    } catch (error: any) {
+      handleExpiredtoken(error);
+      toast.error(error.data?.message);
+      setAuthState((prev) => ({
+        ...prev,
+        error: error.response.data.message,
+      }));
+      throw error;
+    }
+  };
+
+  const updateExistingDocument=async (documentId:string,data:Partial<createDocumentType>):Promise<requiredDocuments>=>{
+    try {
+      const updatedDocument = await updateDocumenttype(documentId,data);
+      toast.success(updatedDocument.data?.message);
+      return updatedDocument.data.data;
+    } catch (error: any) {
+      handleExpiredtoken(error);
+      toast.error(error.data?.message);
+      setAuthState((prev) => ({
+        ...prev,
+        error: error.response.data.message,
+      }));
+      throw error;
+    }
+  }
+
   const deleteExistingRewardPoints = async (rewardPointId: number) => {
     try {
       const deletedRewardPoints = await deleteRewardPoints(rewardPointId);
@@ -551,6 +611,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         getDrivers,
         getDriverDocs,
         getDocumenttypes,
+        deleteExistingDocument,
         updateDriverdocsStatus,
         updateDriveractivestatus,
         getRidetypes,
@@ -566,6 +627,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         updateRewardPoints,
         deleteExistingRewardPoints,
         deleteExistingUser,
+        createNewDocument,
+        updateExistingDocument,
         logout,
       }}
     >
@@ -573,5 +636,3 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     </AuthContext.Provider>
   );
 };
-
-export default AuthContext;

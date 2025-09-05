@@ -211,7 +211,29 @@ export interface Reward {
 export interface CreateRewardBody {
   title: string;
   description: string;
-  point_required: string|number;
+  point_required: string | number;
+}
+
+export enum UserType {
+  DRIVER = "driver",
+  RIDER = "rider",
+  BUSINESS = "business",
+}
+
+export interface createDocumentType {
+  name: string;
+  display_name: string;
+  description: string;
+  is_required: boolean;
+  user_type: UserType;
+}
+
+export interface updateDocumentType {
+  name?: string;
+  display_name?: string;
+  description?: string;
+  is_required?: boolean;
+  user_type?: UserType;
 }
 
 export enum AdjustmentType {

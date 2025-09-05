@@ -15,9 +15,9 @@ import Riders from "./pages/Riders";
 import Drivers from "./pages/Drivers";
 import RideDetails from "./pages/RideDetails";
 import NotFound from "./pages/NotFound";
-import { Documents } from "./pages/Documents";
 import Rewards from "./pages/Rewards";
 import { Toaster } from "react-hot-toast";
+import Documents from "./pages/Documents";
 
 // Create a theme instance
 const theme = createTheme({

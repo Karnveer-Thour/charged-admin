@@ -30,7 +30,7 @@ instance.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Api to get admin data
@@ -70,7 +70,7 @@ export const getDriverdocsdata = (id: string) =>
 export const updateDriverDocs = (
   driverId: string,
   documentId: string,
-  data: DriverDocumentpayload
+  data: DriverDocumentpayload,
 ) => instance.put(`/admin/verifydriverdoc/${driverId}/${documentId}`, data);
 
 // Api to get update driver status
@@ -78,7 +78,7 @@ export const updateDriverDocs = (
 
 export const updateDriverstatus = (
   driverId: string,
-  data: Driverstatuspayload
+  data: Driverstatuspayload,
 ) => {
   return instance.put(`/admin/updatestatus/${driverId}`, data);
 };
@@ -89,6 +89,32 @@ export const updateDriverstatus = (
 // It is used in the documents component
 
 export const getDocumenttypesdata = () => instance.get("/admin/documenttypes");
+
+// Api to create a new document type
+// This API is used to create a new document type
+// It takes the document type data as the request body
+// It returns the created document type
+// It is used in the documents component
+
+export const createDocumenttype = (body: object) =>
+  instance.post("/admin/documenttypes", body);
+
+//api to update a document type
+// This API is used to update a document type
+// It takes the document type id and the updated data as parameters
+// It returns the updated document type
+// It is used in the documents component
+export const updateDocumenttype = (id: string, body: object) =>
+  instance.put(`/admin/documenttypes/${id}`, body);
+
+// Api to delete a document type
+// This API is used to delete a document type
+// It takes the document type id as a parameter
+// It returns the result of the delete operation
+// It is used in the documents component
+
+export const deleteDocument = (documentId: string) =>
+  instance.delete(`/admin/documenttypes/${documentId}`);
 
 // Api to get all riders
 // This API is used to get all riders
@@ -134,24 +160,65 @@ export const getRidesDataByUserId = (Id: number) =>
 export const getDashboardStatsData = () =>
   instance.get("/admin/dashboardstats");
 
+// Api to get all rewards
+// This API is used to get all rewards
+// It returns an array of rewards
+// It is used in the Rewards component
+
 export const getRewards = () => instance.get("/admin/rewards");
+
+// Api to create a new reward
+// This API is used to create a new reward
+// It takes the reward data as the request body
+// It returns the created reward
+// It is used in the Rewards component
 
 export const createReward = (data: CreateRewardBody) =>
   instance.post("/admin/rewards", data);
 
+// Api to delete a reward
+// This API is used to delete a reward
+// It takes the reward id as a parameter
+// It returns the result of the delete operation
+// It is used in the Rewards component
+
 export const deleteReward = (rewardId: number) =>
   instance.delete(`/admin/rewards/${rewardId}`);
+
+// Api to get reward points of a user
+// This API is used to get reward points of a user
+// It takes the user id as a parameter
+// It returns the reward points of the user
+// It is used in the Rewards component
 
 export const getRewardPoints = (userId: number) =>
   instance.get(`/admin/rewardpoints/${userId}`);
 
+// Api to change reward points of a user
+// This API is used to change reward points of a user
+// It takes the user id and the data to be updated as parameters
+// It returns the updated reward points of the user
+// It is used in the Rewards component
+
 export const changeRewardPoints = (
   userId: number,
-  data: ChangeRewardPointsBody
+  data: ChangeRewardPointsBody,
 ) => instance.post(`/admin/rewardpoints/${userId}`, data);
+
+// Api to delete reward points of a user
+// This API is used to delete reward points of a user
+// It takes the reward point id as a parameter
+// It returns the result of the delete operation
+// It is used in the Rewards component
 
 export const deleteRewardPoints = (rewardPointId: number) =>
   instance.delete(`/admin/rewardpoints/${rewardPointId}`);
+
+// Api to delete a user
+// This API is used to delete a user
+// It takes the user id as a parameter
+// It returns the result of the delete operation
+// It is used in the Riders and Drivers component
 
 export const deleteUser = (userId: string) =>
   instance.delete(`/admin/deleteusers/${userId}`);

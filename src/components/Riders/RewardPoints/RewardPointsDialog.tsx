@@ -17,7 +17,7 @@ import {
   TableCell,
   TableBody,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { formatDate } from "../../../utils/formatters";
 import { Minus, Plus } from "lucide-react";
 import { AdjustmentType, RewardPointDetail, Rider } from "../../../types";
@@ -55,7 +55,7 @@ const RewardPointsDialog: React.FC<RewardPointsDialogProps> = ({
     setIsRewardPointDeleting(true);
   };
   const handleRewardPointsAdjustmentDialog = (
-    adjustmentType: AdjustmentType
+    adjustmentType: AdjustmentType,
   ) => {
     setIsAdjustingRewards(true);
     setAdjustmentType(adjustmentType);
@@ -120,7 +120,7 @@ const RewardPointsDialog: React.FC<RewardPointsDialogProps> = ({
                       startIcon={<Minus />}
                       onClick={() =>
                         handleRewardPointsAdjustmentDialog(
-                          AdjustmentType.DECREMENT
+                          AdjustmentType.DECREMENT,
                         )
                       }
                       disabled={false}
@@ -136,7 +136,7 @@ const RewardPointsDialog: React.FC<RewardPointsDialogProps> = ({
                       startIcon={<Plus />}
                       onClick={() =>
                         handleRewardPointsAdjustmentDialog(
-                          AdjustmentType.INCREMENT
+                          AdjustmentType.INCREMENT,
                         )
                       }
                       disabled={false}
@@ -196,7 +196,7 @@ const RewardPointsDialog: React.FC<RewardPointsDialogProps> = ({
                               onClick={() => {
                                 handleDeleteRewardPoint();
                                 setSelectedRewardPointToDelete(
-                                  RewardPointDetail
+                                  RewardPointDetail,
                                 );
                               }}
                             >
@@ -232,6 +232,7 @@ const RewardPointsDialog: React.FC<RewardPointsDialogProps> = ({
           selectedDeleteRewardPoint={selectedRewardPointToDelete}
           setSelectedDeleteRewardPoint={setSelectedRewardPointToDelete}
           setIsDeleteRewardPointDialogOpened={setIsRewardPointDeleting}
+          riderId={Number(rider.id)}
           fetchRewardPoints={fetchRewardPoints}
         />
       )}
