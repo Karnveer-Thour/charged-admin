@@ -40,7 +40,7 @@ const DocumentTable = ({
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell align="center">Name</TableCell>
+              <TableCell align="left">Name</TableCell>
               <TableCell align="center">Description</TableCell>
               <TableCell align="center">Required</TableCell>
               <TableCell align="center">User Type</TableCell>

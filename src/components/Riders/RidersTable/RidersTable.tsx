@@ -64,7 +64,7 @@ const RidersTable = ({
             <TableRow>
               <TableCell>Rider</TableCell>
               <TableCell>Contact</TableCell>
-              <TableCell align="center">Reward Points</TableCell>
+              <TableCell align="center">Rating</TableCell>
               <TableCell align="center">Rides</TableCell>
               <TableCell align="center">Joined</TableCell>
               <TableCell align="center">Last Ride</TableCell>

@@ -104,7 +104,7 @@ const RewardsTable = ({
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell align="center">Title</TableCell>
+                <TableCell align="left">Title</TableCell>
                 <TableCell align="center">Description</TableCell>
                 <TableCell align="center">Points Required</TableCell>
                 <TableCell align="center">Date</TableCell>
@@ -128,7 +128,7 @@ const RewardsTable = ({
                           <Typography
                             variant="body1"
                             fontWeight="medium"
-                            align="center"
+                            align="left"
                           >
                             {Reward.title}
                           </Typography>
