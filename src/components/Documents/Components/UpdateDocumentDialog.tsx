@@ -10,7 +10,6 @@ import {
   Typography,
   FormControlLabel,
   Checkbox,
-  MenuItem,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { requiredDocuments, updateDocumentType, UserType } from "../../../types";
@@ -147,20 +146,6 @@ const UpdateDocumentDialog = ({
                   }
                   label="Required Document"
                 />
-
-                <TextField
-                  select
-                  label="User Type"
-                  name="user_type"
-                  value={formData.user_type || "driver"}
-                  onChange={handleChange}
-                  required
-                  fullWidth
-                >
-                  <MenuItem value="driver">Driver</MenuItem>
-                  <MenuItem value="rider">Rider</MenuItem>
-                  <MenuItem value="admin">Admin</MenuItem>
-                </TextField>
               </Box>
             </DialogContent>
             <DialogActions>

@@ -10,7 +10,6 @@ import {
   Typography,
   FormControlLabel,
   Checkbox,
-  MenuItem,
 } from "@mui/material";
 import { useState } from "react";
 import { createDocumentType, UserType } from "../../../types";
@@ -131,20 +130,6 @@ const AddDocumentDialog = ({
                 }
                 label="Required Document"
               />
-
-              <TextField
-                select
-                label="User Type"
-                name="user_type"
-                value={formData.user_type}
-                onChange={handleChange}
-                required
-                fullWidth
-              >
-                <MenuItem value={UserType.DRIVER}>{UserType.DRIVER.toUpperCase()}</MenuItem>
-                <MenuItem value={UserType.RIDER}>{UserType.RIDER.toUpperCase()}</MenuItem>
-                <MenuItem value={UserType.BUSINESS}>{UserType.BUSINESS.toUpperCase()}</MenuItem>
-              </TextField>
             </Box>
           </DialogContent>
 
