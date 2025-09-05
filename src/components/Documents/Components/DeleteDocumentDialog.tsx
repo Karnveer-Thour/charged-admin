@@ -18,6 +18,7 @@ interface DeleteDocumentDialogProps {
   setSelectedDocumentToDelete: React.Dispatch<
     React.SetStateAction<requiredDocuments | null>
   >;
+  fetchDocuments: () => Promise<void>;
 }
 
 const DeleteDocumentDialog = ({
@@ -25,10 +26,10 @@ const DeleteDocumentDialog = ({
   onClose,
   SelectedDocumentToDelete,
   setSelectedDocumentToDelete,
+  fetchDocuments
 }: DeleteDocumentDialogProps) => {
   const [isDocumentDeleting, setIsDocumentDeleting] = useState<boolean>(false);
-  const {getDocumenttypes,deleteExistingDocument}=useAuth();
-  const { fetchDocuments } = useDocuments(getDocumenttypes);
+  const {deleteExistingDocument}=useAuth();
   const handleCloseDeleteDocumentDialog = () => {
     onClose(false);
     setSelectedDocumentToDelete(null);

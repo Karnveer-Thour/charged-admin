@@ -144,6 +144,7 @@ export const DocumentsComponent = () => {
         onClose={setIsDocumentDeleting}
         SelectedDocumentToDelete={documentToDelete!}
         setSelectedDocumentToDelete={setDocumentToDelete}
+        fetchDocuments={fetchDocuments}
       />
     </Container>
   );
