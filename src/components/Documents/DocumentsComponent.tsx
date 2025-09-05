@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Search as SearchIcon } from "@mui/icons-material";
-import { createDocumentType, requiredDocuments } from "../../types";
+import { requiredDocuments } from "../../types";
 import { useAuth } from "../../contexts/AuthContext";
 import { useDocuments } from "./Hooks/useDocument";
 import DocumentTable from "./Components/DocumentTable";
@@ -30,24 +30,19 @@ export const DocumentsComponent = () => {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
 
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
-  const [updateLoading, setUpdateLoading] = useState(false);
+  const [documentToUpdate, setDocumentToUpdate] = useState<requiredDocuments | null>(
+    null,
+  );
   const [isDocumentDeleting, setIsDocumentDeleting] = useState<boolean>(false);
-  const [documentToDelete, setDocumentToDelete] = useState<requiredDocuments | null>(null);
-  const [selectedDocument, setSelectedDocument] =
+  const [documentToDelete, setDocumentToDelete] =
     useState<requiredDocuments | null>(null);
 
   const handleOpenAdd = () => setAddDialogOpen(true);
-  const handleCloseAdd = () => setAddDialogOpen(false);
 
   const handleOpenUpdate = (doc: requiredDocuments) => {
-    setSelectedDocument(doc);
+    setDocumentToUpdate(doc);
     setUpdateDialogOpen(true);
   };
-  const handleCloseUpdate = () => {
-    setSelectedDocument(null);
-    setUpdateDialogOpen(false);
-  };
-  const handleSubmitUpdate = () => {};
 
   const handleDelete = (doc: requiredDocuments) => {
     setDocumentToDelete(doc);
@@ -138,13 +133,13 @@ export const DocumentsComponent = () => {
 
       <UpdateDocumentDialog
         open={updateDialogOpen}
-        loading={updateLoading}
-        document={selectedDocument}
-        onClose={handleCloseUpdate}
-        onSubmit={handleSubmitUpdate}
+        document={documentToUpdate!}
+        setDocumentToUpdate={setDocumentToUpdate}
+        setDialogOpen={setUpdateDialogOpen}
+        fetchDocuments={fetchDocuments}
       />
 
-      <DeleteDocumentDialog 
+      <DeleteDocumentDialog
         open={isDocumentDeleting}
         onClose={setIsDocumentDeleting}
         SelectedDocumentToDelete={documentToDelete!}
