@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { Reward } from "../../../types";
 import { useAuth } from "../../../contexts/AuthContext";
+import { useState } from "react";
 
 interface DeleteRewardDialogProps {
   isDeleteRewardDialogOpened: boolean;
@@ -26,12 +27,14 @@ const DeleteRewardDialog = ({
   setSelectedRewardToDelete,
   fetchRewards,
 }: DeleteRewardDialogProps) => {
-  const {deleteExistingReward}=useAuth();
+  const [isRewardDeleting, setIsRewardDeleting] = useState<boolean>(false);
+  const { deleteExistingReward } = useAuth();
   const handleCloseDeleteRewardDialog = () => {
     setIsDeleteRewardDialogOpened(false);
     setSelectedRewardToDelete(undefined);
   };
-  const handleDeleteReward = async() => {
+  const handleDeleteReward = async () => {
+    setIsRewardDeleting(true);
     try {
       await deleteExistingReward(SelectedRewardToDelete.id);
       await fetchRewards();
@@ -39,6 +42,7 @@ const DeleteRewardDialog = ({
     } catch (error) {
       console.log(error);
     }
+    setIsRewardDeleting(false);
   };
   return (
     <Dialog
@@ -54,10 +58,19 @@ const DeleteRewardDialog = ({
         </Typography>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCloseDeleteRewardDialog} color="inherit">
+        <Button
+          onClick={handleCloseDeleteRewardDialog}
+          color="inherit"
+          disabled={isRewardDeleting}
+        >
           Close
         </Button>
-        <Button onClick={handleDeleteReward} color="error" variant="contained">
+        <Button
+          onClick={handleDeleteReward}
+          color="error"
+          variant="contained"
+          disabled={isRewardDeleting}
+        >
           Delete
         </Button>
       </DialogActions>

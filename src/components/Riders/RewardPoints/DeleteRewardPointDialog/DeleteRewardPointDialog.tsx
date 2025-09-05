@@ -19,6 +19,7 @@ interface DeleteRewardPointDialogProps {
   setSelectedDeleteRewardPoint: React.Dispatch<
     React.SetStateAction<RewardPointDetail | undefined>
   >;
+  riderId:number;
   fetchRewardPoints:(riderId:number)=>Promise<void>;
 }
 
@@ -28,6 +29,7 @@ const DeleteRewardPointDialog = ({
   setIsDeleteRewardPointDialogOpened,
   setSelectedDeleteRewardPoint,
   fetchRewardPoints,
+  riderId,
 }: DeleteRewardPointDialogProps) => {
   const { deleteExistingRewardPoints } = useAuth();
   const handleCloseDeleteRewardPointDialog = () => {
@@ -36,9 +38,8 @@ const DeleteRewardPointDialog = ({
   };
   const handleDeleteRewardPoint = async () => {
     await deleteExistingRewardPoints(selectedDeleteRewardPoint.id);
-    setSelectedDeleteRewardPoint(undefined);
-    await fetchRewardPoints(selectedDeleteRewardPoint.id);
-    setIsDeleteRewardPointDialogOpened(false);
+    await fetchRewardPoints(riderId);
+    handleCloseDeleteRewardPointDialog();
   };
   return (
     <Dialog
